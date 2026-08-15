@@ -1,0 +1,26 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environments
+venv/
+.venv/
+env/
+ENV/
+#tests
+tests/
+data/
+# Local configuration
+.env
+.kaggle/kaggle.json
+# Data & Models
+# models/*.json (Allowing models for HF Space)
+!models/.gitkeep
+data/
+*.db
+*.log
+*.parquet
+
+dnstds(1).md
+task_list.md

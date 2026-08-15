@@ -1,0 +1,9 @@
+streamlit
+xgboost
+shap
+numpy
+scapy
+redis
+python-dotenv
+matplotlib
+pandas
