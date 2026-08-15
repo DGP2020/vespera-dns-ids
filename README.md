@@ -3,7 +3,8 @@ title: Vespera Dns Ids
 emoji: 📚
 colorFrom: pink
 colorTo: purple
-sdk: static
+sdk: streamlit
+app_file: app.py
 pinned: false
 license: mit
 ---
