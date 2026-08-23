@@ -23,13 +23,31 @@ def load_tier2_model():
 clf1 = load_tier1_model()
 clf2 = load_tier2_model()
 
-col1, col2 = st.columns(2)
+col1, col2 = st.columns([3, 2])
 
 with col1:
     st.subheader("Simulate DNS Query")
-    fqdn = st.text_input("Enter a Domain (e.g., vpn.evil.com)", value="vpn.evil.com")
-    record_type = st.selectbox("Record Type", ["A", "TXT", "CNAME", "AAAA"])
     
+    preset = st.radio("Quick Preset", ["Benign (e.g. google.com)", "Suspicious Tunneling (e.g. 1a2b3c.evil.com)", "Custom Input"], horizontal=True)
+    
+    if preset == "Benign (e.g. google.com)":
+        default_fqdn = "google.com"
+        default_rtype = "A"
+        default_is_attack = False
+    elif preset == "Suspicious Tunneling (e.g. 1a2b3c.evil.com)":
+        default_fqdn = "a1b2c3d4e5f6g7h8.tunnel.evil.com"
+        default_rtype = "TXT"
+        default_is_attack = True
+    else:
+        default_fqdn = "example.com"
+        default_rtype = "A"
+        default_is_attack = False
+
+    fqdn = st.text_input("Enter a Domain (FQDN)", value=default_fqdn)
+    record_type = st.selectbox("Record Type", ["A", "TXT", "CNAME", "AAAA"], index=["A", "TXT", "CNAME", "AAAA"].index(default_rtype))
+    
+    is_attack_sim = st.checkbox("Simulate High-Volume / Anomalous Traffic Window (Tier-2 Stateful Window)", value=default_is_attack)
+
     if st.button("Analyze", type="primary"):
         if fqdn:
             with st.spinner("Analyzing..."):
@@ -43,12 +61,22 @@ with col1:
                 else:
                     st.success(f"✅ BENIGN (Score: {t1_score:.2f})")
                 
-                with st.expander("Tier-1 Features"):
+                with st.expander("View Tier-1 Features"):
                     st.json(t1_features)
                 
-                # Mock stateful features for Tier 2 demo 
+                # Stateful features simulation
                 parent_domain = extract_parent_domain(fqdn)
+                ngram_score = compute_ngram_score(t1_features.get("query_name", parent_domain), n=2)
                 
+                if is_attack_sim:
+                    rec_het = 0.9 if record_type in ["TXT", "CNAME"] else 0.6
+                    payload_var = 45.2
+                    uniq_ips = 5.0
+                else:
+                    rec_het = 0.1 if record_type in ["TXT", "CNAME"] else 0.0
+                    payload_var = 1.2
+                    uniq_ips = 1.0
+
                 st.write("### Tier-2 (Stateful) Analysis")
                 
                 t2_features = {
@@ -56,10 +84,10 @@ with col1:
                     "subdomain_count": t1_features["subdomain_count"],
                     "shannon_entropy": t1_features["shannon_entropy"],
                     "numeric_alpha_ratio": t1_features["numeric_alpha_ratio"],
-                    "record_type_heterogeneity": 0.9 if record_type in ["TXT", "CNAME"] else 0.1,
-                    "payload_variance": 45.2,
-                    "ngram_transition_score": compute_ngram_score(t1_features.get("query_name", parent_domain), n=2),
-                    "unique_ip_concurrency": 5.0
+                    "record_type_heterogeneity": rec_het,
+                    "payload_variance": payload_var,
+                    "ngram_transition_score": ngram_score,
+                    "unique_ip_concurrency": uniq_ips
                 }
                 
                 payload = {
@@ -74,9 +102,9 @@ with col1:
                 if t2_score >= 0.50:
                     st.error(f"💥 VERIFIED CRITICAL (Score: {t2_score:.2f})")
                 else:
-                    st.success(f"✅ FALSE POSITIVE ANOMALY (Score: {t2_score:.2f})")
+                    st.success(f"✅ FALSE POSITIVE ANOMALY / BENIGN (Score: {t2_score:.2f})")
                 
-                with st.expander("Tier-2 Features"):
+                with st.expander("View Tier-2 Features"):
                     st.json(t2_features)
                 
                 # TreeSHAP Explanation
@@ -91,7 +119,13 @@ with col2:
     st.markdown("""
     ### About the Architecture
     **Tier 1:** Fast triage using stateless features derived from a single DNS packet. High recall, optimized for latency.
-    **Tier 2:** Deep analysis using stateful features computed over a 30-second window. High precision, produces TreeSHAP explanations.
+    **Tier 2:** Deep analysis using stateful features computed over a 30-second sliding window. High precision, produces TreeSHAP explanations.
     
-    *Note: For this standalone Hugging Face Space demo, Tier-2 stateful features (like payload variance) are simulated.*
+    ### Stateful Window Simulation
+    In production, Tier 2 aggregates a 30-second sliding window of query events for each domain:
+    - **Payload Variance:** High variance in payload sizes indicates data exfiltration.
+    - **Unique IP Concurrency:** Multiple client IPs querying the same suspicious domain.
+    - **N-gram Transition Score:** Character distribution deviation from standard domain names.
+    - **Record Type Heterogeneity:** Ratio of TXT/CNAME queries.
     """)
+
