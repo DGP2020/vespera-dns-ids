@@ -67,115 +67,28 @@
                 "xl": "1.5rem",
                 "full": "9999px"
         },
-        "spacing": {
-                "sm": "16px",
-                "base": "4px",
-                "xs": "8px",
-                "xl": "64px",
-                "gutter": "24px",
-                "md": "24px",
-                "lg": "40px",
-                "container-max": "1440px"
-        },
         "fontFamily": {
-                "headline-md": [
-                        "Inter"
-                ],
-                "body-lg": [
-                        "Inter"
-                ],
-                "label-md": [
-                        "JetBrains Mono"
-                ],
-                "body-md": [
-                        "Inter"
-                ],
-                "label-sm": [
-                        "JetBrains Mono"
-                ],
-                "display-lg": [
-                        "Inter"
-                ],
-                "headline-lg": [
-                        "Inter"
-                ],
-                "headline-lg-mobile": [
-                        "Inter"
-                ]
-        },
-        "fontSize": {
-                "headline-md": [
-                        "24px",
-                        {
-                                "lineHeight": "32px",
-                                "fontWeight": "600"
-                        }
-                ],
-                "body-lg": [
-                        "18px",
-                        {
-                                "lineHeight": "28px",
-                                "fontWeight": "400"
-                        }
-                ],
-                "label-md": [
-                        "14px",
-                        {
-                                "lineHeight": "20px",
-                                "letterSpacing": "0.02em",
-                                "fontWeight": "500"
-                        }
-                ],
-                "body-md": [
-                        "16px",
-                        {
-                                "lineHeight": "24px",
-                                "fontWeight": "400"
-                        }
-                ],
-                "label-sm": [
-                        "12px",
-                        {
-                                "lineHeight": "16px",
-                                "fontWeight": "500"
-                        }
-                ],
-                "display-lg": [
-                        "48px",
-                        {
-                                "lineHeight": "56px",
-                                "letterSpacing": "-0.02em",
-                                "fontWeight": "700"
-                        }
-                ],
-                "headline-lg": [
-                        "32px",
-                        {
-                                "lineHeight": "40px",
-                                "letterSpacing": "-0.01em",
-                                "fontWeight": "600"
-                        }
-                ],
-                "headline-lg-mobile": [
-                        "24px",
-                        {
-                                "lineHeight": "32px",
-                                "fontWeight": "600"
-                        }
-                ]
+                "headline-md": ["Inter"],
+                "body-lg": ["Inter"],
+                "label-md": ["JetBrains Mono"],
+                "body-md": ["Inter"],
+                "label-sm": ["JetBrains Mono"],
+                "display-lg": ["Inter"],
+                "headline-lg": ["Inter"]
         }
-},
-    },
+      }
+    }
   }
 </script>
 <style>
         body {
-            background-color: #0B0F19; /* Canvas */
+            background-color: #0B0F19;
             color: #dfe2f1;
             background-image: 
                 radial-gradient(circle at 15% 50%, rgba(77, 142, 255, 0.05) 0%, transparent 50%),
                 radial-gradient(circle at 85% 30%, rgba(255, 84, 81, 0.05) 0%, transparent 50%);
             background-attachment: fixed;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
         .glass-panel {
             background: rgba(28, 31, 42, 0.4); 
@@ -183,6 +96,7 @@
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.08);
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+            transition: background 0.3s ease, border-color 0.3s ease;
         }
         .status-benign {
             background: rgba(77, 142, 255, 0.1); 
@@ -198,11 +112,43 @@
             box-shadow: 0 0 0 2px rgba(77, 142, 255, 0.3);
             border-color: #4d8eff;
         }
+
+        /* Light Mode Styles Override */
+        html:not(.dark) body {
+            background-color: #f4f6fc;
+            color: #171b26;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(0, 90, 194, 0.06) 0%, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(255, 84, 81, 0.06) 0%, transparent 50%);
+        }
+        html:not(.dark) .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.06);
+        }
+        html:not(.dark) header, 
+        html:not(.dark) aside {
+            background-color: rgba(255, 255, 255, 0.9) !important;
+            border-color: rgba(0, 0, 0, 0.08) !important;
+            color: #171b26 !important;
+        }
+        html:not(.dark) .text-on-surface {
+            color: #171b26 !important;
+        }
+        html:not(.dark) .text-on-surface-variant {
+            color: #424754 !important;
+        }
+        html:not(.dark) input, 
+        html:not(.dark) select {
+            background-color: #ffffff !important;
+            color: #171b26 !important;
+            border-color: #c2c6d6 !important;
+        }
         
-        /* Layout overrides for side nav integration */
+        /* Layout overrides */
         .main-content-wrapper {
-            margin-left: 16rem; /* w-64 */
-            padding-top: 4rem; /* h-16 top nav */
+            margin-left: 16rem;
+            padding-top: 4rem;
             transition: margin-left 0.3s ease;
         }
         .sidebar-collapsed + .main-content-wrapper {
@@ -215,7 +161,6 @@
             transform: translateX(-100%);
         }
         
-        /* Custom Scrollbar for organic feel */
         ::-webkit-scrollbar {
             width: 8px;
             height: 8px;
@@ -241,6 +186,18 @@
                 mainContent.style.marginLeft = '0';
             } else {
                 mainContent.style.marginLeft = '16rem';
+            }
+        }
+
+        function toggleTheme() {
+            const htmlEl = document.documentElement;
+            const themeIcon = document.getElementById('themeToggleIcon');
+            if (htmlEl.classList.contains('dark')) {
+                htmlEl.classList.remove('dark');
+                if (themeIcon) themeIcon.innerText = 'dark_mode';
+            } else {
+                htmlEl.classList.add('dark');
+                if (themeIcon) themeIcon.innerText = 'light_mode';
             }
         }
 
@@ -301,7 +258,6 @@
             const entropy = calculateEntropy(topLabel);
             const numAlphaRatio = calculateNumericAlphaRatio(cleanDomain);
 
-            // Tier 1 Scoring heuristic (mimicking XGBoost model)
             let t1Score = 0.05;
             if (entropy > 3.8 || fqdnLength > 45 || subdomainCount > 2 || numAlphaRatio > 0.4) {
                 t1Score = 0.95;
@@ -318,7 +274,6 @@
                 "numeric_alpha_ratio": parseFloat(numAlphaRatio.toFixed(4))
             };
 
-            // Render Tier 1 Status
             const t1Container = document.getElementById('t1StatusContainer');
             if (t1Score > 0.70) {
                 t1Container.className = 'status-alert p-5 rounded-xl flex items-center justify-between backdrop-blur-md shadow-lg transition-all';
@@ -342,7 +297,6 @@
 
             document.getElementById('t1JsonOutput').innerText = JSON.stringify(t1Features, null, 2);
 
-            // Tier 2 Deep Analysis
             let payloadVar = isAttackWindow ? 45.2 : (t1Score > 0.70 ? 28.4 : 1.2);
             let recHet = isAttackWindow ? 0.9 : (['TXT', 'CNAME'].includes(recordType) ? 0.6 : 0.0);
             let uniqIps = isAttackWindow ? 5.0 : (t1Score > 0.70 ? 3.0 : 1.0);
@@ -425,7 +379,7 @@
                                 <span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">verified</span>
                                 <span class="font-headline-md text-headline-md font-semibold">✅ FALSE POSITIVE ANOMALY / BENIGN (Score: ${t2Score.toFixed(2)})</span>
                             </div>
-                            <span class="font-label-sm text-xs px-3 py-1 bg-primary/20 border border-primary/40 text-primary rounded-full font-bold font-label-sm">Passed Deep Analysis</span>
+                            <span class="font-label-sm text-xs px-3 py-1 bg-primary/20 border border-primary/40 text-primary rounded-full font-bold">Passed Deep Analysis</span>
                         </div>
 
                         <div class="glass-panel rounded-xl overflow-hidden">
@@ -461,7 +415,7 @@
     </script>
 </head>
 <body class="font-body-md text-body-md antialiased min-h-screen flex flex-col">
-<!-- TopNavBar (Shared Component) -->
+<!-- TopNavBar -->
 <header class="bg-surface/80 backdrop-blur-md dark:bg-surface/80 text-primary dark:text-primary flex justify-between items-center w-full px-gutter h-16 max-w-container-max mx-auto border-b border-outline-variant/30 dark:border-outline-variant/30 fixed top-0 z-50">
 <div class="flex items-center gap-4">
 <button class="text-on-surface-variant hover:text-primary transition-colors flex items-center justify-center p-2 rounded-full hover:bg-surface-variant/50" onclick="toggleSidebar()">
@@ -471,12 +425,14 @@
 </div>
 <nav class="hidden md:flex items-center gap-6">
 <a class="text-primary font-bold border-b-2 border-primary pb-1" href="#">Dashboard</a>
-<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200" href="https://vespera.streamlit.app" target="_blank">Live Streamlit App</a>
-<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200" href="https://github.com/YOUR_USERNAME/vespera-dns-ids" target="_blank">GitHub Repo</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200" href="#threat-history">Threat Intelligence</a>
+<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200" href="#tier1-section">Logs</a>
 </nav>
 <div class="flex items-center gap-4">
-<button onclick="window.open('https://vespera.streamlit.app', '_blank')" class="text-on-surface-variant hover:text-primary transition-colors duration-200 flex items-center gap-1 font-label-md text-label-md bg-surface-variant/30 px-3 py-1.5 rounded-full">
-<span class="material-symbols-outlined text-sm">open_in_new</span> Live App
+<!-- Light / Dark Mode Toggle Button -->
+<button onclick="toggleTheme()" class="flex items-center gap-2 font-label-md text-label-md bg-surface-variant/40 hover:bg-surface-variant/70 text-on-surface px-3.5 py-1.5 rounded-full border border-outline-variant/30 transition-all cursor-pointer" title="Toggle Light / Dark Theme">
+<span id="themeToggleIcon" class="material-symbols-outlined text-sm">light_mode</span>
+<span class="text-xs">Theme</span>
 </button>
 <div class="flex items-center gap-2">
 <button class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-surface-variant/50 transition-colors text-on-surface-variant hover:text-primary" title="Star Project">
@@ -489,7 +445,7 @@
 </div>
 </header>
 
-<!-- SideNavBar (Shared Component) -->
+<!-- SideNavBar -->
 <aside class="sidebar bg-surface-container/60 backdrop-blur-xl dark:bg-surface-container/60 text-primary dark:text-primary border-r border-outline-variant/30 dark:border-outline-variant/30 fixed left-0 top-16 h-[calc(100vh-64px)] flex flex-col z-40 w-64" id="sidebar">
 <div class="p-4 border-b border-outline-variant/20 flex flex-col gap-1">
 <div class="flex items-center gap-3 mb-2">
@@ -527,10 +483,9 @@
 </a>
 </nav>
 <div class="p-2 border-t border-outline-variant/20 mt-auto">
-<a class="flex items-center gap-3 text-on-surface-variant hover:bg-surface-variant/50 dark:hover:bg-surface-variant/50 hover:text-on-surface rounded-xl mx-2 my-1 px-3 py-2.5 font-label-md transition-all" href="https://vespera.streamlit.app" target="_blank">
-<span class="material-symbols-outlined">description</span>
-                Live Demo App
-</a>
+<div class="flex items-center justify-center p-2 text-xs text-on-surface-variant font-label-sm">
+    Vespera IDS Engine Active
+</div>
 </div>
 </aside>
 
@@ -713,7 +668,6 @@
 <div id="tier1-section">
 <h2 class="font-headline-lg text-headline-lg text-on-surface mb-6">Tier-1 (Stateless) Analysis</h2>
 <div class="flex flex-col gap-4">
-<!-- Status Card Container -->
 <div id="t1StatusContainer" class="status-benign p-5 rounded-xl flex items-center justify-between backdrop-blur-md shadow-lg transition-all">
 <div class="flex items-center gap-4">
 <span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">check_circle</span>
@@ -721,7 +675,6 @@
 </div>
 <span class="font-label-sm text-xs px-3 py-1 bg-primary/20 border border-primary/40 text-primary rounded-full">Low Risk</span>
 </div>
-<!-- Expandable Features -->
 <div class="glass-panel rounded-xl overflow-hidden">
 <button onclick="toggleExpandable('t1JsonExp')" class="w-full px-6 py-5 flex items-center justify-between text-left hover:bg-surface-variant/30 transition-colors group">
 <span class="font-label-md text-label-md text-on-surface">View Tier-1 Stateless Features</span>
@@ -757,7 +710,6 @@
 </main>
 
 <script>
-    // Run initial analysis on load
     window.addEventListener('DOMContentLoaded', () => {
         runAnalysis();
     });
