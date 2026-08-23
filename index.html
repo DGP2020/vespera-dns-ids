@@ -98,86 +98,66 @@
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
             transition: background 0.3s ease, border-color 0.3s ease;
         }
-        .status-benign {
-            background: rgba(77, 142, 255, 0.1); 
-            border: 1px solid rgba(77, 142, 255, 0.3);
-            color: #4d8eff; 
-        }
-        .status-alert {
-            background: rgba(255, 84, 81, 0.1); 
-            border: 1px solid rgba(255, 84, 81, 0.3);
-            color: #ff5451; 
-        }
-        .input-glow:focus {
-            box-shadow: 0 0 0 2px rgba(77, 142, 255, 0.3);
-            border-color: #4d8eff;
-        }
+        .status-benign { background: rgba(77,142,255,0.1); border: 1px solid rgba(77,142,255,0.3); color: #4d8eff; }
+        .status-alert  { background: rgba(255,84,81,0.1);  border: 1px solid rgba(255,84,81,0.3);  color: #ff5451; }
+        .input-glow:focus { box-shadow: 0 0 0 2px rgba(77,142,255,0.3); border-color: #4d8eff; }
 
-        /* Light Mode Styles Override */
-        html:not(.dark) body {
-            background-color: #f4f6fc;
-            color: #171b26;
-            background-image: 
-                radial-gradient(circle at 15% 50%, rgba(0, 90, 194, 0.06) 0%, transparent 50%),
-                radial-gradient(circle at 85% 30%, rgba(255, 84, 81, 0.06) 0%, transparent 50%);
-        }
-        html:not(.dark) .glass-panel {
-            background: rgba(255, 255, 255, 0.85);
-            border: 1px solid rgba(0, 0, 0, 0.08);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.06);
-        }
-        html:not(.dark) header, 
-        html:not(.dark) aside {
-            background-color: rgba(255, 255, 255, 0.9) !important;
-            border-color: rgba(0, 0, 0, 0.08) !important;
-            color: #171b26 !important;
-        }
-        html:not(.dark) .text-on-surface {
-            color: #171b26 !important;
-        }
-        html:not(.dark) .text-on-surface-variant {
-            color: #424754 !important;
-        }
-        html:not(.dark) input, 
-        html:not(.dark) select {
-            background-color: #ffffff !important;
-            color: #171b26 !important;
-            border-color: #c2c6d6 !important;
-        }
+        /* Tab System */
+        .tab-view { display: none; }
+        .tab-view.active { display: block; }
+        .nav-tab-active { color: #adc6ff !important; font-weight: 700 !important; border-bottom: 2px solid #adc6ff; padding-bottom: 4px; }
+        .sidebar-nav-active { background: rgba(77,142,255,0.2) !important; color: #adc6ff !important; border: 1px solid rgba(77,142,255,0.2) !important; }
+
+        /* Animations */
+        @keyframes pulse-ring { 0%{transform:scale(0.8);opacity:1;} 100%{transform:scale(2);opacity:0;} }
+        .live-pulse::before { content:''; position:absolute; inset:0; border-radius:9999px; background:currentColor; animation:pulse-ring 1.5s ease-out infinite; }
+        .live-pulse { position: relative; }
+        @keyframes slideInLog { from{opacity:0;transform:translateX(-10px);} to{opacity:1;transform:translateX(0);} }
+        .log-entry { animation: slideInLog 0.3s ease forwards; }
+        @keyframes growBar { from{width:0;} }
+        .score-bar { animation: growBar 0.6s ease forwards; }
+        @keyframes spin { to{transform:rotate(360deg);} }
+        .spinner { animation: spin 0.7s linear infinite; }
+        .threat-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .threat-card:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(0,0,0,0.3); }
+
+        /* Light Mode */
+        html:not(.dark) body { background-color:#f4f6fc; color:#171b26; }
+        html:not(.dark) .glass-panel { background:rgba(255,255,255,0.85); border:1px solid rgba(0,0,0,0.08); box-shadow:0 8px 32px 0 rgba(0,0,0,0.06); }
+        html:not(.dark) header, html:not(.dark) aside { background-color:rgba(255,255,255,0.9)!important; border-color:rgba(0,0,0,0.08)!important; color:#171b26!important; }
+        html:not(.dark) input, html:not(.dark) select { background-color:#ffffff!important; color:#171b26!important; border-color:#c2c6d6!important; }
         
-        /* Layout overrides */
-        .main-content-wrapper {
-            margin-left: 16rem;
-            padding-top: 4rem;
-            transition: margin-left 0.3s ease;
-        }
-        .sidebar-collapsed + .main-content-wrapper {
-            margin-left: 0;
-        }
-        .sidebar {
-            transition: transform 0.3s ease;
-        }
-        .sidebar-collapsed {
-            transform: translateX(-100%);
-        }
+        .main-content-wrapper { margin-left: 16rem; padding-top: 4rem; transition: margin-left 0.3s ease; }
+        .tab-content-page { margin-left: 16rem; padding: 2rem 3rem; padding-top: 5rem; }
+        .sidebar-collapsed + .main-content-wrapper { margin-left: 0; }
+        .sidebar { transition: transform 0.3s ease; }
+        .sidebar-collapsed { transform: translateX(-100%); }
         
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 10px;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
     </style>
 <script>
+        // ===== TAB STATE =====
+        const ALL_TABS = ['dashboard','threat-intel','logs','tier1','tier2'];
+        const appState = { totalAnalyzed:0, totalThreats:0, totalBenign:0, logs:[], logIdCounter:0, liveLogsActive:true };
+        const LOG_BENIGN=['google.com','cloudflare.com','github.com','microsoft.com','amazon.com','apple.com','netflix.com','twitter.com'];
+        const LOG_THREAT=['a1b2c3.tunnel.evil.com','rndx71m.c2.mal.ru','dGhpcw.exfil.xyz','payload-chunk.tunnel.net'];
+        const LOG_RECS=['A','CNAME','TXT','MX','AAAA'];
+
+        function switchTab(tab) {
+            ALL_TABS.forEach(t => {
+                const v=document.getElementById('tab-'+t);
+                const n=document.getElementById('nav-'+t);
+                const s=document.getElementById('side-'+t);
+                if(v) v.classList.toggle('active', t===tab);
+                if(n) n.classList.toggle('nav-tab-active', t===tab);
+                if(s) s.classList.toggle('sidebar-nav-active', t===tab);
+            });
+            window.scrollTo(0,0);
+        }
+
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const mainContent = document.getElementById('main-content');
@@ -400,16 +380,342 @@
             const input = document.getElementById('domainInput');
             const select = document.getElementById('recordTypeSelect');
             const checkbox = document.getElementById('simulateAttackWindow');
+            if (type === 'benign') { input.value='google.com'; select.value='A'; if(checkbox)checkbox.checked=false; }
+            else { input.value='a1b2c3d4e5f6g7h8.tunnel.evil.com'; select.value='TXT'; if(checkbox)checkbox.checked=true; }
+            runAnalysis();
+        }
 
-            if (type === 'benign') {
-                input.value = 'google.com';
-                select.value = 'A';
-                if (checkbox) checkbox.checked = false;
-            } else if (type === 'suspicious') {
-                input.value = 'a1b2c3d4e5f6g7h8.tunnel.evil.com';
-                select.value = 'TXT';
-                if (checkbox) checkbox.checked = true;
+        // ===== STATS =====
+        function updateStats() {
+            const t=document.getElementById('statTotal'); if(t) t.innerText=appState.totalAnalyzed;
+            const th=document.getElementById('statThreats'); if(th) th.innerText=appState.totalThreats;
+            const b=document.getElementById('statBenign'); if(b) b.innerText=appState.totalBenign;
+        }
+
+        // ===== LOGS =====
+        function addLog(t1feat, t2score) {
+            const entry={id:++appState.logIdCounter,ts:new Date().toLocaleTimeString(),domain:t1feat.query_name,record:t1feat.record_type,entropy:t1feat.shannon_entropy,t1Score:t1feat.t1Score,verdict:t1feat.t1Score>0.70?'threat':'benign'};
+            appState.logs.unshift(entry);
+            if(appState.logs.length>200) appState.logs.pop();
+            renderLogs(); updateLogStats();
+        }
+        function renderLogs() {
+            const tb=document.getElementById('log-table-body');
+            const em=document.getElementById('logEmptyState');
+            const search=(document.getElementById('logSearch')?.value||'').toLowerCase();
+            const vf=document.getElementById('logVerdictFilter')?.value||'all';
+            const tf2=document.getElementById('logTypeFilter')?.value||'all';
+            const filtered=appState.logs.filter(e=>{
+                if(search&&!e.domain.includes(search)) return false;
+                if(vf!=='all'&&e.verdict!==vf) return false;
+                if(tf2!=='all'&&e.record!==tf2) return false;
+                return true;
+            });
+            if(!tb) return;
+            if(filtered.length===0){ tb.innerHTML=''; if(em)em.classList.remove('hidden'); }
+            else {
+                if(em)em.classList.add('hidden');
+                tb.innerHTML=filtered.slice(0,100).map(e=>`<tr class="log-entry hover:bg-surface-variant/20 transition-colors cursor-pointer" onclick="analyzeLog('${e.domain}','${e.record}')">
+  <td class="py-2 px-3 text-on-surface-variant text-xs font-label-sm">${e.id}</td>
+  <td class="py-2 px-3 text-on-surface-variant text-xs font-label-sm">${e.ts}</td>
+  <td class="py-2 px-3 text-on-surface font-label-md text-xs">${e.domain}</td>
+  <td class="py-2 px-3"><span class="px-2 py-0.5 rounded-full text-[10px] font-label-sm bg-surface-container-high border border-outline-variant/30">${e.record}</span></td>
+  <td class="py-2 px-3 font-label-md text-xs ${e.entropy>3.8?'text-tertiary-container':'text-on-surface'}">${e.entropy.toFixed(3)}</td>
+  <td class="py-2 px-3 font-label-md text-xs ${e.t1Score>0.70?'text-tertiary-container':'text-secondary'}">${e.t1Score.toFixed(2)}</td>
+  <td class="py-2 px-3"><span class="px-2 py-0.5 rounded-full text-[10px] font-label-sm border ${e.verdict==='threat'?'bg-tertiary-container/20 border-tertiary-container/40 text-tertiary-container':'bg-primary/20 border-primary/30 text-primary'}">${e.verdict==='threat'?'🚨 Threat':'✅ Benign'}</span></td>
+  <td class="py-2 px-3"><button class="text-[10px] text-primary font-label-sm flex items-center gap-1 hover:underline"><span class="material-symbols-outlined text-xs">open_in_new</span>Analyze</button></td>
+</tr>`).join('');
             }
+            const cnt=document.getElementById('logCount'); if(cnt) cnt.innerText=`${filtered.length} entries`;
+        }
+        function analyzeLog(domain,record){
+            document.getElementById('domainInput').value=domain;
+            document.getElementById('recordTypeSelect').value=record;
+            switchTab('dashboard'); runAnalysis();
+        }
+        function updateLogStats(){
+            const t=document.getElementById('logStatTotal'); if(t) t.innerText=appState.logs.length;
+            const th=document.getElementById('logStatThreats'); if(th) th.innerText=appState.logs.filter(e=>e.verdict==='threat').length;
+            const b=document.getElementById('logStatBenign'); if(b) b.innerText=appState.logs.filter(e=>e.verdict==='benign').length;
+        }
+        function filterLogs(){ renderLogs(); }
+        function clearLogs(){ appState.logs=[]; appState.logIdCounter=0; renderLogs(); updateLogStats(); }
+        function exportLogs(){
+            const h=['ID','Timestamp','Domain','Record','Entropy','T1Score','Verdict'];
+            const rows=appState.logs.map(e=>[e.id,e.ts,e.domain,e.record,e.entropy,e.t1Score,e.verdict]);
+            dlFile('vespera_logs.csv',[h,...rows].map(r=>r.join(',')).join('\n'),'text/csv');
+        }
+        function toggleLiveLogs(){
+            appState.liveLogsActive=!appState.liveLogsActive;
+            const ic=document.getElementById('liveLogIcon'); const lb=document.getElementById('liveLogLabel');
+            if(ic) ic.innerText=appState.liveLogsActive?'pause':'play_arrow';
+            if(lb) lb.innerText=appState.liveLogsActive?'Pause Stream':'Resume Stream';
+        }
+        let liveInt=null;
+        function startLiveLogs(){
+            if(liveInt) return;
+            liveInt=setInterval(()=>{
+                if(!appState.liveLogsActive) return;
+                const isThreat=Math.random()<0.25;
+                const dom=(isThreat?LOG_THREAT:LOG_BENIGN)[Math.floor(Math.random()*(isThreat?LOG_THREAT.length:LOG_BENIGN.length))];
+                const rec=LOG_RECS[Math.floor(Math.random()*LOG_RECS.length)];
+                const cleanDomain=dom.replace(/\.$/,'').toLowerCase();
+                const parts=cleanDomain.split('.');
+                const topLabel=parts[0]||'';
+                const e2=calculateEntropy(topLabel);
+                const nar2=calculateNumericAlphaRatio(cleanDomain);
+                const fqdnLen=cleanDomain.length;
+                const subCount=Math.max(0,parts.length-2);
+                let t1s=0.05;
+                if(e2>3.8||fqdnLen>45||subCount>2||nar2>0.4) t1s=0.95;
+                else if(e2>3.0||fqdnLen>25||rec==='TXT'||rec==='CNAME') t1s=0.72;
+                const t1feat={query_name:cleanDomain,record_type:rec,fqdn_length:fqdnLen,subdomain_count:subCount,shannon_entropy:parseFloat(e2.toFixed(4)),numeric_alpha_ratio:parseFloat(nar2.toFixed(4)),t1Score:t1s};
+                addLog(t1feat, null);
+                appState.totalAnalyzed++; if(t1s>0.70) appState.totalThreats++; else appState.totalBenign++;
+                updateStats();
+                const rEl=document.getElementById('logStatRate'); if(rEl) rEl.innerText=(Math.random()*2+0.5).toFixed(1)+'/s';
+            },2500);
+        }
+
+        // ===== THREAT INTELLIGENCE =====
+        const IOC_SEED=[
+            {domain:'a1b2c3d4.tunnel.evil.com',type:'tunnel',severity:'critical',t1:0.95,t2:0.98,seen:'2026-08-23 18:01'},
+            {domain:'rnd7h2xp91mz.c2.mal.ru',type:'c2',severity:'critical',t1:0.95,t2:0.99,seen:'2026-08-23 17:48'},
+            {domain:'dGhpcyBpcyBh.exfil.xyz',type:'exfil',severity:'high',t1:0.72,t2:0.91,seen:'2026-08-23 16:30'},
+            {domain:'payload-chunk.v2.tunnel.net',type:'tunnel',severity:'critical',t1:0.95,t2:0.97,seen:'2026-08-23 15:22'},
+            {domain:'zxcv9k2j.out.bad.io',type:'malware',severity:'high',t1:0.72,t2:0.88,seen:'2026-08-23 14:10'},
+            {domain:'malware-drop.cdn.suspicious.co',type:'malware',severity:'high',t1:0.72,t2:0.85,seen:'2026-08-23 12:55'},
+            {domain:'b64encode.data.exfil-net.com',type:'exfil',severity:'critical',t1:0.95,t2:0.99,seen:'2026-08-23 11:40'},
+            {domain:'cmd.control.botnet-hub.ru',type:'c2',severity:'critical',t1:0.95,t2:0.98,seen:'2026-08-23 10:15'},
+            {domain:'update.legit-looking.biz',type:'malware',severity:'medium',t1:0.72,t2:0.76,seen:'2026-08-23 09:01'},
+        ];
+        let displayedIOCs=[...IOC_SEED];
+        const sevCls={critical:'bg-tertiary-container/30 border-tertiary-container text-tertiary-container',high:'bg-orange-500/20 border-orange-500/40 text-orange-400',medium:'bg-yellow-500/20 border-yellow-500/40 text-yellow-400'};
+        const typeLbl={tunnel:'🔵 DNS Tunnel',exfil:'🟠 Data Exfil',c2:'🔴 C2 Comm',malware:'🟣 Malware Drop'};
+        function renderIOCTable(){
+            const tb=document.getElementById('ioc-table-body'); if(!tb) return;
+            const tf=document.getElementById('iocTypeFilter')?.value||'all';
+            const sf=document.getElementById('iocSeverityFilter')?.value||'all';
+            const filtered=displayedIOCs.filter(r=>(tf==='all'||r.type===tf)&&(sf==='all'||r.severity===sf));
+            tb.innerHTML=filtered.map(r=>`<tr class="hover:bg-surface-variant/20 transition-colors">
+  <td class="py-2.5 px-4 font-label-md text-xs text-on-surface">${r.domain}</td>
+  <td class="py-2.5 px-4 text-on-surface-variant text-[11px]">${typeLbl[r.type]||r.type}</td>
+  <td class="py-2.5 px-4"><span class="px-2 py-0.5 rounded-full text-[10px] font-label-sm border ${sevCls[r.severity]||''}">${r.severity.toUpperCase()}</span></td>
+  <td class="py-2.5 px-4 font-label-md text-xs text-tertiary-container">${r.t1.toFixed(2)}</td>
+  <td class="py-2.5 px-4 font-label-md text-xs text-tertiary-container">${r.t2.toFixed(2)}</td>
+  <td class="py-2.5 px-4 text-on-surface-variant text-[11px]">${r.seen}</td>
+  <td class="py-2.5 px-4"><button onclick="iocInvestigateFromTable('${r.domain}')" class="text-[10px] text-primary hover:underline font-label-sm flex items-center gap-1"><span class="material-symbols-outlined text-xs">manage_search</span>Investigate</button></td>
+</tr>`).join('');
+            const cnt=document.getElementById('ioc-table-count'); if(cnt) cnt.innerText=`Showing ${filtered.length} of ${displayedIOCs.length} IOCs`;
+        }
+        function filterIOCTable(){ renderIOCTable(); }
+        function refreshThreatFeed(){
+            const btn=document.getElementById('refreshThreatBtn');
+            if(btn) btn.innerHTML='<span class="material-symbols-outlined text-sm spinner">autorenew</span> Refreshing...';
+            setTimeout(()=>{
+                const ne={domain:`rnd${Math.random().toString(36).slice(2,8)}.fresh-ioc.net`,type:['tunnel','exfil','c2','malware'][Math.floor(Math.random()*4)],severity:['critical','high','medium'][Math.floor(Math.random()*3)],t1:parseFloat((0.72+Math.random()*0.23).toFixed(2)),t2:parseFloat((0.78+Math.random()*0.21).toFixed(2)),seen:new Date().toLocaleString()};
+                displayedIOCs.unshift(ne);
+                const ic=document.getElementById('ioc-count'); if(ic) ic.innerText=parseInt(ic.innerText.replace(/,/g,''))+1;
+                renderIOCTable();
+                if(btn) btn.innerHTML='<span class="material-symbols-outlined text-sm">refresh</span> Refresh Feed';
+            },1200);
+        }
+        function iocInvestigateFromTable(domain){ document.getElementById('iocSearchInput').value=domain; investigateIOC(); }
+        function investigateIOC(){
+            const domain=(document.getElementById('iocSearchInput')?.value||'').trim();
+            const res=document.getElementById('iocInvestigateResult');
+            if(!domain||!res) return;
+            res.classList.remove('hidden');
+            res.innerHTML='<div class="text-on-surface-variant font-label-sm text-xs flex items-center gap-2"><span class="material-symbols-outlined text-sm spinner">autorenew</span>Investigating '+domain+'...</div>';
+            setTimeout(()=>{
+                const cleanDomain=domain.replace(/\.$/,'').toLowerCase();
+                const parts=cleanDomain.split('.');
+                const e3=calculateEntropy(parts[0]||'');
+                const nar3=calculateNumericAlphaRatio(cleanDomain);
+                const fqdnLen=cleanDomain.length;
+                const subCount=Math.max(0,parts.length-2);
+                let t1s=0.05;
+                if(e3>3.8||fqdnLen>45||subCount>2||nar3>0.4) t1s=0.95;
+                else if(e3>3.0||fqdnLen>25) t1s=0.72;
+                const threat=t1s>0.70;
+                const inDB=displayedIOCs.some(i=>i.domain===domain);
+                let t2s=(t1s>0.70)?0.98:0.04;
+                res.innerHTML=`<div class="flex flex-col gap-3">
+  <div class="${threat?'status-alert':'status-benign'} p-4 rounded-xl flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">${threat?'warning':'check_circle'}</span>
+      <div><div class="font-semibold font-label-md text-sm">${domain}</div><div class="text-xs mt-0.5 opacity-80 font-label-sm">${threat?'⚠️ Malicious / suspicious':'✅ No threat indicators'}</div></div>
+    </div>
+    <div class="text-right"><div class="text-lg font-bold font-label-md">T1: ${t1s.toFixed(2)} | T2: ${t2s.toFixed(2)}</div><div class="text-xs font-label-sm ${inDB?'text-tertiary-container':'text-on-surface-variant'}">${inDB?'In IOC database':'Not in IOC database'}</div></div>
+  </div>
+  <div class="grid grid-cols-3 gap-3">
+    <div class="glass-panel rounded-xl p-3 text-center"><div class="font-bold font-label-md text-sm ${e3>3.8?'text-tertiary-container':'text-secondary'}">${e3.toFixed(3)}</div><div class="text-[10px] font-label-sm text-on-surface-variant mt-1">Entropy</div></div>
+    <div class="glass-panel rounded-xl p-3 text-center"><div class="font-bold font-label-md text-sm text-on-surface">${fqdnLen}</div><div class="text-[10px] font-label-sm text-on-surface-variant mt-1">FQDN Len</div></div>
+    <div class="glass-panel rounded-xl p-3 text-center"><div class="font-bold font-label-md text-sm text-on-surface">${subCount}</div><div class="text-[10px] font-label-sm text-on-surface-variant mt-1">Subdomains</div></div>
+  </div>
+  <div class="flex gap-3 flex-wrap">
+    <button onclick="document.getElementById('domainInput').value='${domain}';switchTab('dashboard');runAnalysis();" class="flex-1 px-4 py-2 rounded-full bg-primary/20 border border-primary/30 text-primary text-xs font-label-md hover:bg-primary/30">Run Full Simulation</button>
+    <button onclick="switchTab('tier2');" class="flex-1 px-4 py-2 rounded-full bg-tertiary-container/20 border border-tertiary-container/30 text-tertiary-container text-xs font-label-md hover:bg-tertiary-container/30">Tier-2 Deep Dive</button>
+  </div>
+</div>`;
+            },900);
+        }
+        function exportIOCs(){
+            const h=['Domain','Type','Severity','T1','T2','FirstSeen'];
+            const rows=displayedIOCs.map(i=>[i.domain,i.type,i.severity,i.t1,i.t2,i.seen]);
+            dlFile('vespera_iocs.csv',[h,...rows].map(r=>r.join(',')).join('\n'),'text/csv');
+        }
+        function renderAttackBreakdown(){
+            const data=[{l:'DNS Tunneling',n:112,c:'bg-tertiary-container',p:45},{l:'C2 Communication',n:68,c:'bg-orange-400',p:28},{l:'Data Exfiltration',n:42,c:'bg-yellow-400',p:17},{l:'Malware Dropper',n:25,c:'bg-purple-400',p:10}];
+            const el=document.getElementById('attackBreakdown'); if(!el) return;
+            el.innerHTML=data.map(d=>`<div><div class="flex justify-between text-xs font-label-sm mb-1"><span class="text-on-surface">${d.l}</span><span class="text-on-surface-variant">${d.n}</span></div><div class="w-full h-2 bg-surface-container rounded-full overflow-hidden"><div class="h-full ${d.c} rounded-full score-bar" style="width:${d.p}%"></div></div></div>`).join('');
+        }
+        function renderRegionList(){
+            const data=[{c:'🇷🇺 Russia',n:89,p:36},{c:'🇨🇳 China',n:67,p:27},{c:'🇰🇵 North Korea',n:34,p:14},{c:'🇮🇷 Iran',n:28,p:11},{c:'🌐 Unknown',n:29,p:12}];
+            const el=document.getElementById('regionList'); if(!el) return;
+            el.innerHTML=data.map(r=>`<div class="flex items-center justify-between text-xs font-label-sm"><span class="text-on-surface">${r.c}</span><div class="flex items-center gap-3"><div class="w-20 h-1.5 bg-surface-container rounded-full overflow-hidden"><div class="h-full bg-tertiary-container/70 rounded-full score-bar" style="width:${r.p}%"></div></div><span class="text-on-surface-variant w-6 text-right">${r.n}</span></div></div>`).join('');
+        }
+
+        // ===== TIER-1 STANDALONE =====
+        const BATCH_DOMAINS=[{domain:'google.com',record:'A',expected:'Benign'},{domain:'cloudflare.com',record:'A',expected:'Benign'},{domain:'a1b2c3d4e5.tunnel.evil.com',record:'TXT',expected:'Threat'},{domain:'dGhpcyBpcw.exfil.xyz',record:'CNAME',expected:'Threat'},{domain:'vpn.corporate-network.internal',record:'A',expected:'Benign'},{domain:'rnd7h2xp91mzqavl.c2.malware.ru',record:'MX',expected:'Threat'},{domain:'microsoft.com',record:'AAAA',expected:'Benign'},{domain:'github.com',record:'A',expected:'Benign'}];
+        function renderBatchTable(){
+            const tb=document.getElementById('batchTable'); if(!tb) return;
+            tb.innerHTML=BATCH_DOMAINS.map(r=>{
+                const cleanDomain=r.domain.replace(/\.$/,'').toLowerCase();
+                const parts=cleanDomain.split('.');
+                const e4=calculateEntropy(parts[0]||'');
+                const nar4=calculateNumericAlphaRatio(cleanDomain);
+                const fqdnLen=cleanDomain.length;
+                const subCount=Math.max(0,parts.length-2);
+                let t1s=0.05;
+                if(e4>3.8||fqdnLen>45||subCount>2||nar4>0.4) t1s=0.95;
+                else if(e4>3.0||fqdnLen>25||r.record==='TXT'||r.record==='CNAME') t1s=0.72;
+                const threat=t1s>0.70;
+                const correct=(threat&&r.expected==='Threat')||(!threat&&r.expected==='Benign');
+                return `<tr class="hover:bg-surface-variant/20 cursor-pointer transition-colors" onclick="document.getElementById('t1DomainInput').value='${r.domain}';document.getElementById('t1RecordType').value='${r.record}';runT1Analysis();">
+  <td class="py-3 px-4 font-label-md text-xs text-on-surface">${r.domain}</td>
+  <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-[10px] font-label-sm ${r.expected==='Threat'?'bg-tertiary-container/20 text-tertiary-container border border-tertiary-container/30':'bg-primary/20 text-primary border border-primary/30'}">${r.expected}</span></td>
+  <td class="py-3 px-4 text-on-surface-variant text-xs">${r.record}</td>
+  <td class="py-3 px-4 font-label-md text-xs ${threat?'text-tertiary-container':'text-secondary'}">${t1s.toFixed(2)}</td>
+  <td class="py-3 px-4"><span class="flex items-center gap-1 ${correct?'text-secondary':'text-tertiary-container'}"><span class="material-symbols-outlined text-sm" style="font-variation-settings:'FILL' 1;">${correct?'check_circle':'cancel'}</span>${correct?'Correct':'Mismatch'}</span></td>
+</tr>`;
+            }).join('');
+        }
+        function runT1Analysis(){
+            const domain=(document.getElementById('t1DomainInput')?.value||'').trim();
+            const record=document.getElementById('t1RecordType')?.value||'A';
+            if(!domain){ alert('Please enter a domain.'); return; }
+            const cleanDomain=domain.replace(/\.$/,'').toLowerCase();
+            const parts=cleanDomain.split('.');
+            const e5=calculateEntropy(parts[0]||'');
+            const nar5=calculateNumericAlphaRatio(cleanDomain);
+            const fqdnLen=cleanDomain.length;
+            const subCount=Math.max(0,parts.length-2);
+            let t1s=0.05;
+            if(e5>3.8||fqdnLen>45||subCount>2||nar5>0.4) t1s=0.95;
+            else if(e5>3.0||fqdnLen>25||record==='TXT'||record==='CNAME') t1s=0.72;
+            const threat=t1s>0.70;
+            const feats={query_name:cleanDomain,record_type:record,fqdn_length:fqdnLen,subdomain_count:subCount,shannon_entropy:parseFloat(e5.toFixed(4)),numeric_alpha_ratio:parseFloat(nar5.toFixed(4))};
+            appState.totalAnalyzed++; if(t1s>0.70) appState.totalThreats++; else appState.totalBenign++; updateStats();
+            addLog({...feats,t1Score:t1s},null);
+            const c=document.getElementById('t1DetailResult'); if(!c) return;
+            const indicators=[
+                {l:'Shannon Entropy',v:e5,thr:3.8,hi:'Encoded/random label',lo:'Human-readable label'},
+                {l:'FQDN Length',v:fqdnLen,thr:45,hi:'Abnormally long domain',lo:'Normal length'},
+                {l:'Subdomain Count',v:subCount,thr:2,hi:'Many nesting levels',lo:'Normal depth'},
+                {l:'Numeric-Alpha Ratio',v:nar5,thr:0.4,hi:'Base32/hex encoding detected',lo:'Normal ratio'},
+            ];
+            c.innerHTML=`<div class="flex flex-col gap-4">
+  <div class="${threat?'status-alert':'status-benign'} p-5 rounded-xl flex items-center justify-between backdrop-blur-md shadow-lg">
+    <div class="flex items-center gap-4"><span class="material-symbols-outlined text-3xl" style="font-variation-settings:'FILL' 1;">${threat?'warning':'check_circle'}</span>
+    <div><div class="font-headline-md font-semibold">${threat?'🚨 SUSPICIOUS':'✅ BENIGN'}</div><div class="text-xs mt-1 font-label-sm opacity-80">${cleanDomain}</div></div></div>
+    <div class="text-right"><div class="text-2xl font-bold font-label-md">${t1s.toFixed(2)}</div><div class="text-xs font-label-sm opacity-70">Risk Score</div></div>
+  </div>
+  <div class="glass-panel rounded-xl p-5">
+    <div class="flex justify-between text-xs font-label-sm mb-2"><span class="text-on-surface-variant">Threat Probability</span><span class="${threat?'text-tertiary-container':'text-secondary'}">${(t1s*100).toFixed(1)}%</span></div>
+    <div class="w-full h-3 bg-surface-container rounded-full overflow-hidden"><div class="h-full ${threat?'bg-tertiary-container':'bg-secondary'} rounded-full score-bar" style="width:${(t1s*100).toFixed(1)}%"></div></div>
+  </div>
+  <div class="glass-panel rounded-xl p-5">
+    <h3 class="font-headline-md text-sm font-semibold text-on-surface mb-4">Extracted Features</h3>
+    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">${Object.entries(feats).map(([k,v])=>`<div class="bg-surface-container/60 rounded-xl p-3"><div class="text-[10px] font-label-sm text-on-surface-variant uppercase tracking-wide mb-1">${k.replace(/_/g,' ')}</div><div class="text-sm font-bold font-label-md text-on-surface">${typeof v==='number'?v.toFixed(4).replace(/\.?0+$/,''):v}</div></div>`).join('')}</div>
+  </div>
+  <div class="glass-panel rounded-xl p-5">
+    <h3 class="font-headline-md text-sm font-semibold text-on-surface mb-4">Risk Indicators</h3>
+    <div class="flex flex-col gap-2">${indicators.map(ind=>{const hi=ind.v>ind.thr;return`<div class="flex items-center gap-3 p-3 rounded-lg ${hi?'bg-tertiary-container/10 border border-tertiary-container/20':'bg-primary/5 border border-outline-variant/20'}"><span class="material-symbols-outlined text-sm ${hi?'text-tertiary-container':'text-secondary'}" style="font-variation-settings:'FILL' 1;">${hi?'warning':'check_circle'}</span><div><div class="text-xs font-semibold font-label-sm ${hi?'text-tertiary-container':'text-on-surface'}">${ind.l}: ${typeof ind.v==='number'?ind.v.toFixed(3):ind.v}</div><div class="text-[10px] font-label-sm text-on-surface-variant">${hi?ind.hi:ind.lo}</div></div></div>`;}).join('')}</div>
+  </div>
+</div>`;
+        }
+
+        // ===== TIER-2 STANDALONE =====
+        function runT2Analysis(){
+            const domain=(document.getElementById('t2DomainInput')?.value||'').trim();
+            const record=document.getElementById('t2RecordType')?.value||'A';
+            const windowMode=document.getElementById('t2WindowMode')?.value||'normal';
+            if(!domain){ alert('Please enter a domain.'); return; }
+            const cleanDomain=domain.replace(/\.$/,'').toLowerCase();
+            const parts=cleanDomain.split('.');
+            const e6=calculateEntropy(parts[0]||'');
+            const nar6=calculateNumericAlphaRatio(cleanDomain);
+            const fqdnLen=cleanDomain.length;
+            const subCount=Math.max(0,parts.length-2);
+            let t1s=0.05;
+            if(e6>3.8||fqdnLen>45||subCount>2||nar6>0.4) t1s=0.95;
+            else if(e6>3.0||fqdnLen>25||record==='TXT'||record==='CNAME') t1s=0.72;
+            const att=windowMode==='anomalous'||windowMode==='burst';
+            const burst=windowMode==='burst';
+            const payloadVar=att?(burst?62.5:45.2):(t1s>0.70?28.4:1.2);
+            const recHet=att?0.9:(['TXT','CNAME'].includes(record)?0.6:0.0);
+            const uniqIps=att?(burst?8.0:5.0):(t1s>0.70?3.0:1.0);
+            const ngramScore=parseFloat((e6*2.1).toFixed(4));
+            const t2Score=(t1s>0.70||att)?(burst?0.999:0.98):0.04;
+            const threat=t2Score>=0.50;
+            appState.totalAnalyzed++; if(t2Score>=0.50) appState.totalThreats++; else appState.totalBenign++; updateStats();
+            addLog({query_name:cleanDomain,record_type:record,fqdn_length:fqdnLen,subdomain_count:subCount,shannon_entropy:parseFloat(e6.toFixed(4)),numeric_alpha_ratio:parseFloat(nar6.toFixed(4)),t1Score:t1s},t2Score);
+            const shaps=[
+                {n:'payload_variance',raw:payloadVar,shap:payloadVar*0.08},
+                {n:'shannon_entropy',raw:e6,shap:e6*0.42},
+                {n:'ngram_transition_score',raw:ngramScore,shap:ngramScore*0.15},
+                {n:'record_type_heterogeneity',raw:recHet,shap:recHet*0.25},
+                {n:'unique_ip_concurrency',raw:uniqIps,shap:uniqIps*0.12},
+            ];
+            const maxS=Math.max(...shaps.map(s=>Math.abs(s.shap)));
+            const c=document.getElementById('t2DetailResult'); if(!c) return;
+            c.innerHTML=`<div class="flex flex-col gap-4">
+  <div class="${threat?'status-alert':'status-benign'} p-5 rounded-xl flex items-center justify-between backdrop-blur-md shadow-lg">
+    <div class="flex items-center gap-4"><span class="material-symbols-outlined text-3xl" style="font-variation-settings:'FILL' 1;">${threat?'error':'verified'}</span>
+    <div><div class="font-headline-md font-semibold">${threat?'💥 VERIFIED CRITICAL THREAT':'✅ BENIGN / FALSE POSITIVE CLEARED'}</div><div class="text-xs mt-1 font-label-sm opacity-80">${cleanDomain} | Window: ${windowMode}</div></div></div>
+    <div class="text-right"><div class="text-2xl font-bold font-label-md">${t2Score.toFixed(3)}</div><div class="text-xs font-label-sm opacity-70">T2 Score</div></div>
+  </div>
+  <div class="glass-panel rounded-xl p-5">
+    <div class="flex justify-between text-xs font-label-sm mb-2"><span class="text-on-surface-variant">Threat Confidence (Tier-2)</span><span class="${threat?'text-tertiary-container':'text-secondary'}">${(t2Score*100).toFixed(1)}%</span></div>
+    <div class="w-full h-3 bg-surface-container rounded-full overflow-hidden"><div class="h-full ${threat?'bg-gradient-to-r from-tertiary-container/70 to-tertiary-container':'bg-secondary'} rounded-full score-bar" style="width:${(t2Score*100).toFixed(1)}%"></div></div>
+  </div>
+  <div class="glass-panel rounded-xl p-5">
+    <h3 class="font-headline-md text-sm font-semibold text-on-surface mb-4">🧠 TreeSHAP Feature Attributions</h3>
+    <div class="overflow-x-auto"><table class="w-full text-left font-label-md text-xs">
+      <thead><tr class="border-b border-outline-variant/30 text-on-surface-variant"><th class="py-2 px-3">Feature</th><th class="py-2 px-3">Raw Value</th><th class="py-2 px-3">SHAP</th><th class="py-2 px-3">Impact Bar</th><th class="py-2 px-3">Direction</th></tr></thead>
+      <tbody class="divide-y divide-outline-variant/20">${shaps.map(s=>{const pos=s.shap>=0;const bw=maxS>0?Math.abs(s.shap/maxS*100):0;return`<tr><td class="py-2.5 px-3 font-semibold ${pos?'text-tertiary-container':'text-primary'}">${s.n}</td><td class="py-2.5 px-3 text-on-surface-variant">${typeof s.raw==='number'?s.raw.toFixed(3):s.raw}</td><td class="py-2.5 px-3 font-bold ${pos?'text-tertiary-container':'text-primary'}">${pos?'+':''}${s.shap.toFixed(3)}</td><td class="py-2.5 px-3 w-28"><div class="h-2 bg-surface-container rounded-full overflow-hidden"><div class="h-full ${pos?'bg-tertiary-container':'bg-primary'} rounded-full score-bar" style="width:${bw.toFixed(1)}%"></div></div></td><td class="py-2.5 px-3 ${pos?'text-tertiary-container':'text-primary'} text-[10px] font-label-sm">${pos?'▲ Risk':'▼ Reduces'}</td></tr>`;}).join('')}</tbody>
+    </table></div>
+  </div>
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+    ${[{l:'Payload Variance',v:payloadVar,u:'bytes²'},{l:'Record Heterogeneity',v:recHet,u:''},{l:'N-gram Score',v:ngramScore,u:''},{l:'Unique IPs',v:uniqIps,u:''}].map(f=>`<div class="glass-panel rounded-xl p-4 text-center"><div class="text-lg font-bold ${threat?'text-tertiary-container':'text-secondary'} font-label-md">${typeof f.v==='number'?f.v.toFixed(2):f.v}${f.u}</div><div class="text-[10px] font-label-sm text-on-surface-variant mt-1">${f.l}</div></div>`).join('')}
+  </div>
+</div>`;
+        }
+
+        // ===== UTIL =====
+        function dlFile(name,content,type){
+            const a=document.createElement('a');
+            a.href=URL.createObjectURL(new Blob([content],{type}));
+            a.download=name; a.click(); URL.revokeObjectURL(a.href);
+        }
+
+        function setPreset(type) {
+            const input = document.getElementById('domainInput');
+            const select = document.getElementById('recordTypeSelect');
+            const checkbox = document.getElementById('simulateAttackWindow');
+            if (type === 'benign') { input.value='google.com'; select.value='A'; if(checkbox)checkbox.checked=false; }
+            else { input.value='a1b2c3d4e5f6g7h8.tunnel.evil.com'; select.value='TXT'; if(checkbox)checkbox.checked=true; }
             runAnalysis();
         }
     </script>
@@ -424,9 +730,11 @@
 <span class="text-headline-md font-headline-md font-bold text-on-surface dark:text-on-surface">Vespera DNS IDS</span>
 </div>
 <nav class="hidden md:flex items-center gap-6">
-<a class="text-primary font-bold border-b-2 border-primary pb-1" href="#">Dashboard</a>
-<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200" href="#threat-history">Threat Intelligence</a>
-<a class="text-on-surface-variant font-medium hover:text-primary transition-colors duration-200" href="#tier1-section">Logs</a>
+<a id="nav-dashboard" class="nav-tab text-on-surface-variant font-medium hover:text-primary transition-colors cursor-pointer" onclick="switchTab('dashboard')">Dashboard</a>
+<a id="nav-threat-intel" class="nav-tab text-on-surface-variant font-medium hover:text-primary transition-colors cursor-pointer" onclick="switchTab('threat-intel')">Threat Intelligence</a>
+<a id="nav-logs" class="nav-tab text-on-surface-variant font-medium hover:text-primary transition-colors cursor-pointer" onclick="switchTab('logs')">Logs</a>
+<a id="nav-tier1" class="nav-tab text-on-surface-variant font-medium hover:text-primary transition-colors cursor-pointer" onclick="switchTab('tier1')">Tier-1 Analysis</a>
+<a id="nav-tier2" class="nav-tab text-on-surface-variant font-medium hover:text-primary transition-colors cursor-pointer" onclick="switchTab('tier2')">Tier-2 Deep Dive</a>
 </nav>
 <div class="flex items-center gap-4">
 <!-- Light / Dark Mode Toggle Button -->
@@ -465,22 +773,11 @@
 </button>
 </div>
 <nav class="flex-1 overflow-y-auto py-2 px-2">
-<a class="flex items-center gap-3 bg-primary/20 dark:bg-primary/20 text-primary dark:text-primary rounded-xl mx-2 my-1 px-3 py-2.5 font-label-md transition-all border border-primary/20" href="#">
-<span class="material-symbols-outlined">radar</span>
-                Simulation
-</a>
-<a class="flex items-center gap-3 text-on-surface-variant hover:bg-surface-variant/50 dark:hover:bg-surface-variant/50 hover:text-on-surface rounded-xl mx-2 my-1 px-3 py-2.5 font-label-md transition-all" href="#threat-history">
-<span class="material-symbols-outlined">analytics</span>
-                Threat History
-</a>
-<a class="flex items-center gap-3 text-on-surface-variant hover:bg-surface-variant/50 dark:hover:bg-surface-variant/50 hover:text-on-surface rounded-xl mx-2 my-1 px-3 py-2.5 font-label-md transition-all" href="#tier1-section">
-<span class="material-symbols-outlined">shield</span>
-                Tier-1 Analysis
-</a>
-<a class="flex items-center gap-3 text-on-surface-variant hover:bg-surface-variant/50 dark:hover:bg-surface-variant/50 hover:text-on-surface rounded-xl mx-2 my-1 px-3 py-2.5 font-label-md transition-all" href="#tier2-section">
-<span class="material-symbols-outlined">security</span>
-                Tier-2 Deep Dive
-</a>
+<a id="side-dashboard" class="sidebar-nav flex items-center gap-3 rounded-xl mx-2 my-1 px-3 py-2.5 font-label-md transition-all cursor-pointer text-on-surface-variant hover:bg-surface-variant/50 hover:text-on-surface" onclick="switchTab('dashboard')"><span class="material-symbols-outlined">radar</span> Simulation</a>
+<a id="side-threat-intel" class="sidebar-nav flex items-center gap-3 rounded-xl mx-2 my-1 px-3 py-2.5 font-label-md transition-all cursor-pointer text-on-surface-variant hover:bg-surface-variant/50 hover:text-on-surface" onclick="switchTab('threat-intel')"><span class="material-symbols-outlined">analytics</span> Threat Intelligence</a>
+<a id="side-logs" class="sidebar-nav flex items-center gap-3 rounded-xl mx-2 my-1 px-3 py-2.5 font-label-md transition-all cursor-pointer text-on-surface-variant hover:bg-surface-variant/50 hover:text-on-surface" onclick="switchTab('logs')"><span class="material-symbols-outlined">list_alt</span> Logs</a>
+<a id="side-tier1" class="sidebar-nav flex items-center gap-3 rounded-xl mx-2 my-1 px-3 py-2.5 font-label-md transition-all cursor-pointer text-on-surface-variant hover:bg-surface-variant/50 hover:text-on-surface" onclick="switchTab('tier1')"><span class="material-symbols-outlined">shield</span> Tier-1 Analysis</a>
+<a id="side-tier2" class="sidebar-nav flex items-center gap-3 rounded-xl mx-2 my-1 px-3 py-2.5 font-label-md transition-all cursor-pointer text-on-surface-variant hover:bg-surface-variant/50 hover:text-on-surface" onclick="switchTab('tier2')"><span class="material-symbols-outlined">security</span> Tier-2 Deep Dive</a>
 </nav>
 <div class="p-2 border-t border-outline-variant/20 mt-auto">
 <div class="flex items-center justify-center p-2 text-xs text-on-surface-variant font-label-sm">
@@ -491,6 +788,9 @@
 
 <!-- Main Content Area -->
 <main class="main-content-wrapper flex-1 p-8 lg:p-12 max-w-[1440px] mx-auto w-full" id="main-content">
+
+<!-- ===== DASHBOARD TAB ===== -->
+<div id="tab-dashboard" class="tab-view">
 <!-- Header Section -->
 <div class="mb-12">
 <div class="flex items-center gap-4 mb-4">
@@ -707,11 +1007,171 @@
 </div>
 </div>
 </div>
+<!-- end tab-dashboard -->
 </main>
 
+<!-- ===== THREAT INTELLIGENCE TAB ===== -->
+<div id="tab-threat-intel" class="tab-view" style="display:none;margin-left:16rem;padding-top:4rem;padding:2rem 3rem;padding-top:5rem;"></div>
+
+<!-- ===== LOGS TAB ===== -->
+<div id="tab-logs" class="tab-view" style="display:none;margin-left:16rem;padding-top:4rem;padding:2rem 3rem;padding-top:5rem;"></div>
+
+<!-- ===== TIER-1 TAB ===== -->
+<div id="tab-tier1" class="tab-view" style="display:none;margin-left:16rem;padding-top:4rem;padding:2rem 3rem;padding-top:5rem;"></div>
+
+<!-- ===== TIER-2 TAB ===== -->
+<div id="tab-tier2" class="tab-view" style="display:none;margin-left:16rem;padding-top:4rem;padding:2rem 3rem;padding-top:5rem;"></div>
+
 <script>
+    // ===== BUILD TAB HTML =====
+    function buildThreatIntelTab() {
+        return `<div class="mb-8"><div class="flex items-center justify-between mb-2">
+<h1 class="font-display-lg text-on-surface flex items-center gap-3">Threat Intelligence <span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings:'FILL' 1;">travel_explore</span></h1>
+<div class="flex items-center gap-3">
+<button id="refreshThreatBtn" onclick="refreshThreatFeed()" class="flex items-center gap-2 px-4 py-2 rounded-full bg-primary/20 border border-primary/30 text-primary text-xs font-label-md hover:bg-primary/30 transition-all"><span class="material-symbols-outlined text-sm">refresh</span> Refresh Feed</button>
+<div class="text-on-surface-variant font-label-sm text-xs bg-surface-container-high/50 px-3 py-1 rounded-full border border-outline-variant/30 flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-secondary inline-block relative live-pulse"></span> Feed Active</div>
+</div></div>
+<p class="text-on-surface-variant font-body-lg">Live threat indicators, known malicious domains, and global DNS attack patterns.</p></div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+<div class="glass-panel rounded-xl p-5 threat-card border-l-4 border-tertiary-container"><div class="flex items-center justify-between mb-3"><span class="text-on-surface-variant text-xs font-label-sm uppercase tracking-wider">Active IOCs</span><span class="material-symbols-outlined text-tertiary-container" style="font-variation-settings:'FILL' 1;">bug_report</span></div><div class="text-3xl font-bold text-tertiary-container font-label-md" id="ioc-count">247</div><div class="text-xs text-on-surface-variant mt-1 font-label-sm">↑ 12 new today</div></div>
+<div class="glass-panel rounded-xl p-5 threat-card border-l-4 border-primary"><div class="flex items-center justify-between mb-3"><span class="text-on-surface-variant text-xs font-label-sm uppercase tracking-wider">Blocked Domains</span><span class="material-symbols-outlined text-primary" style="font-variation-settings:'FILL' 1;">block</span></div><div class="text-3xl font-bold text-primary font-label-md">1,842</div><div class="text-xs text-on-surface-variant mt-1 font-label-sm">↑ 58 new today</div></div>
+<div class="glass-panel rounded-xl p-5 threat-card border-l-4 border-secondary"><div class="flex items-center justify-between mb-3"><span class="text-on-surface-variant text-xs font-label-sm uppercase tracking-wider">Detection Rate</span><span class="material-symbols-outlined text-secondary" style="font-variation-settings:'FILL' 1;">verified</span></div><div class="text-3xl font-bold text-secondary font-label-md">99.1%</div><div class="text-xs text-on-surface-variant mt-1 font-label-sm">Last 30 days</div></div>
+<div class="glass-panel rounded-xl p-5 threat-card border-l-4 border-outline"><div class="flex items-center justify-between mb-3"><span class="text-on-surface-variant text-xs font-label-sm uppercase tracking-wider">False Positive Rate</span><span class="material-symbols-outlined text-on-surface-variant" style="font-variation-settings:'FILL' 1;">target</span></div><div class="text-3xl font-bold text-on-surface font-label-md">0.3%</div><div class="text-xs text-on-surface-variant mt-1 font-label-sm">Industry leading</div></div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8">
+<div class="lg:col-span-8 glass-panel rounded-xl overflow-hidden">
+<div class="px-6 py-4 border-b border-outline-variant/20 flex items-center justify-between"><h2 class="font-headline-md font-semibold text-on-surface">🔴 Live IOC Feed</h2><div class="flex items-center gap-3">
+<select id="iocTypeFilter" onchange="filterIOCTable()" class="bg-surface-container text-on-surface text-xs border border-outline-variant/40 rounded-lg px-3 py-1.5 font-label-sm focus:outline-none"><option value="all">All Types</option><option value="tunnel">DNS Tunnel</option><option value="exfil">Data Exfil</option><option value="c2">C2 Comm</option><option value="malware">Malware Drop</option></select>
+<select id="iocSeverityFilter" onchange="filterIOCTable()" class="bg-surface-container text-on-surface text-xs border border-outline-variant/40 rounded-lg px-3 py-1.5 font-label-sm focus:outline-none"><option value="all">All Severity</option><option value="critical">Critical</option><option value="high">High</option><option value="medium">Medium</option></select>
+</div></div>
+<div class="overflow-x-auto"><table class="w-full text-left font-label-md text-xs"><thead><tr class="border-b border-outline-variant/30 text-on-surface-variant bg-surface-container/40"><th class="py-3 px-4">Domain</th><th class="py-3 px-4">Type</th><th class="py-3 px-4">Severity</th><th class="py-3 px-4">T1</th><th class="py-3 px-4">T2</th><th class="py-3 px-4">First Seen</th><th class="py-3 px-4">Action</th></tr></thead><tbody id="ioc-table-body" class="divide-y divide-outline-variant/20 text-on-surface"></tbody></table></div>
+<div class="px-6 py-3 border-t border-outline-variant/20 flex items-center justify-between text-xs text-on-surface-variant font-label-sm"><span id="ioc-table-count">Loading...</span><button onclick="exportIOCs()" class="flex items-center gap-1 text-primary hover:underline"><span class="material-symbols-outlined text-xs">download</span> Export CSV</button></div>
+</div>
+<div class="lg:col-span-4 flex flex-col gap-4">
+<div class="glass-panel rounded-xl p-6"><h3 class="font-headline-md font-semibold text-on-surface mb-4">Attack Vector Breakdown</h3><div class="flex flex-col gap-3" id="attackBreakdown"></div></div>
+<div class="glass-panel rounded-xl p-6"><h3 class="font-headline-md font-semibold text-on-surface mb-4">🌍 Top Source Regions</h3><div class="flex flex-col gap-2" id="regionList"></div></div>
+</div></div>
+<div class="glass-panel rounded-xl p-6"><h3 class="font-headline-md font-semibold text-on-surface mb-4 flex items-center gap-2"><span class="material-symbols-outlined text-primary">manage_search</span> Investigate a Domain / IOC</h3>
+<div class="flex gap-3 flex-wrap"><input id="iocSearchInput" type="text" placeholder="Enter domain to investigate (e.g. tunnelbot.xyz)" class="flex-1 min-w-[240px] bg-[#0a0e18]/80 border border-outline-variant text-on-surface rounded-xl px-4 py-3 font-label-md focus:outline-none input-glow transition-all">
+<button onclick="investigateIOC()" class="bg-primary text-on-primary font-label-md px-6 py-3 rounded-full hover:opacity-90 transition-all flex items-center gap-2"><span class="material-symbols-outlined text-sm">search</span> Investigate</button></div>
+<div id="iocInvestigateResult" class="mt-4 hidden"></div></div>`;
+    }
+
+    function buildLogsTab() {
+        return `<div class="mb-8"><div class="flex items-center justify-between mb-2">
+<h1 class="font-display-lg text-on-surface flex items-center gap-3">DNS Query Logs <span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings:'FILL' 1;">list_alt</span></h1>
+<div class="flex items-center gap-3">
+<button onclick="toggleLiveLogs()" class="flex items-center gap-2 px-4 py-2 rounded-full bg-secondary/20 border border-secondary/30 text-secondary text-xs font-label-md hover:bg-secondary/30 transition-all"><span class="material-symbols-outlined text-sm" id="liveLogIcon">pause</span><span id="liveLogLabel">Pause Stream</span></button>
+<button onclick="clearLogs()" class="flex items-center gap-2 px-4 py-2 rounded-full bg-surface-container-high border border-outline-variant/30 text-on-surface-variant text-xs font-label-md hover:bg-surface-variant/50 transition-all"><span class="material-symbols-outlined text-sm">delete_sweep</span> Clear</button>
+<button onclick="exportLogs()" class="flex items-center gap-2 px-4 py-2 rounded-full bg-primary/20 border border-primary/30 text-primary text-xs font-label-md hover:bg-primary/30 transition-all"><span class="material-symbols-outlined text-sm">download</span> Export</button>
+</div></div><p class="text-on-surface-variant font-body-lg">Live stream of all DNS queries processed by the detection engine.</p></div>
+<div class="glass-panel rounded-xl p-4 mb-6 flex flex-wrap gap-3 items-center">
+<span class="text-xs text-on-surface-variant font-label-sm uppercase tracking-wider">Filters:</span>
+<input id="logSearch" type="text" placeholder="Search domain..." oninput="filterLogs()" class="bg-[#0a0e18]/80 border border-outline-variant text-on-surface rounded-lg px-3 py-2 text-xs font-label-md focus:outline-none input-glow w-48">
+<select id="logVerdictFilter" onchange="filterLogs()" class="bg-surface-container text-on-surface text-xs border border-outline-variant/40 rounded-lg px-3 py-2 font-label-sm focus:outline-none"><option value="all">All Verdicts</option><option value="threat">Threat</option><option value="benign">Benign</option></select>
+<select id="logTypeFilter" onchange="filterLogs()" class="bg-surface-container text-on-surface text-xs border border-outline-variant/40 rounded-lg px-3 py-2 font-label-sm focus:outline-none"><option value="all">All Record Types</option><option value="A">A</option><option value="TXT">TXT</option><option value="CNAME">CNAME</option><option value="MX">MX</option><option value="AAAA">AAAA</option></select>
+<div class="ml-auto flex items-center gap-2 text-xs text-on-surface-variant font-label-sm"><span class="w-2 h-2 rounded-full bg-secondary inline-block relative live-pulse"></span><span id="logCount">0 entries</span></div>
+</div>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+<div class="glass-panel rounded-xl p-4 text-center"><div id="logStatTotal" class="text-2xl font-bold text-on-surface font-label-md">0</div><div class="text-xs text-on-surface-variant font-label-sm mt-1">Total Queries</div></div>
+<div class="glass-panel rounded-xl p-4 text-center"><div id="logStatThreats" class="text-2xl font-bold text-tertiary-container font-label-md">0</div><div class="text-xs text-on-surface-variant font-label-sm mt-1">Threats</div></div>
+<div class="glass-panel rounded-xl p-4 text-center"><div id="logStatBenign" class="text-2xl font-bold text-secondary font-label-md">0</div><div class="text-xs text-on-surface-variant font-label-sm mt-1">Benign</div></div>
+<div class="glass-panel rounded-xl p-4 text-center"><div id="logStatRate" class="text-2xl font-bold text-primary font-label-md">0/s</div><div class="text-xs text-on-surface-variant font-label-sm mt-1">Query Rate</div></div>
+</div>
+<div class="glass-panel rounded-xl overflow-hidden">
+<div class="px-6 py-3 border-b border-outline-variant/20 bg-surface-container/40 flex items-center gap-3"><span class="font-label-md text-xs text-on-surface-variant uppercase tracking-wider">Live Query Stream</span><span class="font-label-sm text-[10px] px-2 py-0.5 rounded-full bg-secondary/20 border border-secondary/30 text-secondary">LIVE</span></div>
+<div class="overflow-x-auto"><table class="w-full text-left font-label-md text-xs"><thead><tr class="border-b border-outline-variant/30 text-on-surface-variant bg-surface-container/20"><th class="py-3 px-4">#</th><th class="py-3 px-4">Timestamp</th><th class="py-3 px-4">Domain</th><th class="py-3 px-4">Record</th><th class="py-3 px-4">Entropy</th><th class="py-3 px-4">T1 Score</th><th class="py-3 px-4">Verdict</th><th class="py-3 px-4">Action</th></tr></thead><tbody id="log-table-body" class="divide-y divide-outline-variant/10 text-on-surface"></tbody></table></div>
+<div id="logEmptyState" class="flex flex-col items-center justify-center py-16 text-on-surface-variant"><span class="material-symbols-outlined text-4xl mb-3 opacity-30">history</span><p class="font-body-md text-sm">No log entries yet. Logs stream in every 2.5 seconds.</p></div>
+</div>`;
+    }
+
+    function buildTier1Tab() {
+        return `<div class="mb-8"><h1 class="font-display-lg text-on-surface flex items-center gap-3 mb-2">Tier-1 (Stateless) Analysis <span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings:'FILL' 1;">shield</span></h1><p class="text-on-surface-variant font-body-lg">Fast triage using stateless packet-level features. XGBoost model, sub-millisecond latency.</p></div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
+<div class="lg:col-span-7 flex flex-col gap-6">
+<div class="glass-panel p-8 rounded-xl flex flex-col gap-6 relative overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-primary/30"></div>
+<h2 class="font-headline-md font-semibold text-on-surface flex items-center gap-2"><span class="material-symbols-outlined text-primary">input</span> Run Tier-1 Analysis</h2>
+<div><label class="block font-label-md text-on-surface-variant mb-2">Domain Name</label><input id="t1DomainInput" class="w-full bg-[#0a0e18]/80 border border-outline-variant text-on-surface rounded-xl px-4 py-3 font-label-md focus:outline-none input-glow transition-all" type="text" placeholder="e.g. vpn.evil.com or google.com"></div>
+<div><label class="block font-label-md text-on-surface-variant mb-2">Record Type</label><div class="relative"><select id="t1RecordType" class="w-full bg-[#0a0e18]/80 border border-outline-variant text-on-surface rounded-xl px-4 py-3 font-label-md focus:outline-none input-glow appearance-none"><option value="A">A</option><option value="CNAME">CNAME</option><option value="AAAA">AAAA</option><option value="TXT">TXT</option><option value="MX">MX</option></select><div class="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none"><span class="material-symbols-outlined text-on-surface-variant">expand_more</span></div></div></div>
+<div class="flex flex-wrap gap-3 pt-2"><button onclick="runT1Analysis()" class="bg-primary hover:bg-primary/90 text-on-primary font-label-md px-8 py-3 rounded-full transition-all shadow-[0_0_20px_rgba(77,142,255,0.3)] flex items-center gap-2"><span class="material-symbols-outlined text-sm">play_arrow</span> Run Tier-1</button><button onclick="document.getElementById('t1DomainInput').value='google.com';document.getElementById('t1RecordType').value='A';runT1Analysis();" class="border border-outline-variant/40 text-on-surface-variant font-label-md px-5 py-3 rounded-full text-xs hover:bg-surface-variant/30 transition-all">✅ Benign Preset</button><button onclick="document.getElementById('t1DomainInput').value='a1b2c3d4e5f6g7h8.tunnel.evil.com';document.getElementById('t1RecordType').value='TXT';runT1Analysis();" class="border border-tertiary-container/40 text-tertiary-container font-label-md px-5 py-3 rounded-full text-xs hover:bg-tertiary-container/10 transition-all">🚨 Threat Preset</button></div>
+</div>
+<div id="t1DetailResult" class="flex flex-col gap-4"><div class="glass-panel p-6 rounded-xl border border-dashed border-outline-variant/50 flex items-center justify-center opacity-70"><p class="font-body-md text-on-surface-variant italic flex items-center gap-2"><span class="material-symbols-outlined text-sm">info</span> Run an analysis to see Tier-1 results.</p></div></div>
+</div>
+<div class="lg:col-span-5 flex flex-col gap-4">
+<div class="glass-panel rounded-xl p-6"><h3 class="font-headline-md font-semibold text-on-surface mb-4">📊 Feature Definitions</h3><div class="flex flex-col gap-3 text-xs font-label-sm">
+<div class="border-b border-outline-variant/20 pb-3"><div class="text-primary font-semibold mb-1">FQDN Length</div><div class="text-on-surface-variant">Total characters in the fully-qualified domain name. Long FQDNs indicate encoded data.</div></div>
+<div class="border-b border-outline-variant/20 pb-3"><div class="text-primary font-semibold mb-1">Shannon Entropy</div><div class="text-on-surface-variant">Randomness of the domain label. High entropy (&gt;3.8) is a strong tunnel indicator.</div></div>
+<div class="border-b border-outline-variant/20 pb-3"><div class="text-primary font-semibold mb-1">Subdomain Count</div><div class="text-on-surface-variant">Number of sub-labels. Tunneling tools use many nested subdomains to chunk payload.</div></div>
+<div class="border-b border-outline-variant/20 pb-3"><div class="text-primary font-semibold mb-1">Numeric-Alpha Ratio</div><div class="text-on-surface-variant">Ratio of digits to letters. Base32/hex encoded data produces high ratios.</div></div>
+<div><div class="text-primary font-semibold mb-1">Record Type</div><div class="text-on-surface-variant">TXT and CNAME records are disproportionately used in tunneling.</div></div>
+</div></div>
+<div class="glass-panel rounded-xl p-6"><h3 class="font-headline-md font-semibold text-on-surface mb-4">⚡ Model Performance</h3><div class="flex flex-col gap-3">
+<div><div class="flex justify-between text-xs font-label-sm mb-1"><span class="text-on-surface-variant">Recall</span><span class="text-secondary">97.8%</span></div><div class="w-full h-2 bg-surface-container rounded-full overflow-hidden"><div class="h-full bg-secondary rounded-full score-bar" style="width:97.8%"></div></div></div>
+<div><div class="flex justify-between text-xs font-label-sm mb-1"><span class="text-on-surface-variant">Precision</span><span class="text-primary">91.2%</span></div><div class="w-full h-2 bg-surface-container rounded-full overflow-hidden"><div class="h-full bg-primary rounded-full score-bar" style="width:91.2%"></div></div></div>
+<div><div class="flex justify-between text-xs font-label-sm mb-1"><span class="text-on-surface-variant">F1 Score</span><span class="text-on-surface">94.4%</span></div><div class="w-full h-2 bg-surface-container rounded-full overflow-hidden"><div class="h-full bg-on-surface/60 rounded-full score-bar" style="width:94.4%"></div></div></div>
+</div><p class="text-[10px] text-on-surface-variant mt-4 italic font-label-sm">Evaluated on CIRA-CIC-DoHBrw-2020 + synthetic. N=128k queries.</p></div>
+</div></div>
+<div class="glass-panel rounded-xl p-6"><h3 class="font-headline-md font-semibold text-on-surface mb-2 flex items-center gap-2"><span class="material-symbols-outlined text-primary">table_rows</span> Batch Test — Known Domains</h3><p class="text-xs text-on-surface-variant font-label-sm mb-4">Click any row to run Tier-1 analysis on that domain.</p>
+<div class="overflow-x-auto"><table class="w-full text-left font-label-md text-xs"><thead><tr class="border-b border-outline-variant/30 text-on-surface-variant"><th class="py-3 px-4">Domain</th><th class="py-3 px-4">Expected</th><th class="py-3 px-4">Record</th><th class="py-3 px-4">T1 Score</th><th class="py-3 px-4">Result</th></tr></thead><tbody id="batchTable" class="divide-y divide-outline-variant/20 text-on-surface"></tbody></table></div></div>`;
+    }
+
+    function buildTier2Tab() {
+        return `<div class="mb-8"><h1 class="font-display-lg text-on-surface flex items-center gap-3 mb-2">Tier-2 Deep Dive <span class="material-symbols-outlined text-tertiary-container text-3xl" style="font-variation-settings:'FILL' 1;">security</span></h1><p class="text-on-surface-variant font-body-lg">Stateful deep analysis with TreeSHAP feature attributions. 30-second traffic windows.</p></div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
+<div class="lg:col-span-7 flex flex-col gap-6">
+<div class="glass-panel p-8 rounded-xl flex flex-col gap-6 relative overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-tertiary-container to-tertiary-container/30"></div>
+<h2 class="font-headline-md font-semibold text-on-surface flex items-center gap-2"><span class="material-symbols-outlined text-tertiary-container">manage_search</span> Run Tier-2 Deep Analysis</h2>
+<div><label class="block font-label-md text-on-surface-variant mb-2">Domain Name</label><input id="t2DomainInput" class="w-full bg-[#0a0e18]/80 border border-outline-variant text-on-surface rounded-xl px-4 py-3 font-label-md focus:outline-none input-glow transition-all" type="text" placeholder="e.g. vpn.evil.com"></div>
+<div class="grid grid-cols-2 gap-4">
+<div><label class="block font-label-md text-on-surface-variant mb-2">Record Type</label><div class="relative"><select id="t2RecordType" class="w-full bg-[#0a0e18]/80 border border-outline-variant text-on-surface rounded-xl px-4 py-3 font-label-md focus:outline-none input-glow appearance-none"><option value="A">A</option><option value="CNAME">CNAME</option><option value="AAAA">AAAA</option><option value="TXT">TXT</option><option value="MX">MX</option></select><div class="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none"><span class="material-symbols-outlined text-on-surface-variant">expand_more</span></div></div></div>
+<div><label class="block font-label-md text-on-surface-variant mb-2">Traffic Window</label><div class="relative"><select id="t2WindowMode" class="w-full bg-[#0a0e18]/80 border border-outline-variant text-on-surface rounded-xl px-4 py-3 font-label-md focus:outline-none input-glow appearance-none"><option value="normal">Normal (Low Volume)</option><option value="anomalous">Anomalous (High Volume)</option><option value="burst">Burst Attack Pattern</option></select><div class="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none"><span class="material-symbols-outlined text-on-surface-variant">expand_more</span></div></div></div>
+</div>
+<div class="flex flex-wrap gap-3 pt-2"><button onclick="runT2Analysis()" class="bg-tertiary-container hover:bg-tertiary-container/90 text-white font-label-md px-8 py-3 rounded-full shadow-[0_0_20px_rgba(255,84,81,0.3)] flex items-center gap-2"><span class="material-symbols-outlined text-sm">play_arrow</span> Run Tier-2</button><button onclick="document.getElementById('t2DomainInput').value='google.com';document.getElementById('t2RecordType').value='A';document.getElementById('t2WindowMode').value='normal';runT2Analysis();" class="border border-outline-variant/40 text-on-surface-variant font-label-md px-5 py-3 rounded-full text-xs hover:bg-surface-variant/30 transition-all">✅ Benign</button><button onclick="document.getElementById('t2DomainInput').value='a1b2c3d4e5f6g7h8.tunnel.evil.com';document.getElementById('t2RecordType').value='TXT';document.getElementById('t2WindowMode').value='anomalous';runT2Analysis();" class="border border-tertiary-container/40 text-tertiary-container font-label-md px-5 py-3 rounded-full text-xs hover:bg-tertiary-container/10 transition-all">🚨 Attack Burst</button></div>
+</div>
+<div id="t2DetailResult" class="flex flex-col gap-4"><div class="glass-panel p-6 rounded-xl border border-dashed border-outline-variant/50 flex items-center justify-center opacity-70"><p class="font-body-md text-on-surface-variant italic flex items-center gap-2"><span class="material-symbols-outlined text-sm">info</span> Run analysis to see Tier-2 deep results and TreeSHAP attributions.</p></div></div>
+</div>
+<div class="lg:col-span-5 flex flex-col gap-4">
+<div class="glass-panel rounded-xl p-6"><h3 class="font-headline-md font-semibold text-on-surface mb-4">🧠 Stateful Feature Set</h3><div class="flex flex-col gap-3 text-xs font-label-sm">
+<div class="border-b border-outline-variant/20 pb-3"><div class="text-tertiary-container font-semibold mb-1">Payload Variance</div><div class="text-on-surface-variant">Std dev of query payload sizes over 30s. High variance reveals data exfiltration chunking.</div></div>
+<div class="border-b border-outline-variant/20 pb-3"><div class="text-tertiary-container font-semibold mb-1">Record-Type Heterogeneity</div><div class="text-on-surface-variant">Entropy of DNS record type distribution. Tunnels mix TXT/CNAME/MX abnormally.</div></div>
+<div class="border-b border-outline-variant/20 pb-3"><div class="text-tertiary-container font-semibold mb-1">N-gram Transition Score</div><div class="text-on-surface-variant">Statistical language-model score. Low = rare character sequences = likely encoded payload.</div></div>
+<div><div class="text-tertiary-container font-semibold mb-1">Unique IP Concurrency</div><div class="text-on-surface-variant">Distinct source IPs querying same domain. High concurrency (&gt;3) indicates C2 or botnet.</div></div>
+</div></div>
+<div class="glass-panel rounded-xl p-6"><h3 class="font-headline-md font-semibold text-on-surface mb-4">💡 What is TreeSHAP?</h3><p class="text-xs text-on-surface-variant font-label-sm leading-relaxed mb-3">TreeSHAP computes exact SHAP values for tree-based models. Each value = a feature's contribution to the final prediction score.</p><div class="flex flex-col gap-2"><div class="flex items-center gap-3 p-3 rounded-lg bg-tertiary-container/10 border border-tertiary-container/20"><span class="text-tertiary-container font-bold font-label-md text-sm">+SHAP</span><span class="text-xs text-on-surface-variant font-label-sm">Increases predicted threat probability</span></div><div class="flex items-center gap-3 p-3 rounded-lg bg-primary/10 border border-primary/20"><span class="text-primary font-bold font-label-md text-sm">−SHAP</span><span class="text-xs text-on-surface-variant font-label-sm">Decreases predicted threat probability</span></div></div></div>
+<div class="glass-panel rounded-xl p-6"><h3 class="font-headline-md font-semibold text-on-surface mb-4">⚡ Tier-2 Model Performance</h3><div class="flex flex-col gap-3">
+<div><div class="flex justify-between text-xs font-label-sm mb-1"><span class="text-on-surface-variant">Precision</span><span class="text-tertiary-container">99.1%</span></div><div class="w-full h-2 bg-surface-container rounded-full overflow-hidden"><div class="h-full bg-tertiary-container rounded-full score-bar" style="width:99.1%"></div></div></div>
+<div><div class="flex justify-between text-xs font-label-sm mb-1"><span class="text-on-surface-variant">Recall</span><span class="text-secondary">96.4%</span></div><div class="w-full h-2 bg-surface-container rounded-full overflow-hidden"><div class="h-full bg-secondary rounded-full score-bar" style="width:96.4%"></div></div></div>
+</div><p class="text-[10px] text-on-surface-variant mt-4 italic font-label-sm">N=32k 30-second windows.</p></div>
+</div></div>`;
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
+        // Inject tab content
+        document.getElementById('tab-threat-intel').innerHTML = buildThreatIntelTab();
+        document.getElementById('tab-logs').innerHTML = buildLogsTab();
+        document.getElementById('tab-tier1').innerHTML = buildTier1Tab();
+        document.getElementById('tab-tier2').innerHTML = buildTier2Tab();
+
+        // Fix inline styles on new tabs - use class instead
+        ['tab-threat-intel','tab-logs','tab-tier1','tab-tier2'].forEach(id => {
+            const el = document.getElementById(id);
+            if(el) { el.removeAttribute('style'); el.classList.add('tab-content-page'); }
+        });
+
+        // Initialize tabs
+        switchTab('dashboard');
+        // Run initial analysis
         runAnalysis();
+        // Render Tier-1 batch table (DOM now exists)
+        renderBatchTable();
+        // Render threat intel data (DOM now exists)
+        renderIOCTable();
+        renderAttackBreakdown();
+        renderRegionList();
+        // Start live log streaming
+        startLiveLogs();
     });
 </script>
 </body>
