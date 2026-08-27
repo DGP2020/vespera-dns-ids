@@ -128,6 +128,8 @@ class QueueConfig:
     # --- Redis settings (Phase 2, dnstds §6) ---
     redis_host: str = field(default_factory=lambda: _env_str("DNS_REDIS_HOST", "127.0.0.1"))
     redis_port: int = field(default_factory=lambda: _env_int("DNS_REDIS_PORT", 6379))
+    redis_password: str = field(default_factory=lambda: _env_str("DNS_REDIS_PASSWORD", ""))
+    redis_ssl: bool = field(default_factory=lambda: _env_bool("DNS_REDIS_SSL", False))
     redis_queue_name: str = field(default_factory=lambda: _env_str("DNS_REDIS_QUEUE_NAME", "dns_triage_queue"))
     redis_max_memory_mb: int = field(default_factory=lambda: _env_int("DNS_REDIS_MAX_MEMORY_MB", 512))
 
@@ -143,6 +145,9 @@ class AlertConfig:
 
     # --- Webhook target ---
     webhook_url: str = field(default_factory=lambda: _env_str("DNS_ALERT_WEBHOOK_URL", ""))
+    allow_insecure_local_webhooks: bool = field(
+        default_factory=lambda: _env_bool("DNS_ALERT_ALLOW_LOCAL_WEBHOOKS", False)
+    )
 
     # --- Auth (dnstds §11) ---
     auth_type: str = field(default_factory=lambda: _env_str("DNS_ALERT_AUTH_TYPE", "bearer"))  # 'bearer' | 'hmac'

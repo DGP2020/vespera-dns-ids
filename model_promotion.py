@@ -35,6 +35,7 @@ CLI usage (local testing):
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import logging
 import os
@@ -542,9 +543,10 @@ class ShadowRunner:
 # Atomic Promotion
 # ---------------------------------------------------------------------------
 
-def promote_model(candidate_path: Path, target_symlink: Path) -> None:
+def promote_model(candidate_path: Path, target_symlink: Path) -> str:
     """
     Atomically promote a candidate model to the active symlink.
+    Computes and logs SHA-256 checksum for audit and integrity verification.
 
     Strategy:
       Linux/macOS: create a temp symlink in the same directory, then
@@ -556,11 +558,24 @@ def promote_model(candidate_path: Path, target_symlink: Path) -> None:
         candidate_path: Path to the trained candidate model file.
         target_symlink: Path of the active model symlink/file to replace.
 
+    Returns:
+        SHA-256 checksum string of the promoted model.
+
     Raises:
         FileNotFoundError: if candidate_path does not exist.
+        ValueError: if candidate_path is not a regular file.
     """
     if not candidate_path.exists():
         raise FileNotFoundError(f"Candidate model not found: {candidate_path}")
+    if not candidate_path.is_file():
+        raise ValueError(f"Candidate model path must be a regular file: {candidate_path}")
+
+    # Compute SHA-256 checksum
+    hasher = hashlib.sha256()
+    with open(candidate_path, "rb") as fh:
+        while chunk := fh.read(65536):
+            hasher.update(chunk)
+    sha256_digest = hasher.hexdigest()
 
     target_symlink.parent.mkdir(parents=True, exist_ok=True)
 
@@ -570,8 +585,8 @@ def promote_model(candidate_path: Path, target_symlink: Path) -> None:
         shutil.copy2(str(candidate_path), str(tmp_path))
         os.replace(str(tmp_path), str(target_symlink))
         logger.info(
-            "Model promoted (Windows copy-rename): %s → %s",
-            candidate_path, target_symlink,
+            "Model promoted (Windows copy-rename): %s → %s [SHA256: %s]",
+            candidate_path, target_symlink, sha256_digest,
         )
     else:
         # POSIX: atomic symlink swap
@@ -581,9 +596,11 @@ def promote_model(candidate_path: Path, target_symlink: Path) -> None:
         os.symlink(candidate_path.resolve(), tmp_link)
         os.replace(str(tmp_link), str(target_symlink))
         logger.info(
-            "Model promoted (atomic symlink): %s → %s",
-            candidate_path.resolve(), target_symlink,
+            "Model promoted (atomic symlink): %s → %s [SHA256: %s]",
+            candidate_path.resolve(), target_symlink, sha256_digest,
         )
+
+    return sha256_digest
 
 
 # ---------------------------------------------------------------------------

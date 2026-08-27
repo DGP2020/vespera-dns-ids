@@ -96,10 +96,12 @@ class RedisQueueProvider(BaseQueueBroker):
         self._overflow_log.parent.mkdir(parents=True, exist_ok=True)
         self._overflow_count: int = 0
 
-        # Build the Redis client
+        # Build the Redis client with authentication & TLS support
         self._client = redis_lib.Redis(
             host=self._cfg.redis_host,
             port=self._cfg.redis_port,
+            password=self._cfg.redis_password or None,
+            ssl=self._cfg.redis_ssl,
             decode_responses=False,  # we handle JSON encoding ourselves
             socket_connect_timeout=5,
             socket_timeout=10,
@@ -113,18 +115,24 @@ class RedisQueueProvider(BaseQueueBroker):
 
     def _configure_redis(self) -> None:
         """
-        Apply memory cap and eviction policy. Tolerates connection failures
-        gracefully so local tests can proceed even if Redis isn't running yet.
+        Attempt to verify connection and apply memory limits if allowed.
+        Tolerates restricted CONFIG permissions and connection delays.
         """
         try:
             self._client.ping()
             max_mem = self._cfg.redis_max_memory_mb
-            self._client.config_set("maxmemory", f"{max_mem}mb")
-            self._client.config_set("maxmemory-policy", "noeviction")
+            try:
+                self._client.config_set("maxmemory", f"{max_mem}mb")
+                self._client.config_set("maxmemory-policy", "noeviction")
+            except redis_lib.exceptions.ResponseError as cfg_err:
+                logger.info(
+                    "Redis CONFIG SET not permitted or disabled by server policy (%s) — skipping runtime memory cap.",
+                    cfg_err,
+                )
             logger.info(
-                "RedisQueueProvider connected to %s:%d  queue=%r  maxmemory=%dMB",
+                "RedisQueueProvider connected to %s:%d (ssl=%s)  queue=%r",
                 self._cfg.redis_host, self._cfg.redis_port,
-                self._queue_name, max_mem,
+                self._cfg.redis_ssl, self._queue_name,
             )
         except Exception as exc:  # noqa: BLE001
             logger.warning(

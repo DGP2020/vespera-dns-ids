@@ -24,14 +24,17 @@ from __future__ import annotations
 
 import hashlib
 import hmac
+import ipaddress
 import json
 import logging
 import math
 import random
+import socket
 import threading
 import time
 from enum import Enum
 from typing import Optional
+from urllib.parse import urlparse
 
 try:
     import requests  # type: ignore[import-untyped]
@@ -255,6 +258,56 @@ class AlertDispatcher:
         logger.info("AlertDispatcher dispatch loop stopped.")
 
     # ------------------------------------------------------------------
+    # SSRF & URL safety check
+    # ------------------------------------------------------------------
+
+    def _is_safe_webhook_url(self, url: str) -> tuple[bool, str]:
+        """
+        Validate outbound webhook URL to protect against SSRF.
+        Enforces http/https schemes and restricts local/private/cloud-metadata
+        addresses unless explicitly enabled via allow_insecure_local_webhooks.
+        """
+        try:
+            parsed = urlparse(url)
+        except Exception as exc:
+            return False, f"Malformed URL: {exc}"
+
+        if parsed.scheme not in ("http", "https"):
+            return False, f"Invalid URL scheme {parsed.scheme!r} (must be http or https)"
+
+        hostname = parsed.hostname
+        if not hostname:
+            return False, "URL missing hostname"
+
+        if self._cfg.allow_insecure_local_webhooks:
+            return True, ""
+
+        if hostname.lower() in ("localhost", "127.0.0.1", "::1", "metadata.google.internal"):
+            return False, f"SSRF blocked: local hostname {hostname!r}"
+
+        # Resolve hostname to check for internal/private/link-local IP addresses
+        try:
+            addr_info = socket.getaddrinfo(hostname, None)
+            for item in addr_info:
+                ip_str = item[4][0]
+                ip = ipaddress.ip_address(ip_str)
+                if (
+                    ip.is_loopback
+                    or ip.is_private
+                    or ip.is_link_local
+                    or ip.is_reserved
+                    or ip.is_multicast
+                    or ip_str.startswith("169.254.")
+                ):
+                    return False, f"SSRF blocked: hostname resolves to non-routable/internal IP ({ip_str})"
+        except socket.gaierror as exc:
+            return False, f"DNS resolution failed for hostname {hostname!r}: {exc}"
+        except Exception as exc:
+            return False, f"IP validation error for {hostname!r}: {exc}"
+
+        return True, ""
+
+    # ------------------------------------------------------------------
     # HTTP delivery
     # ------------------------------------------------------------------
 
@@ -270,6 +323,14 @@ class AlertDispatcher:
         webhook_url = self._cfg.webhook_url
         if not webhook_url:
             logger.warning("DNS_ALERT_WEBHOOK_URL not configured — alert not sent.")
+            return
+
+        # SSRF safety validation
+        is_safe, reason = self._is_safe_webhook_url(webhook_url)
+        if not is_safe:
+            logger.error("Webhook delivery aborted due to security validation: %s", reason)
+            self._circuit.record_failure()
+            self._storage.increment_retry(alert["event_id"])
             return
 
         event_id: str = alert["event_id"]
@@ -292,8 +353,16 @@ class AlertDispatcher:
                 )
                 return
 
-        headers = self._build_headers(payload)
-        body = json.dumps(payload)
+        # Canonical JSON encoding
+        body = json.dumps(payload, sort_keys=True)
+
+        try:
+            headers = self._build_headers(body.encode("utf-8"))
+        except ValueError as exc:
+            logger.error("Failed authentication header generation for event %s: %s", event_id, exc)
+            self._circuit.record_failure()
+            self._storage.increment_retry(event_id)
+            return
 
         try:
             resp = requests.post(
@@ -326,15 +395,15 @@ class AlertDispatcher:
     # Auth header builder (dnstds §11)
     # ------------------------------------------------------------------
 
-    def _build_headers(self, payload: dict) -> dict[str, str]:
+    def _build_headers(self, body_bytes: bytes) -> dict[str, str]:
         """
         Build HTTP headers for the outbound alert request.
+        Fails closed if configured authentication secrets are missing.
 
         Auth modes (dnstds §11):
           bearer → Authorization: Bearer <token>
-          hmac   → X-Signature-SHA256: sha256=<hex>  (HMAC over JSON body)
+          hmac   → X-Signature-SHA256: sha256=<hex>  (HMAC over canonical JSON body)
         """
-        body = json.dumps(payload).encode("utf-8")
         headers: dict[str, str] = {
             "Content-Type": "application/json",
         }
@@ -343,21 +412,19 @@ class AlertDispatcher:
 
         if auth_type == "bearer":
             token = self._cfg.bearer_token
-            if token:
-                headers["Authorization"] = f"Bearer {token}"
-            else:
-                logger.warning("Bearer auth selected but DNS_ALERT_BEARER_TOKEN is empty.")
+            if not token:
+                raise ValueError("Bearer auth configured but DNS_ALERT_BEARER_TOKEN is empty.")
+            headers["Authorization"] = f"Bearer {token}"
 
         elif auth_type == "hmac":
             secret = self._cfg.hmac_secret.encode("utf-8")
-            if secret:
-                sig = hmac.new(secret, body, hashlib.sha256).hexdigest()
-                headers["X-Signature-SHA256"] = f"sha256={sig}"
-            else:
-                logger.warning("HMAC auth selected but DNS_ALERT_HMAC_SECRET is empty.")
+            if not secret:
+                raise ValueError("HMAC auth configured but DNS_ALERT_HMAC_SECRET is empty.")
+            sig = hmac.new(secret, body_bytes, hashlib.sha256).hexdigest()
+            headers["X-Signature-SHA256"] = f"sha256={sig}"
 
         else:
-            logger.warning("Unknown auth_type %r — sending unsigned request.", auth_type)
+            raise ValueError(f"Unknown or unsupported auth_type {auth_type!r}.")
 
         return headers
 

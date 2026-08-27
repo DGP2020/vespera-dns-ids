@@ -38,6 +38,16 @@ def get_kaggle_api():
         print(f"Kaggle API authentication error: {e}")
         return None
 
+def _safe_extract_zip(zip_path: Path, target_dir: Path) -> None:
+    """Safely extract zip archive guarding against path traversal (Zip Slip)."""
+    target_resolved = target_dir.resolve()
+    with zipfile.ZipFile(zip_path, "r") as zf:
+        for member in zf.infolist():
+            member_path = (target_dir / member.filename).resolve()
+            if not str(member_path).startswith(str(target_resolved)):
+                raise ValueError(f"Security: Zip traversal attempt detected in member '{member.filename}'")
+        zf.extractall(target_dir)
+
 def download_dataset(target_dir: Path) -> Path:
     """Download best Kaggle DNS tunneling dataset."""
     target_dir.mkdir(parents=True, exist_ok=True)
@@ -47,10 +57,17 @@ def download_dataset(target_dir: Path) -> Path:
     api = get_kaggle_api()
     if api is not None:
         try:
-            api.dataset_download_files(dataset_ref, path=str(target_dir), unzip=True)
+            api.dataset_download_files(dataset_ref, path=str(target_dir), unzip=False)
             print("Download completed via Kaggle API.")
         except Exception as e:
             print(f"Kaggle API download failed ({e}). Checking local files...")
+
+    # Safely extract any zip files in target_dir
+    for zpath in target_dir.glob("*.zip"):
+        try:
+            _safe_extract_zip(zpath, target_dir)
+        except Exception as e:
+            print(f"Zip extraction warning for {zpath.name}: {e}")
     
     # Find CSV in target_dir
     csv_files = list(target_dir.glob("*.csv"))

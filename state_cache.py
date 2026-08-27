@@ -169,6 +169,12 @@ class StateCache:
                 del self._store[key]
                 removed += 1
 
+            # Rebuild zone-level client registry to evict expired zones/clients
+            new_zone_clients: dict[str, set[str]] = defaultdict(set)
+            for (p_dom, c_ip) in self._store.keys():
+                new_zone_clients[p_dom].add(c_ip)
+            self._zone_clients = new_zone_clients
+
         return removed
 
     # ------------------------------------------------------------------

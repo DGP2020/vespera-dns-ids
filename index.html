@@ -138,7 +138,22 @@
         ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
     </style>
-<script>
+    <script>
+        // HTML / JS Sanitizers for XSS protection
+        function escapeHtml(str) {
+            if (str === null || str === undefined) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+        function escapeJsString(str) {
+            if (str === null || str === undefined) return '';
+            return String(str).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '\\"');
+        }
+
         // ===== TAB STATE =====
         const ALL_TABS = ['dashboard','threat-intel','logs','tier1','tier2'];
         const appState = { totalAnalyzed:0, totalThreats:0, totalBenign:0, logs:[], logIdCounter:0, liveLogsActive:true };
@@ -346,7 +361,7 @@
                                 <span id="t2JsonExp-icon" class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                             </button>
                             <div id="t2JsonExp" class="hidden p-6 border-t border-outline-variant/20 bg-[#0a0e18]/60 font-label-md text-xs text-secondary overflow-x-auto">
-                                <pre>${JSON.stringify(t2Features, null, 2)}</pre>
+                                <pre>${escapeHtml(JSON.stringify(t2Features, null, 2))}</pre>
                             </div>
                         </div>
                     </div>
@@ -368,7 +383,7 @@
                                 <span id="t2JsonExp-icon" class="material-symbols-outlined text-on-surface-variant">chevron_right</span>
                             </button>
                             <div id="t2JsonExp" class="hidden p-6 border-t border-outline-variant/20 bg-[#0a0e18]/60 font-label-md text-xs text-secondary overflow-x-auto">
-                                <pre>${JSON.stringify(t2Features, null, 2)}</pre>
+                                <pre>${escapeHtml(JSON.stringify(t2Features, null, 2))}</pre>
                             </div>
                         </div>
                     </div>
@@ -415,16 +430,24 @@
             if(filtered.length===0){ tb.innerHTML=''; if(em)em.classList.remove('hidden'); }
             else {
                 if(em)em.classList.add('hidden');
-                tb.innerHTML=filtered.slice(0,100).map(e=>`<tr class="log-entry hover:bg-surface-variant/20 transition-colors cursor-pointer" onclick="analyzeLog('${e.domain}','${e.record}')">
-  <td class="py-2 px-3 text-on-surface-variant text-xs font-label-sm">${e.id}</td>
-  <td class="py-2 px-3 text-on-surface-variant text-xs font-label-sm">${e.ts}</td>
-  <td class="py-2 px-3 text-on-surface font-label-md text-xs">${e.domain}</td>
-  <td class="py-2 px-3"><span class="px-2 py-0.5 rounded-full text-[10px] font-label-sm bg-surface-container-high border border-outline-variant/30">${e.record}</span></td>
+                tb.innerHTML=filtered.slice(0,100).map(e=>{
+                    const escDom = escapeHtml(e.domain);
+                    const jsDom = escapeJsString(e.domain);
+                    const escRec = escapeHtml(e.record);
+                    const jsRec = escapeJsString(e.record);
+                    const escTs = escapeHtml(e.ts);
+                    const escId = escapeHtml(e.id);
+                    return `<tr class="log-entry hover:bg-surface-variant/20 transition-colors cursor-pointer" onclick="analyzeLog('${jsDom}','${jsRec}')">
+  <td class="py-2 px-3 text-on-surface-variant text-xs font-label-sm">${escId}</td>
+  <td class="py-2 px-3 text-on-surface-variant text-xs font-label-sm">${escTs}</td>
+  <td class="py-2 px-3 text-on-surface font-label-md text-xs">${escDom}</td>
+  <td class="py-2 px-3"><span class="px-2 py-0.5 rounded-full text-[10px] font-label-sm bg-surface-container-high border border-outline-variant/30">${escRec}</span></td>
   <td class="py-2 px-3 font-label-md text-xs ${e.entropy>3.8?'text-tertiary-container':'text-on-surface'}">${e.entropy.toFixed(3)}</td>
   <td class="py-2 px-3 font-label-md text-xs ${e.t1Score>0.70?'text-tertiary-container':'text-secondary'}">${e.t1Score.toFixed(2)}</td>
   <td class="py-2 px-3"><span class="px-2 py-0.5 rounded-full text-[10px] font-label-sm border ${e.verdict==='threat'?'bg-tertiary-container/20 border-tertiary-container/40 text-tertiary-container':'bg-primary/20 border-primary/30 text-primary'}">${e.verdict==='threat'?'🚨 Threat':'✅ Benign'}</span></td>
   <td class="py-2 px-3"><button class="text-[10px] text-primary font-label-sm flex items-center gap-1 hover:underline"><span class="material-symbols-outlined text-xs">open_in_new</span>Analyze</button></td>
-</tr>`).join('');
+</tr>`;
+                }).join('');
             }
             const cnt=document.getElementById('logCount'); if(cnt) cnt.innerText=`${filtered.length} entries`;
         }
@@ -497,15 +520,22 @@
             const tf=document.getElementById('iocTypeFilter')?.value||'all';
             const sf=document.getElementById('iocSeverityFilter')?.value||'all';
             const filtered=displayedIOCs.filter(r=>(tf==='all'||r.type===tf)&&(sf==='all'||r.severity===sf));
-            tb.innerHTML=filtered.map(r=>`<tr class="hover:bg-surface-variant/20 transition-colors">
-  <td class="py-2.5 px-4 font-label-md text-xs text-on-surface">${r.domain}</td>
-  <td class="py-2.5 px-4 text-on-surface-variant text-[11px]">${typeLbl[r.type]||r.type}</td>
-  <td class="py-2.5 px-4"><span class="px-2 py-0.5 rounded-full text-[10px] font-label-sm border ${sevCls[r.severity]||''}">${r.severity.toUpperCase()}</span></td>
+            tb.innerHTML=filtered.map(r=>{
+                const escDom = escapeHtml(r.domain);
+                const jsDom = escapeJsString(r.domain);
+                const escType = escapeHtml(typeLbl[r.type]||r.type);
+                const escSev = escapeHtml(r.severity.toUpperCase());
+                const escSeen = escapeHtml(r.seen);
+                return `<tr class="hover:bg-surface-variant/20 transition-colors">
+  <td class="py-2.5 px-4 font-label-md text-xs text-on-surface">${escDom}</td>
+  <td class="py-2.5 px-4 text-on-surface-variant text-[11px]">${escType}</td>
+  <td class="py-2.5 px-4"><span class="px-2 py-0.5 rounded-full text-[10px] font-label-sm border ${sevCls[r.severity]||''}">${escSev}</span></td>
   <td class="py-2.5 px-4 font-label-md text-xs text-tertiary-container">${r.t1.toFixed(2)}</td>
   <td class="py-2.5 px-4 font-label-md text-xs text-tertiary-container">${r.t2.toFixed(2)}</td>
-  <td class="py-2.5 px-4 text-on-surface-variant text-[11px]">${r.seen}</td>
-  <td class="py-2.5 px-4"><button onclick="iocInvestigateFromTable('${r.domain}')" class="text-[10px] text-primary hover:underline font-label-sm flex items-center gap-1"><span class="material-symbols-outlined text-xs">manage_search</span>Investigate</button></td>
-</tr>`).join('');
+  <td class="py-2.5 px-4 text-on-surface-variant text-[11px]">${escSeen}</td>
+  <td class="py-2.5 px-4"><button onclick="iocInvestigateFromTable('${jsDom}')" class="text-[10px] text-primary hover:underline font-label-sm flex items-center gap-1"><span class="material-symbols-outlined text-xs">manage_search</span>Investigate</button></td>
+</tr>`;
+            }).join('');
             const cnt=document.getElementById('ioc-table-count'); if(cnt) cnt.innerText=`Showing ${filtered.length} of ${displayedIOCs.length} IOCs`;
         }
         function filterIOCTable(){ renderIOCTable(); }
@@ -525,10 +555,13 @@
             const domain=(document.getElementById('iocSearchInput')?.value||'').trim();
             const res=document.getElementById('iocInvestigateResult');
             if(!domain||!res) return;
+            const escDom = escapeHtml(domain);
+            const jsDom = escapeJsString(domain);
             res.classList.remove('hidden');
-            res.innerHTML='<div class="text-on-surface-variant font-label-sm text-xs flex items-center gap-2"><span class="material-symbols-outlined text-sm spinner">autorenew</span>Investigating '+domain+'...</div>';
+            res.innerHTML='<div class="text-on-surface-variant font-label-sm text-xs flex items-center gap-2"><span class="material-symbols-outlined text-sm spinner">autorenew</span>Investigating '+escDom+'...</div>';
             setTimeout(()=>{
                 const cleanDomain=domain.replace(/\.$/,'').toLowerCase();
+                const escCleanDomain = escapeHtml(cleanDomain);
                 const parts=cleanDomain.split('.');
                 const e3=calculateEntropy(parts[0]||'');
                 const nar3=calculateNumericAlphaRatio(cleanDomain);
@@ -544,7 +577,7 @@
   <div class="${threat?'status-alert':'status-benign'} p-4 rounded-xl flex items-center justify-between">
     <div class="flex items-center gap-3">
       <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">${threat?'warning':'check_circle'}</span>
-      <div><div class="font-semibold font-label-md text-sm">${domain}</div><div class="text-xs mt-0.5 opacity-80 font-label-sm">${threat?'⚠️ Malicious / suspicious':'✅ No threat indicators'}</div></div>
+      <div><div class="font-semibold font-label-md text-sm">${escCleanDomain}</div><div class="text-xs mt-0.5 opacity-80 font-label-sm">${threat?'⚠️ Malicious / suspicious':'✅ No threat indicators'}</div></div>
     </div>
     <div class="text-right"><div class="text-lg font-bold font-label-md">T1: ${t1s.toFixed(2)} | T2: ${t2s.toFixed(2)}</div><div class="text-xs font-label-sm ${inDB?'text-tertiary-container':'text-on-surface-variant'}">${inDB?'In IOC database':'Not in IOC database'}</div></div>
   </div>
@@ -554,7 +587,7 @@
     <div class="glass-panel rounded-xl p-3 text-center"><div class="font-bold font-label-md text-sm text-on-surface">${subCount}</div><div class="text-[10px] font-label-sm text-on-surface-variant mt-1">Subdomains</div></div>
   </div>
   <div class="flex gap-3 flex-wrap">
-    <button onclick="document.getElementById('domainInput').value='${domain}';switchTab('dashboard');runAnalysis();" class="flex-1 px-4 py-2 rounded-full bg-primary/20 border border-primary/30 text-primary text-xs font-label-md hover:bg-primary/30">Run Full Simulation</button>
+    <button onclick="document.getElementById('domainInput').value='${jsDom}';switchTab('dashboard');runAnalysis();" class="flex-1 px-4 py-2 rounded-full bg-primary/20 border border-primary/30 text-primary text-xs font-label-md hover:bg-primary/30">Run Full Simulation</button>
     <button onclick="switchTab('tier2');" class="flex-1 px-4 py-2 rounded-full bg-tertiary-container/20 border border-tertiary-container/30 text-tertiary-container text-xs font-label-md hover:bg-tertiary-container/30">Tier-2 Deep Dive</button>
   </div>
 </div>`;
@@ -568,12 +601,12 @@
         function renderAttackBreakdown(){
             const data=[{l:'DNS Tunneling',n:112,c:'bg-tertiary-container',p:45},{l:'C2 Communication',n:68,c:'bg-orange-400',p:28},{l:'Data Exfiltration',n:42,c:'bg-yellow-400',p:17},{l:'Malware Dropper',n:25,c:'bg-purple-400',p:10}];
             const el=document.getElementById('attackBreakdown'); if(!el) return;
-            el.innerHTML=data.map(d=>`<div><div class="flex justify-between text-xs font-label-sm mb-1"><span class="text-on-surface">${d.l}</span><span class="text-on-surface-variant">${d.n}</span></div><div class="w-full h-2 bg-surface-container rounded-full overflow-hidden"><div class="h-full ${d.c} rounded-full score-bar" style="width:${d.p}%"></div></div></div>`).join('');
+            el.innerHTML=data.map(d=>`<div><div class="flex justify-between text-xs font-label-sm mb-1"><span class="text-on-surface">${escapeHtml(d.l)}</span><span class="text-on-surface-variant">${d.n}</span></div><div class="w-full h-2 bg-surface-container rounded-full overflow-hidden"><div class="h-full ${d.c} rounded-full score-bar" style="width:${d.p}%"></div></div></div>`).join('');
         }
         function renderRegionList(){
             const data=[{c:'🇷🇺 Russia',n:89,p:36},{c:'🇨🇳 China',n:67,p:27},{c:'🇰🇵 North Korea',n:34,p:14},{c:'🇮🇷 Iran',n:28,p:11},{c:'🌐 Unknown',n:29,p:12}];
             const el=document.getElementById('regionList'); if(!el) return;
-            el.innerHTML=data.map(r=>`<div class="flex items-center justify-between text-xs font-label-sm"><span class="text-on-surface">${r.c}</span><div class="flex items-center gap-3"><div class="w-20 h-1.5 bg-surface-container rounded-full overflow-hidden"><div class="h-full bg-tertiary-container/70 rounded-full score-bar" style="width:${r.p}%"></div></div><span class="text-on-surface-variant w-6 text-right">${r.n}</span></div></div>`).join('');
+            el.innerHTML=data.map(r=>`<div class="flex items-center justify-between text-xs font-label-sm"><span class="text-on-surface">${escapeHtml(r.c)}</span><div class="flex items-center gap-3"><div class="w-20 h-1.5 bg-surface-container rounded-full overflow-hidden"><div class="h-full bg-tertiary-container/70 rounded-full score-bar" style="width:${r.p}%"></div></div><span class="text-on-surface-variant w-6 text-right">${r.n}</span></div></div>`).join('');
         }
 
         // ===== TIER-1 STANDALONE =====
@@ -582,6 +615,10 @@
             const tb=document.getElementById('batchTable'); if(!tb) return;
             tb.innerHTML=BATCH_DOMAINS.map(r=>{
                 const cleanDomain=r.domain.replace(/\.$/,'').toLowerCase();
+                const escDom = escapeHtml(r.domain);
+                const jsDom = escapeJsString(r.domain);
+                const escRec = escapeHtml(r.record);
+                const jsRec = escapeJsString(r.record);
                 const parts=cleanDomain.split('.');
                 const e4=calculateEntropy(parts[0]||'');
                 const nar4=calculateNumericAlphaRatio(cleanDomain);
@@ -592,10 +629,10 @@
                 else if(e4>3.0||fqdnLen>25||r.record==='TXT'||r.record==='CNAME') t1s=0.72;
                 const threat=t1s>0.70;
                 const correct=(threat&&r.expected==='Threat')||(!threat&&r.expected==='Benign');
-                return `<tr class="hover:bg-surface-variant/20 cursor-pointer transition-colors" onclick="document.getElementById('t1DomainInput').value='${r.domain}';document.getElementById('t1RecordType').value='${r.record}';runT1Analysis();">
-  <td class="py-3 px-4 font-label-md text-xs text-on-surface">${r.domain}</td>
-  <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-[10px] font-label-sm ${r.expected==='Threat'?'bg-tertiary-container/20 text-tertiary-container border border-tertiary-container/30':'bg-primary/20 text-primary border border-primary/30'}">${r.expected}</span></td>
-  <td class="py-3 px-4 text-on-surface-variant text-xs">${r.record}</td>
+                return `<tr class="hover:bg-surface-variant/20 cursor-pointer transition-colors" onclick="document.getElementById('t1DomainInput').value='${jsDom}';document.getElementById('t1RecordType').value='${jsRec}';runT1Analysis();">
+  <td class="py-3 px-4 font-label-md text-xs text-on-surface">${escDom}</td>
+  <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-[10px] font-label-sm ${r.expected==='Threat'?'bg-tertiary-container/20 text-tertiary-container border border-tertiary-container/30':'bg-primary/20 text-primary border border-primary/30'}">${escapeHtml(r.expected)}</span></td>
+  <td class="py-3 px-4 text-on-surface-variant text-xs">${escRec}</td>
   <td class="py-3 px-4 font-label-md text-xs ${threat?'text-tertiary-container':'text-secondary'}">${t1s.toFixed(2)}</td>
   <td class="py-3 px-4"><span class="flex items-center gap-1 ${correct?'text-secondary':'text-tertiary-container'}"><span class="material-symbols-outlined text-sm" style="font-variation-settings:'FILL' 1;">${correct?'check_circle':'cancel'}</span>${correct?'Correct':'Mismatch'}</span></td>
 </tr>`;
@@ -606,6 +643,7 @@
             const record=document.getElementById('t1RecordType')?.value||'A';
             if(!domain){ alert('Please enter a domain.'); return; }
             const cleanDomain=domain.replace(/\.$/,'').toLowerCase();
+            const escCleanDomain = escapeHtml(cleanDomain);
             const parts=cleanDomain.split('.');
             const e5=calculateEntropy(parts[0]||'');
             const nar5=calculateNumericAlphaRatio(cleanDomain);
@@ -628,7 +666,7 @@
             c.innerHTML=`<div class="flex flex-col gap-4">
   <div class="${threat?'status-alert':'status-benign'} p-5 rounded-xl flex items-center justify-between backdrop-blur-md shadow-lg">
     <div class="flex items-center gap-4"><span class="material-symbols-outlined text-3xl" style="font-variation-settings:'FILL' 1;">${threat?'warning':'check_circle'}</span>
-    <div><div class="font-headline-md font-semibold">${threat?'🚨 SUSPICIOUS':'✅ BENIGN'}</div><div class="text-xs mt-1 font-label-sm opacity-80">${cleanDomain}</div></div></div>
+    <div><div class="font-headline-md font-semibold">${threat?'🚨 SUSPICIOUS':'✅ BENIGN'}</div><div class="text-xs mt-1 font-label-sm opacity-80">${escCleanDomain}</div></div></div>
     <div class="text-right"><div class="text-2xl font-bold font-label-md">${t1s.toFixed(2)}</div><div class="text-xs font-label-sm opacity-70">Risk Score</div></div>
   </div>
   <div class="glass-panel rounded-xl p-5">
@@ -637,11 +675,11 @@
   </div>
   <div class="glass-panel rounded-xl p-5">
     <h3 class="font-headline-md text-sm font-semibold text-on-surface mb-4">Extracted Features</h3>
-    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">${Object.entries(feats).map(([k,v])=>`<div class="bg-surface-container/60 rounded-xl p-3"><div class="text-[10px] font-label-sm text-on-surface-variant uppercase tracking-wide mb-1">${k.replace(/_/g,' ')}</div><div class="text-sm font-bold font-label-md text-on-surface">${typeof v==='number'?v.toFixed(4).replace(/\.?0+$/,''):v}</div></div>`).join('')}</div>
+    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">${Object.entries(feats).map(([k,v])=>`<div class="bg-surface-container/60 rounded-xl p-3"><div class="text-[10px] font-label-sm text-on-surface-variant uppercase tracking-wide mb-1">${escapeHtml(k.replace(/_/g,' '))}</div><div class="text-sm font-bold font-label-md text-on-surface">${typeof v==='number'?v.toFixed(4).replace(/\.?0+$/,''):escapeHtml(v)}</div></div>`).join('')}</div>
   </div>
   <div class="glass-panel rounded-xl p-5">
     <h3 class="font-headline-md text-sm font-semibold text-on-surface mb-4">Risk Indicators</h3>
-    <div class="flex flex-col gap-2">${indicators.map(ind=>{const hi=ind.v>ind.thr;return`<div class="flex items-center gap-3 p-3 rounded-lg ${hi?'bg-tertiary-container/10 border border-tertiary-container/20':'bg-primary/5 border border-outline-variant/20'}"><span class="material-symbols-outlined text-sm ${hi?'text-tertiary-container':'text-secondary'}" style="font-variation-settings:'FILL' 1;">${hi?'warning':'check_circle'}</span><div><div class="text-xs font-semibold font-label-sm ${hi?'text-tertiary-container':'text-on-surface'}">${ind.l}: ${typeof ind.v==='number'?ind.v.toFixed(3):ind.v}</div><div class="text-[10px] font-label-sm text-on-surface-variant">${hi?ind.hi:ind.lo}</div></div></div>`;}).join('')}</div>
+    <div class="flex flex-col gap-2">${indicators.map(ind=>{const hi=ind.v>ind.thr;return`<div class="flex items-center gap-3 p-3 rounded-lg ${hi?'bg-tertiary-container/10 border border-tertiary-container/20':'bg-primary/5 border border-outline-variant/20'}"><span class="material-symbols-outlined text-sm ${hi?'text-tertiary-container':'text-secondary'}" style="font-variation-settings:'FILL' 1;">${hi?'warning':'check_circle'}</span><div><div class="text-xs font-semibold font-label-sm ${hi?'text-tertiary-container':'text-on-surface'}">${escapeHtml(ind.l)}: ${typeof ind.v==='number'?ind.v.toFixed(3):escapeHtml(ind.v)}</div><div class="text-[10px] font-label-sm text-on-surface-variant">${escapeHtml(hi?ind.hi:ind.lo)}</div></div></div>`;}).join('')}</div>
   </div>
 </div>`;
         }
@@ -653,6 +691,8 @@
             const windowMode=document.getElementById('t2WindowMode')?.value||'normal';
             if(!domain){ alert('Please enter a domain.'); return; }
             const cleanDomain=domain.replace(/\.$/,'').toLowerCase();
+            const escCleanDomain = escapeHtml(cleanDomain);
+            const escWindowMode = escapeHtml(windowMode);
             const parts=cleanDomain.split('.');
             const e6=calculateEntropy(parts[0]||'');
             const nar6=calculateNumericAlphaRatio(cleanDomain);
@@ -683,7 +723,7 @@
             c.innerHTML=`<div class="flex flex-col gap-4">
   <div class="${threat?'status-alert':'status-benign'} p-5 rounded-xl flex items-center justify-between backdrop-blur-md shadow-lg">
     <div class="flex items-center gap-4"><span class="material-symbols-outlined text-3xl" style="font-variation-settings:'FILL' 1;">${threat?'error':'verified'}</span>
-    <div><div class="font-headline-md font-semibold">${threat?'💥 VERIFIED CRITICAL THREAT':'✅ BENIGN / FALSE POSITIVE CLEARED'}</div><div class="text-xs mt-1 font-label-sm opacity-80">${cleanDomain} | Window: ${windowMode}</div></div></div>
+    <div><div class="font-headline-md font-semibold">${threat?'💥 VERIFIED CRITICAL THREAT':'✅ BENIGN / FALSE POSITIVE CLEARED'}</div><div class="text-xs mt-1 font-label-sm opacity-80">${escCleanDomain} | Window: ${escWindowMode}</div></div></div>
     <div class="text-right"><div class="text-2xl font-bold font-label-md">${t2Score.toFixed(3)}</div><div class="text-xs font-label-sm opacity-70">T2 Score</div></div>
   </div>
   <div class="glass-panel rounded-xl p-5">
@@ -694,11 +734,11 @@
     <h3 class="font-headline-md text-sm font-semibold text-on-surface mb-4">🧠 TreeSHAP Feature Attributions</h3>
     <div class="overflow-x-auto"><table class="w-full text-left font-label-md text-xs">
       <thead><tr class="border-b border-outline-variant/30 text-on-surface-variant"><th class="py-2 px-3">Feature</th><th class="py-2 px-3">Raw Value</th><th class="py-2 px-3">SHAP</th><th class="py-2 px-3">Impact Bar</th><th class="py-2 px-3">Direction</th></tr></thead>
-      <tbody class="divide-y divide-outline-variant/20">${shaps.map(s=>{const pos=s.shap>=0;const bw=maxS>0?Math.abs(s.shap/maxS*100):0;return`<tr><td class="py-2.5 px-3 font-semibold ${pos?'text-tertiary-container':'text-primary'}">${s.n}</td><td class="py-2.5 px-3 text-on-surface-variant">${typeof s.raw==='number'?s.raw.toFixed(3):s.raw}</td><td class="py-2.5 px-3 font-bold ${pos?'text-tertiary-container':'text-primary'}">${pos?'+':''}${s.shap.toFixed(3)}</td><td class="py-2.5 px-3 w-28"><div class="h-2 bg-surface-container rounded-full overflow-hidden"><div class="h-full ${pos?'bg-tertiary-container':'bg-primary'} rounded-full score-bar" style="width:${bw.toFixed(1)}%"></div></div></td><td class="py-2.5 px-3 ${pos?'text-tertiary-container':'text-primary'} text-[10px] font-label-sm">${pos?'▲ Risk':'▼ Reduces'}</td></tr>`;}).join('')}</tbody>
+      <tbody class="divide-y divide-outline-variant/20">${shaps.map(s=>{const pos=s.shap>=0;const bw=maxS>0?Math.abs(s.shap/maxS*100):0;return`<tr><td class="py-2.5 px-3 font-semibold ${pos?'text-tertiary-container':'text-primary'}">${escapeHtml(s.n)}</td><td class="py-2.5 px-3 text-on-surface-variant">${typeof s.raw==='number'?s.raw.toFixed(3):escapeHtml(s.raw)}</td><td class="py-2.5 px-3 font-bold ${pos?'text-tertiary-container':'text-primary'}">${pos?'+':''}${s.shap.toFixed(3)}</td><td class="py-2.5 px-3 w-28"><div class="h-2 bg-surface-container rounded-full overflow-hidden"><div class="h-full ${pos?'bg-tertiary-container':'bg-primary'} rounded-full score-bar" style="width:${bw.toFixed(1)}%"></div></div></td><td class="py-2.5 px-3 ${pos?'text-tertiary-container':'text-primary'} text-[10px] font-label-sm">${pos?'▲ Risk':'▼ Reduces'}</td></tr>`;}).join('')}</tbody>
     </table></div>
   </div>
   <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-    ${[{l:'Payload Variance',v:payloadVar,u:'bytes²'},{l:'Record Heterogeneity',v:recHet,u:''},{l:'N-gram Score',v:ngramScore,u:''},{l:'Unique IPs',v:uniqIps,u:''}].map(f=>`<div class="glass-panel rounded-xl p-4 text-center"><div class="text-lg font-bold ${threat?'text-tertiary-container':'text-secondary'} font-label-md">${typeof f.v==='number'?f.v.toFixed(2):f.v}${f.u}</div><div class="text-[10px] font-label-sm text-on-surface-variant mt-1">${f.l}</div></div>`).join('')}
+    ${[{l:'Payload Variance',v:payloadVar,u:'bytes²'},{l:'Record Heterogeneity',v:recHet,u:''},{l:'N-gram Score',v:ngramScore,u:''},{l:'Unique IPs',v:uniqIps,u:''}].map(f=>`<div class="glass-panel rounded-xl p-4 text-center"><div class="text-lg font-bold ${threat?'text-tertiary-container':'text-secondary'} font-label-md">${typeof f.v==='number'?f.v.toFixed(2):escapeHtml(f.v)}${escapeHtml(f.u)}</div><div class="text-[10px] font-label-sm text-on-surface-variant mt-1">${escapeHtml(f.l)}</div></div>`).join('')}
   </div>
 </div>`;
         }
