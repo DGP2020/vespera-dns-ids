@@ -128,15 +128,116 @@
         html:not(.dark) input, html:not(.dark) select { background-color:#ffffff!important; color:#171b26!important; border-color:#c2c6d6!important; }
         
         .main-content-wrapper { margin-left: 16rem; padding-top: 4rem; transition: margin-left 0.3s ease; }
-        .tab-content-page { margin-left: 16rem; padding: 2rem 3rem; padding-top: 5rem; }
+        .tab-content-page { margin-left: 16rem; padding: 2rem 3rem; padding-top: 5rem; transition: margin-left 0.3s ease; }
         .sidebar-collapsed + .main-content-wrapper { margin-left: 0; }
+        .sidebar-collapsed ~ .tab-content-page { margin-left: 0; }
         .sidebar { transition: transform 0.3s ease; }
         .sidebar-collapsed { transform: translateX(-100%); }
         
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+        /* Visible High-Contrast Native Scrollbar */
+        ::-webkit-scrollbar { width: 10px; height: 10px; }
+        ::-webkit-scrollbar-track { background: rgba(15, 19, 29, 0.6); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: rgba(173, 198, 255, 0.25); border-radius: 10px; border: 2px solid rgba(15, 19, 29, 0.6); }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(173, 198, 255, 0.5); }
+        html:not(.dark) ::-webkit-scrollbar-track { background: rgba(220, 226, 240, 0.6); }
+        html:not(.dark) ::-webkit-scrollbar-thumb { background: rgba(0, 90, 194, 0.3); border: 2px solid rgba(220, 226, 240, 0.6); }
+        html:not(.dark) ::-webkit-scrollbar-thumb:hover { background: rgba(0, 90, 194, 0.6); }
+
+        /* Custom Interactive Scroll Dock */
+        .custom-scroll-dock {
+            background: rgba(28, 31, 42, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 12px 36px 0 rgba(0, 0, 0, 0.4), 0 0 20px rgba(77, 142, 255, 0.15);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        html:not(.dark) .custom-scroll-dock {
+            background: rgba(255, 255, 255, 0.92);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            box-shadow: 0 12px 36px 0 rgba(0, 0, 0, 0.12), 0 0 15px rgba(0, 90, 194, 0.08);
+        }
+        .custom-scroll-rail {
+            position: relative;
+            width: 14px;
+            height: 180px;
+            background: rgba(10, 14, 24, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 9999px;
+            cursor: pointer;
+            overflow: hidden;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .custom-scroll-rail:hover {
+            border-color: rgba(77, 142, 255, 0.5);
+            box-shadow: 0 0 10px rgba(77, 142, 255, 0.2);
+        }
+        html:not(.dark) .custom-scroll-rail {
+            background: rgba(220, 226, 240, 0.85);
+            border: 1px solid rgba(0, 0, 0, 0.14);
+        }
+        html:not(.dark) .custom-scroll-rail:hover {
+            border-color: rgba(0, 90, 194, 0.5);
+        }
+        .custom-scroll-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 0%;
+            background: linear-gradient(to bottom, #4d8eff, #4edea3);
+            opacity: 0.35;
+            transition: height 0.05s ease-out;
+            pointer-events: none;
+        }
+        .custom-scroll-thumb-btn {
+            position: absolute;
+            left: 1px;
+            width: 10px;
+            height: 32px;
+            border-radius: 9999px;
+            background: linear-gradient(180deg, #adc6ff, #4d8eff);
+            box-shadow: 0 0 10px rgba(77, 142, 255, 0.6);
+            cursor: grab;
+            transition: background 0.2s ease, box-shadow 0.2s ease;
+            user-select: none;
+            touch-action: none;
+        }
+        .custom-scroll-thumb-btn:active {
+            cursor: grabbing;
+            background: linear-gradient(180deg, #d8e2ff, #4edea3);
+            box-shadow: 0 0 14px rgba(78, 222, 163, 0.8);
+        }
+        .custom-scroll-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #c2c6d6;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        .custom-scroll-btn:hover {
+            color: #ffffff;
+            background: rgba(77, 142, 255, 0.25);
+            border-color: rgba(77, 142, 255, 0.5);
+            transform: scale(1.1);
+            box-shadow: 0 0 12px rgba(77, 142, 255, 0.4);
+        }
+        html:not(.dark) .custom-scroll-btn {
+            color: #424754;
+            background: rgba(0, 0, 0, 0.04);
+            border-color: rgba(0, 0, 0, 0.08);
+        }
+        html:not(.dark) .custom-scroll-btn:hover {
+            color: #005ac2;
+            background: rgba(0, 90, 194, 0.12);
+            border-color: rgba(0, 90, 194, 0.3);
+        }
     </style>
     <script>
         // HTML / JS Sanitizers for XSS protection
@@ -171,17 +272,162 @@
                 if(s) s.classList.toggle('sidebar-nav-active', t===tab);
             });
             window.scrollTo(0,0);
+            setTimeout(updateScrollProgress, 60);
         }
 
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const mainContent = document.getElementById('main-content');
             sidebar.classList.toggle('sidebar-collapsed');
-            if(sidebar.classList.contains('sidebar-collapsed')) {
-                mainContent.style.marginLeft = '0';
-            } else {
-                mainContent.style.marginLeft = '16rem';
+            const isCollapsed = sidebar.classList.contains('sidebar-collapsed');
+            mainContent.style.marginLeft = isCollapsed ? '0' : '16rem';
+            document.querySelectorAll('.tab-content-page').forEach(tabEl => {
+                tabEl.style.marginLeft = isCollapsed ? '0' : '16rem';
+            });
+        }
+
+        // ===== CUSTOM SCROLL CONTROLLER LOGIC =====
+        let isDraggingScrollThumb = false;
+        let scrollDragStartY = 0;
+        let scrollDragStartScrollTop = 0;
+
+        function updateScrollProgress() {
+            const docElem = document.documentElement;
+            const docBody = document.body;
+            const scrollTop = window.pageYOffset || docElem.scrollTop || docBody.scrollTop || 0;
+            const scrollHeight = Math.max(docElem.scrollHeight, docBody.scrollHeight, docElem.offsetHeight, docBody.offsetHeight);
+            const clientHeight = window.innerHeight || docElem.clientHeight || 1;
+            
+            const maxScroll = Math.max(scrollHeight - clientHeight, 1);
+            const scrollPercent = Math.min(Math.max(scrollTop / maxScroll, 0), 1);
+            const percentInt = Math.round(scrollPercent * 100);
+            
+            // Top reading progress bar
+            const topBar = document.getElementById('topScrollProgressBar');
+            if (topBar) {
+                topBar.style.width = (scrollPercent * 100) + '%';
             }
+            
+            // Percentage badge
+            const badge = document.getElementById('scrollPercentBadge');
+            if (badge) {
+                badge.innerText = percentInt + '%';
+            }
+            
+            // Vertical rail fill and draggable thumb
+            const rail = document.getElementById('customScrollRail');
+            const fill = document.getElementById('customScrollFill');
+            const thumb = document.getElementById('customScrollThumb');
+            
+            if (rail && thumb) {
+                const railHeight = rail.clientHeight || 180;
+                const thumbHeight = thumb.clientHeight || 32;
+                const maxThumbTop = Math.max(railHeight - thumbHeight - 2, 0);
+                const thumbTop = Math.round(scrollPercent * maxThumbTop);
+                
+                thumb.style.transform = `translateY(${thumbTop}px)`;
+                if (fill) {
+                    fill.style.height = `${scrollPercent * 100}%`;
+                }
+            }
+        }
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function scrollToBottom() {
+            const docElem = document.documentElement;
+            const docBody = document.body;
+            const scrollHeight = Math.max(docElem.scrollHeight, docBody.scrollHeight);
+            window.scrollTo({ top: scrollHeight, behavior: 'smooth' });
+        }
+
+        function scrollStepUp() {
+            window.scrollBy({ top: -380, behavior: 'smooth' });
+        }
+
+        function scrollStepDown() {
+            window.scrollBy({ top: 380, behavior: 'smooth' });
+        }
+
+        function handleRailClick(event) {
+            if (event.target.closest('#customScrollThumb')) return;
+            const rail = document.getElementById('customScrollRail');
+            if (!rail) return;
+            
+            const rect = rail.getBoundingClientRect();
+            const clickY = event.clientY - rect.top;
+            const ratio = Math.min(Math.max(clickY / rect.height, 0), 1);
+            
+            const docElem = document.documentElement;
+            const docBody = document.body;
+            const scrollHeight = Math.max(docElem.scrollHeight, docBody.scrollHeight);
+            const clientHeight = window.innerHeight || docElem.clientHeight || 1;
+            const maxScroll = Math.max(scrollHeight - clientHeight, 0);
+            
+            window.scrollTo({
+                top: ratio * maxScroll,
+                behavior: 'smooth'
+            });
+        }
+
+        function initCustomScrollController() {
+            const rail = document.getElementById('customScrollRail');
+            const thumb = document.getElementById('customScrollThumb');
+            
+            if (rail) {
+                rail.addEventListener('click', handleRailClick);
+            }
+            
+            if (thumb) {
+                const onPointerDown = (e) => {
+                    isDraggingScrollThumb = true;
+                    scrollDragStartY = e.clientY;
+                    scrollDragStartScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                    thumb.style.cursor = 'grabbing';
+                    document.body.style.userSelect = 'none';
+                    document.addEventListener('pointermove', onPointerMove);
+                    document.addEventListener('pointerup', onPointerUp);
+                };
+                
+                const onPointerMove = (e) => {
+                    if (!isDraggingScrollThumb || !rail) return;
+                    const deltaY = e.clientY - scrollDragStartY;
+                    const railHeight = rail.clientHeight || 180;
+                    const thumbHeight = thumb.clientHeight || 32;
+                    const maxThumbTravel = Math.max(railHeight - thumbHeight, 1);
+                    
+                    const docElem = document.documentElement;
+                    const docBody = document.body;
+                    const scrollHeight = Math.max(docElem.scrollHeight, docBody.scrollHeight);
+                    const clientHeight = window.innerHeight || docElem.clientHeight || 1;
+                    const maxScroll = Math.max(scrollHeight - clientHeight, 0);
+                    
+                    const scrollDelta = (deltaY / maxThumbTravel) * maxScroll;
+                    window.scrollTo({
+                        top: Math.min(Math.max(scrollDragStartScrollTop + scrollDelta, 0), maxScroll),
+                        behavior: 'auto'
+                    });
+                };
+                
+                const onPointerUp = () => {
+                    if (isDraggingScrollThumb) {
+                        isDraggingScrollThumb = false;
+                        thumb.style.cursor = 'grab';
+                        document.body.style.userSelect = '';
+                        document.removeEventListener('pointermove', onPointerMove);
+                        document.removeEventListener('pointerup', onPointerUp);
+                    }
+                };
+                
+                thumb.addEventListener('pointerdown', onPointerDown);
+            }
+            
+            window.addEventListener('scroll', updateScrollProgress, { passive: true });
+            window.addEventListener('resize', updateScrollProgress, { passive: true });
+            
+            updateScrollProgress();
         }
 
         function toggleTheme() {
@@ -793,6 +1039,61 @@
 </div>
 </header>
 
+<!-- Top Scroll Progress Bar -->
+<div id="topScrollProgressBar" class="fixed top-16 left-0 h-1 bg-gradient-to-r from-primary via-secondary to-tertiary-container z-50 transition-all duration-75 shadow-[0_0_10px_rgba(77,142,255,0.8)]" style="width: 0%;"></div>
+
+<!-- Dedicated Floating Quick-Scroll Controller Bar -->
+<aside id="floatingScrollController" aria-label="Page Scroll Navigation" class="fixed right-3 md:right-5 top-1/2 -translate-y-1/2 z-50 flex flex-col items-center gap-1.5 p-2 rounded-2xl custom-scroll-dock group select-none shadow-2xl transition-all duration-300">
+    <!-- Position Percentage Badge -->
+    <div class="tooltip mb-0.5">
+        <span id="scrollPercentBadge" class="px-2 py-0.5 rounded-full bg-primary/20 text-primary text-[10px] font-label-md font-bold tracking-wider border border-primary/30">0%</span>
+        <span class="tooltip-text">Scroll Position</span>
+    </div>
+
+    <!-- Scroll to Top Button -->
+    <button onclick="scrollToTop()" class="custom-scroll-btn tooltip" title="Scroll to Top" aria-label="Scroll to Top">
+        <span class="material-symbols-outlined text-base">vertical_align_top</span>
+        <span class="tooltip-text">Scroll to Top</span>
+    </button>
+
+    <!-- Scroll Step Up Button -->
+    <button onclick="scrollStepUp()" class="custom-scroll-btn tooltip" title="Scroll Up" aria-label="Scroll Up">
+        <span class="material-symbols-outlined text-base">keyboard_arrow_up</span>
+        <span class="tooltip-text">Scroll Up (Step)</span>
+    </button>
+
+    <!-- Interactive Custom Scroll Rail & Draggable Thumb -->
+    <div class="py-1 px-0.5 tooltip relative">
+        <div id="customScrollRail" class="custom-scroll-rail" title="Click or Drag to Scroll">
+            <div id="customScrollFill" class="custom-scroll-fill"></div>
+            <!-- Section Tick Marks -->
+            <div class="absolute inset-y-0 w-full flex flex-col justify-between py-2 items-center pointer-events-none opacity-30">
+                <div class="w-1.5 h-0.5 bg-on-surface rounded-full"></div>
+                <div class="w-1.5 h-0.5 bg-on-surface rounded-full"></div>
+                <div class="w-1.5 h-0.5 bg-on-surface rounded-full"></div>
+                <div class="w-1.5 h-0.5 bg-on-surface rounded-full"></div>
+            </div>
+            <!-- Draggable Thumb Handle -->
+            <div id="customScrollThumb" class="custom-scroll-thumb-btn flex items-center justify-center">
+                <div class="w-1 h-3 rounded-full bg-surface-container-lowest/80"></div>
+            </div>
+        </div>
+        <span class="tooltip-text">Click or Drag Scrollbar</span>
+    </div>
+
+    <!-- Scroll Step Down Button -->
+    <button onclick="scrollStepDown()" class="custom-scroll-btn tooltip" title="Scroll Down" aria-label="Scroll Down">
+        <span class="material-symbols-outlined text-base">keyboard_arrow_down</span>
+        <span class="tooltip-text">Scroll Down (Step)</span>
+    </button>
+
+    <!-- Scroll to Bottom Button -->
+    <button onclick="scrollToBottom()" class="custom-scroll-btn tooltip" title="Scroll to Bottom" aria-label="Scroll to Bottom">
+        <span class="material-symbols-outlined text-base">vertical_align_bottom</span>
+        <span class="tooltip-text">Scroll to Bottom</span>
+    </button>
+</aside>
+
 <!-- SideNavBar -->
 <aside class="sidebar bg-surface-container/60 backdrop-blur-xl dark:bg-surface-container/60 text-primary dark:text-primary border-r border-outline-variant/30 dark:border-outline-variant/30 fixed left-0 top-16 h-[calc(100vh-64px)] flex flex-col z-40 w-64" id="sidebar">
 <div class="p-4 border-b border-outline-variant/20 flex flex-col gap-1">
@@ -1210,6 +1511,8 @@
         renderIOCTable();
         renderAttackBreakdown();
         renderRegionList();
+        // Initialize custom scrollbar controller
+        initCustomScrollController();
         // Start live log streaming
         startLiveLogs();
     });
