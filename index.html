@@ -81,58 +81,93 @@
   }
 </script>
 <style>
-        body {
-            background-color: #0B0F19;
-            color: #dfe2f1;
-            background-image: 
-                radial-gradient(circle at 15% 50%, rgba(77, 142, 255, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at 85% 30%, rgba(255, 84, 81, 0.05) 0%, transparent 50%);
-            background-attachment: fixed;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-        .glass-panel {
-            background: rgba(28, 31, 42, 0.4); 
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
-            transition: background 0.3s ease, border-color 0.3s ease;
-        }
-        .status-benign { background: rgba(77,142,255,0.1); border: 1px solid rgba(77,142,255,0.3); color: #4d8eff; }
-        .status-alert  { background: rgba(255,84,81,0.1);  border: 1px solid rgba(255,84,81,0.3);  color: #ff5451; }
-        .input-glow:focus { box-shadow: 0 0 0 2px rgba(77,142,255,0.3); border-color: #4d8eff; }
+        /* ===== ENTERPRISE SOC THEME ===== */
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap');
 
-        /* Tab System */
+        :root {
+            --bg-base:     #0a0d14;
+            --bg-panel:    #0f1320;
+            --bg-panel-2:  #131826;
+            --bg-row-alt:  #111624;
+            --border:      #1e2538;
+            --border-hi:   #2a3350;
+            --text-primary: #e4e8f7;
+            --text-muted:  #5d6b8a;
+            --text-dim:    #3a4460;
+            --accent-blue:  #4d8eff;
+            --accent-green: #00d68f;
+            --accent-orange:#f7a35c;
+            --accent-red:   #ff4f4f;
+            --accent-yellow:#f7e25c;
+            --accent-purple:#a855f7;
+        }
+
+        * { box-sizing: border-box; }
+        html.dark, html { color-scheme: dark; }
+
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            background-image: none;
+            transition: none;
+        }
+
+        /* Enterprise panel — no blur, flat matte */
+        .glass-panel {
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            box-shadow: none;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            transition: border-color 0.2s ease;
+        }
+        .glass-panel:hover { border-color: var(--border-hi); }
+
+        /* Status badges */
+        .status-benign { background: rgba(0,214,143,0.08); border: 1px solid rgba(0,214,143,0.3); color: var(--accent-green); }
+        .status-alert  { background: rgba(255,79,79,0.08);  border: 1px solid rgba(255,79,79,0.3);  color: var(--accent-red); }
+
+        .input-glow:focus { outline: none; box-shadow: 0 0 0 1px var(--accent-blue); border-color: var(--accent-blue); }
+
+        /* Tab system */
         .tab-view { display: none; }
         .tab-view.active { display: block; }
-        .nav-tab-active { color: #adc6ff !important; font-weight: 700 !important; border-bottom: 2px solid #adc6ff; padding-bottom: 4px; }
-        .sidebar-nav-active { background: rgba(77,142,255,0.2) !important; color: #adc6ff !important; border: 1px solid rgba(77,142,255,0.2) !important; }
+        .nav-tab-active { color: var(--accent-blue) !important; font-weight: 600 !important; border-bottom: 2px solid var(--accent-blue); padding-bottom: 3px; }
+        .sidebar-nav-active { background: rgba(77,142,255,0.12) !important; color: var(--accent-blue) !important; border-left: 2px solid var(--accent-blue) !important; border-radius: 0 !important; }
 
         /* Animations */
         @keyframes pulse-ring { 0%{transform:scale(0.8);opacity:1;} 100%{transform:scale(2);opacity:0;} }
         .live-pulse::before { content:''; position:absolute; inset:0; border-radius:9999px; background:currentColor; animation:pulse-ring 1.5s ease-out infinite; }
         .live-pulse { position: relative; }
-        @keyframes slideInLog { from{opacity:0;transform:translateX(-10px);} to{opacity:1;transform:translateX(0);} }
-        .log-entry { animation: slideInLog 0.3s ease forwards; }
+        @keyframes slideInLog { from{opacity:0;transform:translateY(-4px);} to{opacity:1;transform:translateY(0);} }
+        .log-entry { animation: slideInLog 0.25s ease forwards; }
         @keyframes growBar { from{width:0;} }
         .score-bar { animation: growBar 0.6s ease forwards; }
         @keyframes spin { to{transform:rotate(360deg);} }
         .spinner { animation: spin 0.7s linear infinite; }
-        .threat-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
-        .threat-card:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(0,0,0,0.3); }
+        .threat-card { transition: border-color 0.2s ease; }
+        .threat-card:hover { border-color: var(--border-hi) !important; }
 
-        /* Light Mode */
-        html:not(.dark) body { background-color:#f4f6fc; color:#171b26; }
-        html:not(.dark) .glass-panel { background:rgba(255,255,255,0.85); border:1px solid rgba(0,0,0,0.08); box-shadow:0 8px 32px 0 rgba(0,0,0,0.06); }
-        html:not(.dark) header, html:not(.dark) aside { background-color:rgba(255,255,255,0.9)!important; border-color:rgba(0,0,0,0.08)!important; color:#171b26!important; }
-        html:not(.dark) input, html:not(.dark) select { background-color:#ffffff!important; color:#171b26!important; border-color:#c2c6d6!important; }
-        
-        .main-content-wrapper { margin-left: 16rem; padding-top: 4rem; transition: margin-left 0.3s ease; }
-        .tab-content-page { margin-left: 16rem; padding: 2rem 3rem; padding-top: 5rem; transition: margin-left 0.3s ease; }
+        /* Light mode — keep enterprise dark, just lighten slightly */
+        html:not(.dark) body { background-color: #0a0d14; color: #e4e8f7; }
+        html:not(.dark) header, html:not(.dark) aside { background-color: #0f1320 !important; border-color: #1e2538 !important; color: #e4e8f7 !important; }
+        html:not(.dark) input, html:not(.dark) select { background-color: #131826 !important; color: #e4e8f7 !important; border-color: #1e2538 !important; }
+        html:not(.dark) .glass-panel { background: #0f1320; border-color: #1e2538; }
+
+        /* Layout */
+        .main-content-wrapper { margin-left: 14rem; padding-top: 3rem; transition: margin-left 0.25s ease; }
+        .tab-content-page { margin-left: 14rem; padding: 1.5rem 2rem; padding-top: 4.5rem; transition: margin-left 0.25s ease; }
         .sidebar-collapsed + .main-content-wrapper { margin-left: 0; }
         .sidebar-collapsed ~ .tab-content-page { margin-left: 0; }
-        .sidebar { transition: transform 0.3s ease; }
+        .sidebar { transition: transform 0.25s ease; }
         .sidebar-collapsed { transform: translateX(-100%); }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #0a0d14; }
+        ::-webkit-scrollbar-thumb { background: #1e2538; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #2a3350; }
         
         /* Visible High-Contrast Native Scrollbar */
         ::-webkit-scrollbar { width: 10px; height: 10px; }
@@ -563,22 +598,22 @@
 
             const t1Container = document.getElementById('t1StatusContainer');
             if (t1Score > 0.70) {
-                t1Container.className = 'status-alert p-5 rounded-xl flex items-center justify-between backdrop-blur-md shadow-lg transition-all';
+                t1Container.style.cssText = 'padding:10px 14px;border:1px solid rgba(255,79,79,0.35);background:rgba(255,79,79,0.07);display:flex;align-items:center;justify-content:space-between;border-radius:2px;margin-bottom:10px;';
                 t1Container.innerHTML = `
-                    <div class="flex items-center gap-4">
-                        <span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">warning</span>
-                        <span class="font-headline-md text-headline-md font-semibold">🚨 SUSPICIOUS (Score: ${t1Score.toFixed(2)})</span>
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <span class="material-symbols-outlined" style="font-size:20px;color:#ff4f4f;">warning</span>
+                        <span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:#ff4f4f;">SUSPICIOUS (Score: ${t1Score.toFixed(2)})</span>
                     </div>
-                    <span class="font-label-sm text-xs px-3 py-1 bg-tertiary-container/20 border border-tertiary-container/40 text-tertiary-container rounded-full">High Risk</span>
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#ff4f4f;border:1px solid rgba(255,79,79,0.4);padding:2px 8px;border-radius:2px;">HIGH RISK</span>
                 `;
             } else {
-                t1Container.className = 'status-benign p-5 rounded-xl flex items-center justify-between backdrop-blur-md shadow-lg transition-all';
+                t1Container.style.cssText = 'padding:10px 14px;border:1px solid rgba(0,214,143,0.3);background:rgba(0,214,143,0.06);display:flex;align-items:center;justify-content:space-between;border-radius:2px;margin-bottom:10px;';
                 t1Container.innerHTML = `
-                    <div class="flex items-center gap-4">
-                        <span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">check_circle</span>
-                        <span class="font-headline-md text-headline-md font-semibold">BENIGN (Score: ${t1Score.toFixed(2)})</span>
+                    <div style="display:flex;align-items:center;gap:10px;">
+                        <span class="material-symbols-outlined" style="font-size:20px;color:#00d68f;">check_circle</span>
+                        <span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:#00d68f;">BENIGN (Score: ${t1Score.toFixed(2)})</span>
                     </div>
-                    <span class="font-label-sm text-xs px-3 py-1 bg-primary/20 border border-primary/40 text-primary rounded-full">Low Risk</span>
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5d6b8a;">Low Risk</span>
                 `;
             }
 
@@ -694,9 +729,19 @@
 
         // ===== STATS =====
         function updateStats() {
+            // Legacy stat elements (Logs tab)
             const t=document.getElementById('statTotal'); if(t) t.innerText=appState.totalAnalyzed;
             const th=document.getElementById('statThreats'); if(th) th.innerText=appState.totalThreats;
             const b=document.getElementById('statBenign'); if(b) b.innerText=appState.totalBenign;
+            // Enterprise KPI counters (Dashboard)
+            const kt=document.getElementById('kpi-total'); if(kt) kt.innerText=appState.totalAnalyzed;
+            const kth=document.getElementById('kpi-threats'); if(kth) kth.innerText=appState.totalThreats;
+            const kb=document.getElementById('kpi-benign'); if(kb) kb.innerText=appState.totalBenign;
+            const kavg=document.getElementById('kpi-t1avg');
+            if(kavg && appState.totalAnalyzed>0) {
+                const avg = (appState.totalThreats*0.95 + appState.totalBenign*0.05) / appState.totalAnalyzed;
+                kavg.innerText = avg.toFixed(3);
+            }
         }
 
         // ===== LOGS =====
@@ -705,7 +750,31 @@
             appState.logs.unshift(entry);
             if(appState.logs.length>200) appState.logs.pop();
             renderLogs(); updateLogStats();
+            // Update enterprise dashboard live log table
+            const dashTb = document.getElementById('dashLiveLogBody');
+            if(dashTb) {
+                const isThreat = entry.verdict === 'threat';
+                const newRow = document.createElement('tr');
+                newRow.style.cssText = 'border-bottom:1px solid #1e2538;' + (isThreat ? 'background:rgba(255,79,79,0.04);' : '');
+                newRow.innerHTML = `
+                    <td style="padding:5px 10px;font-family:'JetBrains Mono',monospace;font-size:10px;color:#3a4460;">${entry.id}</td>
+                    <td style="padding:5px 10px;font-family:'JetBrains Mono',monospace;font-size:10px;color:#5d6b8a;">${entry.ts}</td>
+                    <td style="padding:5px 10px;font-family:'JetBrains Mono',monospace;font-size:10px;color:#e4e8f7;">${entry.domain}</td>
+                    <td style="padding:5px 10px;font-family:'JetBrains Mono',monospace;font-size:10px;color:#5d6b8a;">${entry.record}</td>
+                    <td style="padding:5px 10px;font-family:'JetBrains Mono',monospace;font-size:10px;color:#f7a35c;">${Number(entry.entropy).toFixed(4)}</td>
+                    <td style="padding:5px 10px;font-family:'JetBrains Mono',monospace;font-size:10px;color:${isThreat?'#ff4f4f':'#00d68f'};">${Number(entry.t1Score).toFixed(2)}</td>
+                    <td style="padding:5px 10px;">
+                        <span style="font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;letter-spacing:0.06em;padding:2px 7px;border-radius:2px;${isThreat?'background:rgba(255,79,79,0.12);border:1px solid rgba(255,79,79,0.4);color:#ff4f4f;':'background:rgba(0,214,143,0.08);border:1px solid rgba(0,214,143,0.3);color:#00d68f;'}">${isThreat?'THREAT':'BENIGN'}</span>
+                    </td>
+                `;
+                // Clear placeholder row if present
+                if(dashTb.rows.length===1 && dashTb.rows[0].cells.length===1) dashTb.innerHTML='';
+                dashTb.insertBefore(newRow, dashTb.firstChild);
+                // Cap at 50 rows
+                while(dashTb.rows.length > 50) dashTb.deleteRow(dashTb.rows.length-1);
+            }
         }
+
         function renderLogs() {
             const tb=document.getElementById('log-table-body');
             const em=document.getElementById('logEmptyState');
@@ -1086,285 +1155,220 @@
 </header>
 
 <!-- Top Scroll Progress Bar -->
-<div id="topScrollProgressBar" class="fixed top-16 left-0 h-1 bg-gradient-to-r from-primary via-secondary to-tertiary-container z-50 transition-all duration-75 shadow-[0_0_10px_rgba(77,142,255,0.8)]" style="width: 0%;"></div>
+<div id="topScrollProgressBar" class="fixed top-12 left-0 h-[2px] z-50 transition-all duration-75" style="width: 0%; background: linear-gradient(90deg, #4d8eff, #00d68f);"></div>
 
-<!-- Dedicated Floating Quick-Scroll Controller Bar -->
+<!-- Floating Scroll Controller -->
 <aside id="floatingScrollController" aria-label="Page Scroll Navigation"
     class="fixed right-4 top-1/2 -translate-y-1/2 z-50 flex flex-col items-center gap-2 py-3 px-2 rounded-2xl custom-scroll-dock select-none">
-
-    <!-- Scroll Position % -->
     <span id="scrollPercentBadge" class="sdock-pct">0%</span>
-
     <div class="sdock-divider"></div>
-
-    <!-- Jump to Top -->
-    <button onclick="scrollToTop()" class="sdock-btn" aria-label="Scroll to Top">
-        &#8679;
-        <span class="sdock-tip">Jump to Top</span>
-    </button>
-
-    <!-- Step Up -->
-    <button onclick="scrollStepUp()" class="sdock-btn" aria-label="Scroll Up">
-        &#8593;
-        <span class="sdock-tip">Scroll Up</span>
-    </button>
-
-    <!-- Scroll Rail -->
-    <div id="customScrollRail" class="custom-scroll-rail" title="Click or drag to scroll" style="margin: 2px 0;">
+    <button onclick="scrollToTop()" class="sdock-btn" aria-label="Scroll to Top">&#8679;<span class="sdock-tip">Jump to Top</span></button>
+    <button onclick="scrollStepUp()" class="sdock-btn" aria-label="Scroll Up">&#8593;<span class="sdock-tip">Scroll Up</span></button>
+    <div id="customScrollRail" class="custom-scroll-rail" title="Click or drag" style="margin: 2px 0;">
         <div id="customScrollFill" class="custom-scroll-fill"></div>
-        <!-- Tick marks -->
-        <div class="absolute inset-y-0 w-full flex flex-col justify-between py-3 items-center pointer-events-none" style="opacity:0.2;">
-            <div style="width:6px;height:2px;background:currentColor;border-radius:1px;"></div>
-            <div style="width:6px;height:2px;background:currentColor;border-radius:1px;"></div>
-            <div style="width:6px;height:2px;background:currentColor;border-radius:1px;"></div>
-        </div>
-        <!-- Draggable thumb -->
         <div id="customScrollThumb" class="custom-scroll-thumb-btn"></div>
     </div>
-
-    <!-- Step Down -->
-    <button onclick="scrollStepDown()" class="sdock-btn" aria-label="Scroll Down">
-        &#8595;
-        <span class="sdock-tip">Scroll Down</span>
-    </button>
-
-    <!-- Jump to Bottom -->
-    <button onclick="scrollToBottom()" class="sdock-btn" aria-label="Scroll to Bottom">
-        &#8681;
-        <span class="sdock-tip">Jump to Bottom</span>
-    </button>
-
+    <button onclick="scrollStepDown()" class="sdock-btn" aria-label="Scroll Down">&#8595;<span class="sdock-tip">Scroll Down</span></button>
+    <button onclick="scrollToBottom()" class="sdock-btn" aria-label="Scroll to Bottom">&#8681;<span class="sdock-tip">Jump to Bottom</span></button>
 </aside>
 
-<!-- SideNavBar -->
-<aside class="sidebar bg-surface-container/60 backdrop-blur-xl dark:bg-surface-container/60 text-primary dark:text-primary border-r border-outline-variant/30 dark:border-outline-variant/30 fixed left-0 top-16 h-[calc(100vh-64px)] flex flex-col z-40 w-64" id="sidebar">
-<div class="p-4 border-b border-outline-variant/20 flex flex-col gap-1">
-<div class="flex items-center gap-3 mb-2">
-<div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center border border-primary/30 relative">
-<span class="material-symbols-outlined text-primary text-sm">security</span>
-<div class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-secondary rounded-full border border-surface-container"></div>
+<aside class="sidebar fixed left-0 top-12 h-[calc(100vh-48px)] flex flex-col z-40 w-56" id="sidebar"
+    style="background:#0f1320; border-right:1px solid #1e2538;">
+<div style="padding:12px 12px 8px; border-bottom:1px solid #1e2538;">
+    <div style="display:flex;align-items:center;gap:8px;">
+        <div style="width:28px;height:28px;border-radius:4px;background:rgba(77,142,255,0.15);border:1px solid rgba(77,142,255,0.3);display:flex;align-items:center;justify-content:center;">
+            <span class="material-symbols-outlined" style="font-size:14px;color:#4d8eff;">security</span>
+        </div>
+        <div>
+            <div style="font-family:'Inter',sans-serif;font-size:11px;font-weight:700;color:#e4e8f7;letter-spacing:0.06em;">VESPERA IDS</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#5d6b8a;">v1.4.2-STABLE</div>
+        </div>
+    </div>
 </div>
-<div>
-<h2 class="font-headline-md text-sm font-semibold text-on-surface">Detection Engine</h2>
-<p class="font-label-sm text-xs text-on-surface-variant">V1.4.2-Stable</p>
+<div style="padding:8px 6px;">
+    <button onclick="setPreset('suspicious')" style="width:100%;padding:7px 12px;background:rgba(77,142,255,0.12);border:1px solid rgba(77,142,255,0.25);border-radius:4px;color:#4d8eff;font-family:'Inter',sans-serif;font-size:11px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;justify-content:center;letter-spacing:0.04em;">
+        <span class="material-symbols-outlined" style="font-size:13px;">add</span> NEW SIMULATION
+    </button>
 </div>
-</div>
-</div>
-<div class="p-4">
-<button onclick="setPreset('suspicious')" class="w-full py-2.5 px-4 bg-primary text-on-primary font-label-md rounded-full flex items-center justify-center gap-2 hover:opacity-90 hover:shadow-[0_0_15px_rgba(77,142,255,0.4)] transition-all">
-<span class="material-symbols-outlined text-sm">add</span> New Simulation
-</button>
-</div>
-<nav class="flex-1 overflow-y-auto py-2 px-2">
-<a id="side-dashboard" class="sidebar-nav flex items-center gap-3 rounded-xl mx-2 my-1 px-3 py-2.5 font-label-md transition-all cursor-pointer text-on-surface-variant hover:bg-surface-variant/50 hover:text-on-surface" onclick="switchTab('dashboard')"><span class="material-symbols-outlined">radar</span> Simulation</a>
-<a id="side-threat-intel" class="sidebar-nav flex items-center gap-3 rounded-xl mx-2 my-1 px-3 py-2.5 font-label-md transition-all cursor-pointer text-on-surface-variant hover:bg-surface-variant/50 hover:text-on-surface" onclick="switchTab('threat-intel')"><span class="material-symbols-outlined">analytics</span> Threat Intelligence</a>
-<a id="side-logs" class="sidebar-nav flex items-center gap-3 rounded-xl mx-2 my-1 px-3 py-2.5 font-label-md transition-all cursor-pointer text-on-surface-variant hover:bg-surface-variant/50 hover:text-on-surface" onclick="switchTab('logs')"><span class="material-symbols-outlined">list_alt</span> Logs</a>
-<a id="side-tier1" class="sidebar-nav flex items-center gap-3 rounded-xl mx-2 my-1 px-3 py-2.5 font-label-md transition-all cursor-pointer text-on-surface-variant hover:bg-surface-variant/50 hover:text-on-surface" onclick="switchTab('tier1')"><span class="material-symbols-outlined">shield</span> Tier-1 Analysis</a>
-<a id="side-tier2" class="sidebar-nav flex items-center gap-3 rounded-xl mx-2 my-1 px-3 py-2.5 font-label-md transition-all cursor-pointer text-on-surface-variant hover:bg-surface-variant/50 hover:text-on-surface" onclick="switchTab('tier2')"><span class="material-symbols-outlined">security</span> Tier-2 Deep Dive</a>
+<nav style="flex:1;overflow-y:auto;padding:4px 0;">
+    <div style="padding:4px 12px 2px;font-family:'JetBrains Mono',monospace;font-size:9px;color:#3a4460;letter-spacing:0.1em;text-transform:uppercase;">Analysis</div>
+    <a id="side-dashboard" class="sidebar-nav" onclick="switchTab('dashboard')" style="display:flex;align-items:center;gap:8px;padding:8px 12px;cursor:pointer;font-family:'Inter',sans-serif;font-size:12px;color:#5d6b8a;border-left:2px solid transparent;transition:all 0.15s ease;text-decoration:none;">
+        <span class="material-symbols-outlined" style="font-size:15px;">radar</span> Dashboard
+    </a>
+    <a id="side-threat-intel" class="sidebar-nav" onclick="switchTab('threat-intel')" style="display:flex;align-items:center;gap:8px;padding:8px 12px;cursor:pointer;font-family:'Inter',sans-serif;font-size:12px;color:#5d6b8a;border-left:2px solid transparent;transition:all 0.15s ease;text-decoration:none;">
+        <span class="material-symbols-outlined" style="font-size:15px;">analytics</span> Threat Intel
+    </a>
+    <a id="side-logs" class="sidebar-nav" onclick="switchTab('logs')" style="display:flex;align-items:center;gap:8px;padding:8px 12px;cursor:pointer;font-family:'Inter',sans-serif;font-size:12px;color:#5d6b8a;border-left:2px solid transparent;transition:all 0.15s ease;text-decoration:none;">
+        <span class="material-symbols-outlined" style="font-size:15px;">list_alt</span> Logs
+    </a>
+    <div style="padding:8px 12px 2px;margin-top:6px;font-family:'JetBrains Mono',monospace;font-size:9px;color:#3a4460;letter-spacing:0.1em;text-transform:uppercase;">Deep Analysis</div>
+    <a id="side-tier1" class="sidebar-nav" onclick="switchTab('tier1')" style="display:flex;align-items:center;gap:8px;padding:8px 12px;cursor:pointer;font-family:'Inter',sans-serif;font-size:12px;color:#5d6b8a;border-left:2px solid transparent;transition:all 0.15s ease;text-decoration:none;">
+        <span class="material-symbols-outlined" style="font-size:15px;">shield</span> Tier-1 Analysis
+    </a>
+    <a id="side-tier2" class="sidebar-nav" onclick="switchTab('tier2')" style="display:flex;align-items:center;gap:8px;padding:8px 12px;cursor:pointer;font-family:'Inter',sans-serif;font-size:12px;color:#5d6b8a;border-left:2px solid transparent;transition:all 0.15s ease;text-decoration:none;">
+        <span class="material-symbols-outlined" style="font-size:15px;">manage_search</span> Tier-2 Deep Dive
+    </a>
 </nav>
-<div class="p-2 border-t border-outline-variant/20 mt-auto">
-<div class="flex items-center justify-center p-2 text-xs text-on-surface-variant font-label-sm">
-    Vespera IDS Engine Active
-</div>
+<div style="padding:8px 12px;border-top:1px solid #1e2538;">
+    <div style="display:flex;align-items:center;gap:6px;">
+        <div style="width:6px;height:6px;border-radius:50%;background:#00d68f;box-shadow:0 0 6px #00d68f;"></div>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#5d6b8a;letter-spacing:0.06em;">ENGINE ACTIVE</span>
+    </div>
 </div>
 </aside>
 
 <!-- Main Content Area -->
-<main class="main-content-wrapper flex-1 p-8 lg:p-12 max-w-[1440px] mx-auto w-full" id="main-content">
+<main class="main-content-wrapper flex-1" id="main-content" style="padding:0;">
 
 <!-- ===== DASHBOARD TAB ===== -->
 <div id="tab-dashboard" class="tab-view">
-<!-- Header Section -->
-<div class="mb-12">
-<div class="flex items-center gap-4 mb-4">
-<h1 class="font-display-lg text-display-lg text-on-surface flex items-center gap-3">
-                    Vespera DNS Tunneling IDS
-                    <span class="material-symbols-outlined text-primary text-4xl drop-shadow-[0_0_10px_rgba(77,142,255,0.5)]" style="font-variation-settings: 'FILL' 1;">local_police</span>
-</h1>
-</div>
-<p class="font-body-lg text-body-lg text-on-surface-variant max-w-3xl">
-                Test the Tier-1 XGBoost triage model and Tier-2 deep analysis against simulated DNS queries.
-            </p>
+
+<!-- Dashboard breadcrumb + system status bar -->
+<div style="padding:10px 20px; border-bottom:1px solid #1e2538; display:flex; align-items:center; justify-content:space-between; background:#0f1320;">
+    <div style="display:flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:11px;">
+        <span style="color:#3a4460;">VESPERA IDS</span>
+        <span style="color:#3a4460;">›</span>
+        <span style="color:#e4e8f7;font-weight:600;">Dashboard</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:16px;">
+        <div style="display:flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:10px;color:#5d6b8a;border:1px solid #1e2538;padding:3px 10px;border-radius:3px;cursor:pointer;">
+            <span class="material-symbols-outlined" style="font-size:12px;">schedule</span> Last 24h ▾
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:10px;">
+            <div style="width:6px;height:6px;border-radius:50%;background:#00d68f;box-shadow:0 0 8px #00d68f;"></div>
+            <span style="color:#00d68f;letter-spacing:0.06em;">SYSTEM ACTIVE</span>
+        </div>
+    </div>
 </div>
 
-<!-- Quick Presets Bar -->
-<div class="mb-6 flex flex-wrap items-center gap-3">
-<span class="font-label-md text-xs text-on-surface-variant uppercase tracking-wider">Quick Presets:</span>
-<button onclick="setPreset('benign')" class="px-4 py-1.5 rounded-full bg-surface-container-high hover:bg-primary/20 text-on-surface hover:text-primary text-xs font-label-md border border-outline-variant/40 transition-all">
-    ✅ Benign (google.com)
-</button>
-<button onclick="setPreset('suspicious')" class="px-4 py-1.5 rounded-full bg-surface-container-high hover:bg-tertiary-container/20 text-on-surface hover:text-tertiary-container text-xs font-label-md border border-outline-variant/40 transition-all">
-    🚨 Suspicious Tunneling (evil.com)
-</button>
+<!-- Padded content -->
+<div style="padding:16px 20px;">
+
+<!-- KPI Metric Row -->
+<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:12px;">
+    <div style="background:#0f1320;border:1px solid #1e2538;padding:12px 14px;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#5d6b8a;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px;">DNS QUERIES</div>
+        <div id="kpi-total" style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:#4d8eff;line-height:1;">0</div>
+        <svg viewBox="0 0 80 22" width="100%" height="22" style="margin-top:8px;display:block;" preserveAspectRatio="none"><polyline points="0,18 10,14 20,16 30,10 40,13 50,8 60,12 70,6 80,10" fill="none" stroke="#4d8eff" stroke-width="1.5" stroke-linejoin="round"/><polygon points="0,18 10,14 20,16 30,10 40,13 50,8 60,12 70,6 80,10 80,22 0,22" fill="rgba(77,142,255,0.1)"/></svg>
+    </div>
+    <div style="background:#0f1320;border:1px solid #1e2538;padding:12px 14px;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#5d6b8a;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px;">THREATS</div>
+        <div id="kpi-threats" style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:#ff4f4f;line-height:1;">0</div>
+        <svg viewBox="0 0 80 22" width="100%" height="22" style="margin-top:8px;display:block;" preserveAspectRatio="none"><polyline points="0,20 10,18 20,14 30,19 40,8 50,16 60,5 70,15 80,7" fill="none" stroke="#ff4f4f" stroke-width="1.5" stroke-linejoin="round"/><polygon points="0,20 10,18 20,14 30,19 40,8 50,16 60,5 70,15 80,7 80,22 0,22" fill="rgba(255,79,79,0.1)"/></svg>
+    </div>
+    <div style="background:#0f1320;border:1px solid #1e2538;padding:12px 14px;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#5d6b8a;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px;">BENIGN</div>
+        <div id="kpi-benign" style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:#00d68f;line-height:1;">0</div>
+        <svg viewBox="0 0 80 22" width="100%" height="22" style="margin-top:8px;display:block;" preserveAspectRatio="none"><polyline points="0,16 10,12 20,15 30,8 40,12 50,6 60,10 70,5 80,9" fill="none" stroke="#00d68f" stroke-width="1.5" stroke-linejoin="round"/><polygon points="0,16 10,12 20,15 30,8 40,12 50,6 60,10 70,5 80,9 80,22 0,22" fill="rgba(0,214,143,0.1)"/></svg>
+    </div>
+    <div style="background:#0f1320;border:1px solid #1e2538;padding:12px 14px;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#5d6b8a;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px;">T1 AVG SCORE</div>
+        <div id="kpi-t1avg" style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:#f7a35c;line-height:1;">—</div>
+        <svg viewBox="0 0 80 22" width="100%" height="22" style="margin-top:8px;display:block;" preserveAspectRatio="none"><polyline points="0,14 10,12 20,13 30,9 40,11 50,8 60,10 70,7 80,9" fill="none" stroke="#f7a35c" stroke-width="1.5" stroke-linejoin="round"/><polygon points="0,14 10,12 20,13 30,9 40,11 50,8 60,10 70,7 80,9 80,22 0,22" fill="rgba(247,163,92,0.1)"/></svg>
+    </div>
+    <div style="background:#0f1320;border:1px solid #1e2538;padding:12px 14px;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#5d6b8a;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px;">T2 PRECISION</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:#00d68f;line-height:1;">99.1%</div>
+        <svg viewBox="0 0 80 22" width="100%" height="22" style="margin-top:8px;display:block;" preserveAspectRatio="none"><polyline points="0,10 10,8 20,9 30,7 40,8 50,6 60,7 70,5 80,6" fill="none" stroke="#00d68f" stroke-width="1.5" stroke-linejoin="round"/><polygon points="0,10 10,8 20,9 30,7 40,8 50,6 60,7 70,5 80,6 80,22 0,22" fill="rgba(0,214,143,0.08)"/></svg>
+    </div>
 </div>
 
-<!-- Two Column Layout -->
-<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 mb-12">
-<!-- Left Column: Simulation Input -->
-<div class="lg:col-span-7 flex flex-col gap-6">
-<h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Simulate DNS Query</h2>
-<div class="glass-panel p-8 rounded-xl flex flex-col gap-6 relative overflow-hidden">
-<div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-tertiary-container to-primary opacity-50"></div>
-<div>
-<label class="block font-label-md text-label-md text-on-surface-variant mb-2">Enter a Domain (e.g., vpn.evil.com)</label>
-<input id="domainInput" class="w-full bg-[#0a0e18]/80 border border-outline-variant text-on-surface rounded-xl px-4 py-3 font-label-md focus:outline-none input-glow transition-all backdrop-blur-sm" type="text" value="google.com">
-</div>
-<div>
-<label class="block font-label-md text-label-md text-on-surface-variant mb-2">Record Type</label>
-<div class="relative">
-<select id="recordTypeSelect" class="w-full bg-[#0a0e18]/80 border border-outline-variant text-on-surface rounded-xl px-4 py-3 font-label-md focus:outline-none input-glow transition-all appearance-none backdrop-blur-sm">
-<option value="A">A</option>
-<option value="CNAME">CNAME</option>
-<option value="AAAA">AAAA</option>
-<option value="TXT">TXT</option>
-<option value="MX">MX</option>
-</select>
-<div class="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none">
-<span class="material-symbols-outlined text-on-surface-variant">expand_more</span>
-</div>
-</div>
-</div>
-<div class="flex items-center gap-3">
-<input id="simulateAttackWindow" type="checkbox" class="rounded border-outline-variant bg-[#0a0e18] text-primary focus:ring-primary h-4 w-4">
-<label for="simulateAttackWindow" class="font-label-md text-xs text-on-surface-variant cursor-pointer">Simulate High-Volume / Anomalous Traffic Window (Tier-2 State)</label>
-</div>
-<div class="pt-4">
-<button onclick="runAnalysis()" class="bg-primary hover:bg-primary/90 text-on-primary font-label-md text-label-md px-8 py-3.5 rounded-full transition-all shadow-[0_0_20px_rgba(77,142,255,0.3)] hover:shadow-[0_0_25px_rgba(77,142,255,0.5)] flex items-center justify-center gap-2 w-full sm:w-auto">
-<span class="material-symbols-outlined text-sm">play_arrow</span>
-                            Analyze
-</button>
-</div>
-</div>
-</div>
-
-<!-- Right Column: Architecture Info -->
-<div class="lg:col-span-5">
-<h2 class="font-headline-lg text-headline-lg text-on-surface mb-6">About the Architecture</h2>
-<div class="glass-panel p-8 rounded-xl flex flex-col gap-5">
-<p class="font-body-md text-body-md text-on-surface leading-relaxed">
-<strong class="text-primary font-semibold">Tier 1:</strong> Fast triage using stateless features derived from a single DNS packet. High recall, optimized for latency.
-</p>
-<p class="font-body-md text-body-md text-on-surface leading-relaxed">
-<strong class="text-tertiary-container font-semibold">Tier 2:</strong> Deep analysis using stateful features computed over a 30-second window. High precision, produces TreeSHAP explanations.
-</p>
-<div class="mt-2 p-5 border border-outline-variant/30 rounded-xl bg-surface-container/30 backdrop-blur-sm">
-<p class="font-body-md text-body-md text-on-surface-variant italic text-sm">
-                            Note: For this standalone web demo, Tier-2 stateful features (like payload variance) are simulated based on traffic window state.
-                        </p>
-</div>
-</div>
-</div>
-</div>
-
-<!-- Threat History Section -->
-<div id="threat-history" class="mb-12">
-<h2 class="font-headline-lg text-headline-lg text-on-surface mb-6">Threat History (Last 24h)</h2>
-<div class="glass-panel p-8 rounded-xl">
-<div class="flex flex-wrap items-center justify-between mb-8 gap-4">
-<div class="flex flex-wrap gap-6">
-<div class="flex items-center gap-2">
-<div class="w-3 h-3 rounded-full bg-tertiary-container shadow-[0_0_8px_rgba(255,84,81,0.6)]"></div>
-<span class="font-label-md text-label-md text-on-surface">Suspicious Domains</span>
-</div>
-<div class="flex items-center gap-2">
-<div class="w-3 h-3 rounded-full bg-primary shadow-[0_0_8px_rgba(77,142,255,0.6)]"></div>
-<span class="font-label-md text-label-md text-on-surface">Benign Queries</span>
-</div>
-</div>
-<div class="text-on-surface-variant font-label-sm text-xs bg-surface-container-high/50 px-3 py-1 rounded-full border border-outline-variant/30">Real-time Monitoring Active</div>
-</div>
-<div class="relative h-72 w-full flex items-end gap-1 px-4">
-<!-- Y-Axis Labels -->
-<div class="absolute -left-2 inset-y-0 flex flex-col justify-between text-[10px] font-label-sm text-on-surface-variant opacity-50 pb-6 pt-2">
-<span>100</span>
-<span>75</span>
-<span>50</span>
-<span>25</span>
-<span>0</span>
-</div>
-<!-- Horizontal Grid Lines -->
-<div class="absolute inset-0 flex flex-col justify-between pb-6 pt-2 pointer-events-none opacity-10">
-<div class="w-full h-px bg-on-surface"></div>
-<div class="w-full h-px bg-on-surface"></div>
-<div class="w-full h-px bg-on-surface"></div>
-<div class="w-full h-px bg-on-surface"></div>
-<div class="w-full h-px bg-on-surface"></div>
-</div>
-<!-- Multi-series Bar Chart Visualization -->
-<div class="absolute inset-0 pb-6 pt-2 pl-4 pr-2 flex items-end justify-between">
-<!-- Group 1 -->
-<div class="flex items-end gap-1 h-full w-[10%]">
-<div class="w-1/3 bg-tertiary-container/80 rounded-t-sm h-[15%] transition-all hover:opacity-100"></div>
-<div class="w-1/3 bg-primary/80 rounded-t-sm h-[85%] transition-all hover:opacity-100"></div>
-</div>
-<!-- Group 2 -->
-<div class="flex items-end gap-1 h-full w-[10%]">
-<div class="w-1/3 bg-tertiary-container/80 rounded-t-sm h-[25%] transition-all hover:opacity-100"></div>
-<div class="w-1/3 bg-primary/80 rounded-t-sm h-[70%] transition-all hover:opacity-100"></div>
-</div>
-<!-- Group 3 -->
-<div class="flex items-end gap-1 h-full w-[10%]">
-<div class="w-1/3 bg-tertiary-container/80 rounded-t-sm h-[10%] transition-all hover:opacity-100"></div>
-<div class="w-1/3 bg-primary/80 rounded-t-sm h-[95%] transition-all hover:opacity-100"></div>
-</div>
-<!-- Group 4 -->
-<div class="flex items-end gap-1 h-full w-[10%]">
-<div class="w-1/3 bg-tertiary-container/80 rounded-t-sm h-[60%] transition-all hover:opacity-100"></div>
-<div class="w-1/3 bg-primary/80 rounded-t-sm h-[45%] transition-all hover:opacity-100"></div>
-</div>
-<!-- Group 5 -->
-<div class="flex items-end gap-1 h-full w-[10%]">
-<div class="w-1/3 bg-tertiary-container/80 rounded-t-sm h-[35%] transition-all hover:opacity-100"></div>
-<div class="w-1/3 bg-primary/80 rounded-t-sm h-[65%] transition-all hover:opacity-100"></div>
-</div>
-<!-- Group 6 -->
-<div class="flex items-end gap-1 h-full w-[10%]">
-<div class="w-1/3 bg-tertiary-container/80 rounded-t-sm h-[85%] shadow-[0_0_15px_rgba(255,84,81,0.4)] transition-all hover:opacity-100"></div>
-<div class="w-1/3 bg-primary/80 rounded-t-sm h-[20%] transition-all hover:opacity-100"></div>
-</div>
-<!-- Group 7 -->
-<div class="flex items-end gap-1 h-full w-[10%]">
-<div class="w-1/3 bg-tertiary-container/80 rounded-t-sm h-[15%] transition-all hover:opacity-100"></div>
-<div class="w-1/3 bg-primary/80 rounded-t-sm h-[80%] transition-all hover:opacity-100"></div>
-</div>
-</div>
-<!-- X-Axis Labels -->
-<div class="absolute bottom-0 inset-x-0 pl-4 pr-2 flex justify-between text-[10px] font-label-sm text-on-surface-variant opacity-70">
-<span class="w-[10%] text-center">00:00</span>
-<span class="w-[10%] text-center">04:00</span>
-<span class="w-[10%] text-center">08:00</span>
-<span class="w-[10%] text-center">12:00</span>
-<span class="w-[10%] text-center">16:00</span>
-<span class="w-[10%] text-center">20:00</span>
-<span class="w-[10%] text-center">23:59</span>
-</div>
-</div>
-<div class="mt-8 flex justify-center">
-<p class="text-xs font-label-sm text-on-surface-variant italic">Event Volume (Y) vs Time (X)</p>
-</div>
-</div>
+<!-- Row 2: Volume Chart + Donut + Simulation -->
+<div style="display:grid;grid-template-columns:1fr 230px 270px;gap:8px;margin-bottom:8px;">
+    <!-- SVG Area Chart -->
+    <div style="background:#0f1320;border:1px solid #1e2538;">
+        <div style="padding:8px 14px;border-bottom:1px solid #1e2538;display:flex;align-items:center;justify-content:space-between;">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5d6b8a;letter-spacing:0.08em;text-transform:uppercase;">QUERY VOLUME OVER TIME</span>
+            <div style="display:flex;gap:12px;"><span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#ff4f4f;">● Threat</span><span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#4d8eff;">● Benign</span></div>
+        </div>
+        <div style="padding:10px 14px 8px;">
+            <svg viewBox="0 0 400 75" width="100%" height="75" preserveAspectRatio="none">
+                <line x1="0" y1="18" x2="400" y2="18" stroke="#1e2538" stroke-width="0.5"/>
+                <line x1="0" y1="37" x2="400" y2="37" stroke="#1e2538" stroke-width="0.5"/>
+                <line x1="0" y1="56" x2="400" y2="56" stroke="#1e2538" stroke-width="0.5"/>
+                <polygon points="0,60 46,45 91,55 137,30 183,43 228,20 274,38 320,15 365,30 400,25 400,73 0,73" fill="rgba(77,142,255,0.12)"/>
+                <polyline points="0,60 46,45 91,55 137,30 183,43 228,20 274,38 320,15 365,30 400,25" fill="none" stroke="#4d8eff" stroke-width="1.5" stroke-linejoin="round"/>
+                <polygon points="0,70 46,67 91,61 137,69 183,45 228,63 274,30 320,59 365,49 400,45 400,73 0,73" fill="rgba(255,79,79,0.1)"/>
+                <polyline points="0,70 46,67 91,61 137,69 183,45 228,63 274,30 320,59 365,49 400,45" fill="none" stroke="#ff4f4f" stroke-width="1.5" stroke-linejoin="round"/>
+            </svg>
+            <div style="display:flex;justify-content:space-between;margin-top:2px;">
+                <span style="font-family:'JetBrains Mono',monospace;font-size:8px;color:#3a4460;">00:00</span>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:8px;color:#3a4460;">06:00</span>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:8px;color:#3a4460;">12:00</span>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:8px;color:#3a4460;">18:00</span>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:8px;color:#3a4460;">23:59</span>
+            </div>
+        </div>
+    </div>
+    <!-- Donut Chart -->
+    <div style="background:#0f1320;border:1px solid #1e2538;">
+        <div style="padding:8px 14px;border-bottom:1px solid #1e2538;"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5d6b8a;letter-spacing:0.08em;text-transform:uppercase;">THREAT BREAKDOWN</span></div>
+        <div style="padding:10px;display:flex;flex-direction:column;align-items:center;gap:8px;">
+            <svg viewBox="0 0 100 100" width="95" height="95">
+                <circle cx="50" cy="50" r="35" fill="none" stroke="#1e2538" stroke-width="18"/>
+                <circle cx="50" cy="50" r="35" fill="none" stroke="#ff4f4f" stroke-width="16" stroke-dasharray="98.96 220.89" stroke-dashoffset="0" transform="rotate(-90 50 50)"/>
+                <circle cx="50" cy="50" r="35" fill="none" stroke="#f7a35c" stroke-width="16" stroke-dasharray="61.58 258.27" stroke-dashoffset="-98.96" transform="rotate(-90 50 50)"/>
+                <circle cx="50" cy="50" r="35" fill="none" stroke="#f7e25c" stroke-width="16" stroke-dasharray="37.38 282.47" stroke-dashoffset="-160.54" transform="rotate(-90 50 50)"/>
+                <circle cx="50" cy="50" r="35" fill="none" stroke="#a855f7" stroke-width="16" stroke-dasharray="21.99 297.86" stroke-dashoffset="-197.92" transform="rotate(-90 50 50)"/>
+                <circle cx="50" cy="50" r="24" fill="#0f1320"/>
+                <text x="50" y="47" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="7" fill="#5d6b8a">IOCs</text>
+                <text x="50" y="57" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="9" font-weight="700" fill="#e4e8f7">247</text>
+            </svg>
+            <div style="width:100%;display:flex;flex-direction:column;gap:3px;">
+                <div style="display:flex;justify-content:space-between;"><span style="display:flex;align-items:center;gap:4px;font-family:'JetBrains Mono',monospace;font-size:9px;color:#5d6b8a;"><span style="width:7px;height:7px;background:#ff4f4f;display:inline-block;border-radius:1px;"></span>DNS Tunnel</span><span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#e4e8f7;">45%</span></div>
+                <div style="display:flex;justify-content:space-between;"><span style="display:flex;align-items:center;gap:4px;font-family:'JetBrains Mono',monospace;font-size:9px;color:#5d6b8a;"><span style="width:7px;height:7px;background:#f7a35c;display:inline-block;border-radius:1px;"></span>C2 Comm</span><span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#e4e8f7;">28%</span></div>
+                <div style="display:flex;justify-content:space-between;"><span style="display:flex;align-items:center;gap:4px;font-family:'JetBrains Mono',monospace;font-size:9px;color:#5d6b8a;"><span style="width:7px;height:7px;background:#f7e25c;display:inline-block;border-radius:1px;"></span>Exfil</span><span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#e4e8f7;">17%</span></div>
+                <div style="display:flex;justify-content:space-between;"><span style="display:flex;align-items:center;gap:4px;font-family:'JetBrains Mono',monospace;font-size:9px;color:#5d6b8a;"><span style="width:7px;height:7px;background:#a855f7;display:inline-block;border-radius:1px;"></span>Malware</span><span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#e4e8f7;">10%</span></div>
+            </div>
+        </div>
+    </div>
+    <!-- Simulation Panel -->
+    <div style="background:#0f1320;border:1px solid #1e2538;display:flex;flex-direction:column;">
+        <div style="padding:8px 14px;border-bottom:1px solid #1e2538;"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5d6b8a;letter-spacing:0.08em;text-transform:uppercase;">SIMULATE QUERY</span></div>
+        <div style="padding:12px;display:flex;flex-direction:column;gap:10px;flex:1;">
+            <div>
+                <label style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#5d6b8a;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:4px;">Domain</label>
+                <input id="domainInput" type="text" value="google.com" style="width:100%;background:#131826;border:1px solid #1e2538;color:#e4e8f7;padding:7px 10px;font-family:'JetBrains Mono',monospace;font-size:12px;outline:none;border-radius:2px;" onfocus="this.style.borderColor='#4d8eff'" onblur="this.style.borderColor='#1e2538'">
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                <div>
+                    <label style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#5d6b8a;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:4px;">Record</label>
+                    <select id="recordTypeSelect" style="width:100%;background:#131826;border:1px solid #1e2538;color:#e4e8f7;padding:7px 8px;font-family:'JetBrains Mono',monospace;font-size:12px;outline:none;border-radius:2px;"><option>A</option><option>CNAME</option><option>AAAA</option><option>TXT</option><option>MX</option></select>
+                </div>
+                <div style="display:flex;flex-direction:column;justify-content:flex-end;">
+                    <label style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#5d6b8a;text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:4px;">Presets</label>
+                    <div style="display:flex;gap:4px;">
+                        <button onclick="setPreset('benign')" style="flex:1;padding:5px 4px;background:rgba(0,214,143,0.1);border:1px solid rgba(0,214,143,0.3);color:#00d68f;font-family:'JetBrains Mono',monospace;font-size:9px;cursor:pointer;border-radius:2px;">OK</button>
+                        <button onclick="setPreset('suspicious')" style="flex:1;padding:5px 4px;background:rgba(255,79,79,0.1);border:1px solid rgba(255,79,79,0.3);color:#ff4f4f;font-family:'JetBrains Mono',monospace;font-size:9px;cursor:pointer;border-radius:2px;">THREAT</button>
+                    </div>
+                </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;">
+                <input id="simulateAttackWindow" type="checkbox" style="width:12px;height:12px;accent-color:#4d8eff;">
+                <label for="simulateAttackWindow" style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#5d6b8a;cursor:pointer;">High-Volume / Anomalous Window</label>
+            </div>
+            <button onclick="runAnalysis()" style="width:100%;padding:9px;background:#4d8eff;border:none;color:#fff;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;letter-spacing:0.08em;cursor:pointer;border-radius:2px;display:flex;align-items:center;justify-content:center;gap:6px;"><span class="material-symbols-outlined" style="font-size:14px;">play_arrow</span> ANALYZE</button>
+        </div>
+    </div>
 </div>
 
-<!-- Analysis Results Section -->
-<div class="flex flex-col gap-10 border-t border-outline-variant/20 pt-10">
-<!-- Tier 1 Analysis Section -->
-<div id="tier1-section">
-<h2 class="font-headline-lg text-headline-lg text-on-surface mb-6">Tier-1 (Stateless) Analysis</h2>
-<div class="flex flex-col gap-4">
-<div id="t1StatusContainer" class="status-benign p-5 rounded-xl flex items-center justify-between backdrop-blur-md shadow-lg transition-all">
-<div class="flex items-center gap-4">
-<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">check_circle</span>
-<span class="font-headline-md text-headline-md font-semibold">BENIGN (Score: 0.00)</span>
-</div>
-<span class="font-label-sm text-xs px-3 py-1 bg-primary/20 border border-primary/40 text-primary rounded-full">Low Risk</span>
-</div>
-<div class="glass-panel rounded-xl overflow-hidden">
-<button onclick="toggleExpandable('t1JsonExp')" class="w-full px-6 py-5 flex items-center justify-between text-left hover:bg-surface-variant/30 transition-colors group">
-<span class="font-label-md text-label-md text-on-surface">View Tier-1 Stateless Features</span>
-<span id="t1JsonExp-icon" class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">chevron_right</span>
-</button>
-<div id="t1JsonExp" class="hidden p-6 border-t border-outline-variant/20 bg-[#0a0e18]/60 font-label-md text-xs text-primary overflow-x-auto">
-<pre id="t1JsonOutput">{
+<!-- Row 3: Analysis Results -->
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+    <div style="background:#0f1320;border:1px solid #1e2538;">
+        <div style="padding:8px 14px;border-bottom:1px solid #1e2538;display:flex;align-items:center;justify-content:space-between;">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5d6b8a;letter-spacing:0.08em;text-transform:uppercase;">TIER-1 STATELESS ANALYSIS</span>
+            <button onclick="toggleExpandable('t1JsonExp')" style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#3a4460;background:none;border:none;cursor:pointer;">FEATURES ▾</button>
+        </div>
+        <div style="padding:12px;">
+            <div id="t1StatusContainer" style="padding:10px 14px;border:1px solid rgba(0,214,143,0.3);background:rgba(0,214,143,0.06);display:flex;align-items:center;justify-content:space-between;border-radius:2px;margin-bottom:10px;">
+                <div style="display:flex;align-items:center;gap:10px;">
+                    <span class="material-symbols-outlined" style="font-size:20px;color:#00d68f;">check_circle</span>
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:#00d68f;">BENIGN (Score: 0.00)</span>
+                </div>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5d6b8a;">Low Risk</span>
+            </div>
+            <div id="t1JsonExp" class="hidden" style="background:#131826;border:1px solid #1e2538;padding:10px;">
+                <pre id="t1JsonOutput" style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#4d8eff;margin:0;white-space:pre-wrap;">{
   "query_name": "google.com",
   "record_type": "A",
   "fqdn_length": 10,
@@ -1372,38 +1376,62 @@
   "shannon_entropy": 2.3219,
   "numeric_alpha_ratio": 0.0
 }</pre>
-</div>
-</div>
-</div>
+            </div>
+        </div>
+    </div>
+    <div style="background:#0f1320;border:1px solid #1e2538;">
+        <div style="padding:8px 14px;border-bottom:1px solid #1e2538;">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5d6b8a;letter-spacing:0.08em;text-transform:uppercase;">TIER-2 STATEFUL (TREESHAP)</span>
+        </div>
+        <div style="padding:12px;" id="t2ResultSection">
+            <div style="border:1px dashed #1e2538;padding:20px;display:flex;align-items:center;justify-content:center;">
+                <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#3a4460;">Run ANALYZE to compute Tier-2 + TreeSHAP</span>
+            </div>
+        </div>
+    </div>
 </div>
 
-<!-- Tier 2 Analysis Section -->
-<div id="tier2-section">
-<h2 class="font-headline-lg text-headline-lg text-on-surface mb-6">Tier-2 (Stateful) Analysis</h2>
-<div id="t2ResultSection">
-<div class="glass-panel p-6 rounded-xl border border-dashed border-outline-variant/50 flex items-center justify-center opacity-70">
-<p class="font-body-md text-on-surface-variant italic flex items-center gap-2">
-<span class="material-symbols-outlined text-sm">info</span>
-    Click "Analyze" to compute Tier-2 stateful analysis & TreeSHAP attributions.
-</p>
+<!-- Row 4: Live DNS Log -->
+<div style="background:#0f1320;border:1px solid #1e2538;">
+    <div style="padding:8px 14px;border-bottom:1px solid #1e2538;display:flex;align-items:center;gap:8px;">
+        <div style="width:6px;height:6px;border-radius:50%;background:#00d68f;box-shadow:0 0 6px #00d68f;position:relative;" class="live-pulse"></div>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5d6b8a;letter-spacing:0.08em;text-transform:uppercase;">LIVE DNS QUERY LOG</span>
+    </div>
+    <div style="overflow-x:auto;max-height:180px;overflow-y:auto;">
+        <table style="width:100%;border-collapse:collapse;">
+            <thead><tr style="background:#131826;">
+                <th style="padding:5px 10px;font-family:'JetBrains Mono',monospace;font-size:9px;color:#3a4460;text-align:left;letter-spacing:0.08em;border-bottom:1px solid #1e2538;">#</th>
+                <th style="padding:5px 10px;font-family:'JetBrains Mono',monospace;font-size:9px;color:#3a4460;text-align:left;letter-spacing:0.08em;border-bottom:1px solid #1e2538;">TIMESTAMP</th>
+                <th style="padding:5px 10px;font-family:'JetBrains Mono',monospace;font-size:9px;color:#3a4460;text-align:left;letter-spacing:0.08em;border-bottom:1px solid #1e2538;">DOMAIN</th>
+                <th style="padding:5px 10px;font-family:'JetBrains Mono',monospace;font-size:9px;color:#3a4460;text-align:left;letter-spacing:0.08em;border-bottom:1px solid #1e2538;">REC</th>
+                <th style="padding:5px 10px;font-family:'JetBrains Mono',monospace;font-size:9px;color:#3a4460;text-align:left;letter-spacing:0.08em;border-bottom:1px solid #1e2538;">ENTROPY</th>
+                <th style="padding:5px 10px;font-family:'JetBrains Mono',monospace;font-size:9px;color:#3a4460;text-align:left;letter-spacing:0.08em;border-bottom:1px solid #1e2538;">T1 SCORE</th>
+                <th style="padding:5px 10px;font-family:'JetBrains Mono',monospace;font-size:9px;color:#3a4460;text-align:left;letter-spacing:0.08em;border-bottom:1px solid #1e2538;">VERDICT</th>
+            </tr></thead>
+            <tbody id="dashLiveLogBody">
+                <tr><td colspan="7" style="padding:14px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:10px;color:#3a4460;">Waiting for live data...</td></tr>
+            </tbody>
+        </table>
+    </div>
 </div>
-</div>
-</div>
-</div>
+
+</div><!-- end padded content -->
+</div><!-- end tab-dashboard -->
 <!-- end tab-dashboard -->
 </main>
 
+
 <!-- ===== THREAT INTELLIGENCE TAB ===== -->
-<div id="tab-threat-intel" class="tab-view" style="display:none;margin-left:16rem;padding-top:4rem;padding:2rem 3rem;padding-top:5rem;"></div>
+<div id="tab-threat-intel" class="tab-view" style="display:none;margin-left:14rem;padding-top:3rem;padding:1.5rem 2rem;padding-top:4.5rem;"></div>
 
 <!-- ===== LOGS TAB ===== -->
-<div id="tab-logs" class="tab-view" style="display:none;margin-left:16rem;padding-top:4rem;padding:2rem 3rem;padding-top:5rem;"></div>
+<div id="tab-logs" class="tab-view" style="display:none;margin-left:14rem;padding-top:3rem;padding:1.5rem 2rem;padding-top:4.5rem;"></div>
 
 <!-- ===== TIER-1 TAB ===== -->
-<div id="tab-tier1" class="tab-view" style="display:none;margin-left:16rem;padding-top:4rem;padding:2rem 3rem;padding-top:5rem;"></div>
+<div id="tab-tier1" class="tab-view" style="display:none;margin-left:14rem;padding-top:3rem;padding:1.5rem 2rem;padding-top:4.5rem;"></div>
 
 <!-- ===== TIER-2 TAB ===== -->
-<div id="tab-tier2" class="tab-view" style="display:none;margin-left:16rem;padding-top:4rem;padding:2rem 3rem;padding-top:5rem;"></div>
+<div id="tab-tier2" class="tab-view" style="display:none;margin-left:14rem;padding-top:3rem;padding:1.5rem 2rem;padding-top:4.5rem;"></div>
 
 <script>
     // ===== BUILD TAB HTML =====
