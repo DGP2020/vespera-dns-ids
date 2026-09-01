@@ -157,9 +157,7 @@
 
         /* Layout */
         .main-content-wrapper { margin-left: 14rem; padding-top: 3rem; transition: margin-left 0.25s ease; }
-        .tab-content-page { margin-left: 14rem; padding: 1.5rem 2rem; padding-top: 4.5rem; transition: margin-left 0.25s ease; }
         .sidebar-collapsed + .main-content-wrapper { margin-left: 0; }
-        .sidebar-collapsed ~ .tab-content-page { margin-left: 0; }
         .sidebar { transition: transform 0.25s ease; }
         .sidebar-collapsed { transform: translateX(-100%); }
 
@@ -361,10 +359,7 @@
             const mainContent = document.getElementById('main-content');
             sidebar.classList.toggle('sidebar-collapsed');
             const isCollapsed = sidebar.classList.contains('sidebar-collapsed');
-            mainContent.style.marginLeft = isCollapsed ? '0' : '16rem';
-            document.querySelectorAll('.tab-content-page').forEach(tabEl => {
-                tabEl.style.marginLeft = isCollapsed ? '0' : '16rem';
-            });
+            mainContent.style.marginLeft = isCollapsed ? '0' : '14rem';
         }
 
         // ===== CUSTOM SCROLL CONTROLLER LOGIC =====
@@ -1123,7 +1118,7 @@
 </head>
 <body class="font-body-md text-body-md antialiased min-h-screen flex flex-col">
 <!-- TopNavBar -->
-<header class="bg-surface/80 backdrop-blur-md dark:bg-surface/80 text-primary dark:text-primary flex justify-between items-center w-full px-gutter h-16 max-w-container-max mx-auto border-b border-outline-variant/30 dark:border-outline-variant/30 fixed top-0 z-50">
+<header class="bg-surface/80 backdrop-blur-md dark:bg-surface/80 text-primary dark:text-primary flex justify-between items-center w-full px-gutter h-12 max-w-container-max mx-auto border-b border-outline-variant/30 dark:border-outline-variant/30 fixed top-0 z-50">
 <div class="flex items-center gap-4">
 <button class="text-on-surface-variant hover:text-primary transition-colors flex items-center justify-center p-2 rounded-full hover:bg-surface-variant/50" onclick="toggleSidebar()">
 <span class="material-symbols-outlined">menu</span>
@@ -1417,21 +1412,20 @@
 
 </div><!-- end padded content -->
 </div><!-- end tab-dashboard -->
-<!-- end tab-dashboard -->
-</main>
-
 
 <!-- ===== THREAT INTELLIGENCE TAB ===== -->
-<div id="tab-threat-intel" class="tab-view" style="display:none;margin-left:14rem;padding-top:3rem;padding:1.5rem 2rem;padding-top:4.5rem;"></div>
+<div id="tab-threat-intel" class="tab-view" style="padding: 1.25rem 20px;"></div>
 
 <!-- ===== LOGS TAB ===== -->
-<div id="tab-logs" class="tab-view" style="display:none;margin-left:14rem;padding-top:3rem;padding:1.5rem 2rem;padding-top:4.5rem;"></div>
+<div id="tab-logs" class="tab-view" style="padding: 1.25rem 20px;"></div>
 
 <!-- ===== TIER-1 TAB ===== -->
-<div id="tab-tier1" class="tab-view" style="display:none;margin-left:14rem;padding-top:3rem;padding:1.5rem 2rem;padding-top:4.5rem;"></div>
+<div id="tab-tier1" class="tab-view" style="padding: 1.25rem 20px;"></div>
 
 <!-- ===== TIER-2 TAB ===== -->
-<div id="tab-tier2" class="tab-view" style="display:none;margin-left:14rem;padding-top:3rem;padding:1.5rem 2rem;padding-top:4.5rem;"></div>
+<div id="tab-tier2" class="tab-view" style="padding: 1.25rem 20px;"></div>
+
+</main>
 
 <script>
     // ===== BUILD TAB HTML =====
@@ -1564,12 +1558,6 @@
         document.getElementById('tab-logs').innerHTML = buildLogsTab();
         document.getElementById('tab-tier1').innerHTML = buildTier1Tab();
         document.getElementById('tab-tier2').innerHTML = buildTier2Tab();
-
-        // Fix inline styles on new tabs - use class instead
-        ['tab-threat-intel','tab-logs','tab-tier1','tab-tier2'].forEach(id => {
-            const el = document.getElementById(id);
-            if(el) { el.removeAttribute('style'); el.classList.add('tab-content-page'); }
-        });
 
         // Initialize tabs
         switchTab('dashboard');
