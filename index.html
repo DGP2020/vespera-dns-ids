@@ -145,24 +145,80 @@
 
         /* Custom Interactive Scroll Dock */
         .custom-scroll-dock {
-            background: rgba(28, 31, 42, 0.75);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            box-shadow: 0 12px 36px 0 rgba(0, 0, 0, 0.4), 0 0 20px rgba(77, 142, 255, 0.15);
+            background: rgba(20, 23, 35, 0.82);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 16px 48px 0 rgba(0, 0, 0, 0.5), 0 0 24px rgba(77, 142, 255, 0.12);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         html:not(.dark) .custom-scroll-dock {
-            background: rgba(255, 255, 255, 0.92);
+            background: rgba(255, 255, 255, 0.95);
             border: 1px solid rgba(0, 0, 0, 0.1);
-            box-shadow: 0 12px 36px 0 rgba(0, 0, 0, 0.12), 0 0 15px rgba(0, 90, 194, 0.08);
+            box-shadow: 0 16px 48px 0 rgba(0, 0, 0, 0.14), 0 0 18px rgba(0, 90, 194, 0.08);
         }
+
+        /* Tooltip system for scroll dock */
+        .sdock-btn {
+            position: relative;
+            width: 36px;
+            height: 36px;
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(173, 198, 255, 0.7);
+            background: transparent;
+            border: 1px solid transparent;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            font-size: 18px;
+            line-height: 1;
+        }
+        .sdock-btn:hover {
+            color: #ffffff;
+            background: rgba(77, 142, 255, 0.22);
+            border-color: rgba(77, 142, 255, 0.45);
+            transform: scale(1.12);
+            box-shadow: 0 0 14px rgba(77, 142, 255, 0.45);
+        }
+        html:not(.dark) .sdock-btn {
+            color: rgba(0, 90, 194, 0.55);
+        }
+        html:not(.dark) .sdock-btn:hover {
+            color: #005ac2;
+            background: rgba(0, 90, 194, 0.12);
+            border-color: rgba(0, 90, 194, 0.35);
+        }
+        .sdock-btn .sdock-tip {
+            position: absolute;
+            right: calc(100% + 10px);
+            top: 50%;
+            transform: translateY(-50%);
+            white-space: nowrap;
+            background: rgba(15, 19, 29, 0.92);
+            color: #e2e6f3;
+            font-size: 11px;
+            font-family: 'Google Sans', sans-serif;
+            padding: 4px 10px;
+            border-radius: 6px;
+            border: 1px solid rgba(255,255,255,0.1);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.18s ease;
+        }
+        html:not(.dark) .sdock-btn .sdock-tip {
+            background: rgba(20, 25, 40, 0.88);
+            color: #f0f2fb;
+        }
+        .sdock-btn:hover .sdock-tip { opacity: 1; }
+
         .custom-scroll-rail {
             position: relative;
-            width: 14px;
-            height: 180px;
+            width: 16px;
+            height: 200px;
             background: rgba(10, 14, 24, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 9999px;
             cursor: pointer;
             overflow: hidden;
@@ -170,11 +226,11 @@
         }
         .custom-scroll-rail:hover {
             border-color: rgba(77, 142, 255, 0.5);
-            box-shadow: 0 0 10px rgba(77, 142, 255, 0.2);
+            box-shadow: 0 0 12px rgba(77, 142, 255, 0.25);
         }
         html:not(.dark) .custom-scroll-rail {
-            background: rgba(220, 226, 240, 0.85);
-            border: 1px solid rgba(0, 0, 0, 0.14);
+            background: rgba(210, 220, 240, 0.8);
+            border: 1px solid rgba(0, 0, 0, 0.12);
         }
         html:not(.dark) .custom-scroll-rail:hover {
             border-color: rgba(0, 90, 194, 0.5);
@@ -186,18 +242,18 @@
             width: 100%;
             height: 0%;
             background: linear-gradient(to bottom, #4d8eff, #4edea3);
-            opacity: 0.35;
+            opacity: 0.3;
             transition: height 0.05s ease-out;
             pointer-events: none;
         }
         .custom-scroll-thumb-btn {
             position: absolute;
-            left: 1px;
+            left: 2px;
             width: 10px;
-            height: 32px;
+            height: 36px;
             border-radius: 9999px;
             background: linear-gradient(180deg, #adc6ff, #4d8eff);
-            box-shadow: 0 0 10px rgba(77, 142, 255, 0.6);
+            box-shadow: 0 0 10px rgba(77, 142, 255, 0.7);
             cursor: grab;
             transition: background 0.2s ease, box-shadow 0.2s ease;
             user-select: none;
@@ -206,38 +262,28 @@
         .custom-scroll-thumb-btn:active {
             cursor: grabbing;
             background: linear-gradient(180deg, #d8e2ff, #4edea3);
-            box-shadow: 0 0 14px rgba(78, 222, 163, 0.8);
+            box-shadow: 0 0 16px rgba(78, 222, 163, 0.9);
         }
-        .custom-scroll-btn {
-            width: 28px;
-            height: 28px;
+
+        /* percent badge */
+        .sdock-pct {
+            font-size: 10px;
+            font-family: 'Google Sans', monospace;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            color: #7ca8ff;
+            padding: 2px 6px;
             border-radius: 9999px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #c2c6d6;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            transition: all 0.2s ease;
-            cursor: pointer;
+            border: 1px solid rgba(77,142,255,0.25);
+            background: rgba(77,142,255,0.1);
+            min-width: 32px;
+            text-align: center;
         }
-        .custom-scroll-btn:hover {
-            color: #ffffff;
-            background: rgba(77, 142, 255, 0.25);
-            border-color: rgba(77, 142, 255, 0.5);
-            transform: scale(1.1);
-            box-shadow: 0 0 12px rgba(77, 142, 255, 0.4);
-        }
-        html:not(.dark) .custom-scroll-btn {
-            color: #424754;
-            background: rgba(0, 0, 0, 0.04);
-            border-color: rgba(0, 0, 0, 0.08);
-        }
-        html:not(.dark) .custom-scroll-btn:hover {
-            color: #005ac2;
-            background: rgba(0, 90, 194, 0.12);
-            border-color: rgba(0, 90, 194, 0.3);
-        }
+        html:not(.dark) .sdock-pct { color: #005ac2; border-color: rgba(0,90,194,0.25); background: rgba(0,90,194,0.08); }
+
+        /* divider */
+        .sdock-divider { width: 20px; height: 1px; background: rgba(255,255,255,0.08); border-radius: 1px; }
+        html:not(.dark) .sdock-divider { background: rgba(0,0,0,0.08); }
     </style>
     <script>
         // HTML / JS Sanitizers for XSS protection
@@ -1043,55 +1089,51 @@
 <div id="topScrollProgressBar" class="fixed top-16 left-0 h-1 bg-gradient-to-r from-primary via-secondary to-tertiary-container z-50 transition-all duration-75 shadow-[0_0_10px_rgba(77,142,255,0.8)]" style="width: 0%;"></div>
 
 <!-- Dedicated Floating Quick-Scroll Controller Bar -->
-<aside id="floatingScrollController" aria-label="Page Scroll Navigation" class="fixed right-3 md:right-5 top-1/2 -translate-y-1/2 z-50 flex flex-col items-center gap-1.5 p-2 rounded-2xl custom-scroll-dock group select-none shadow-2xl transition-all duration-300">
-    <!-- Position Percentage Badge -->
-    <div class="tooltip mb-0.5">
-        <span id="scrollPercentBadge" class="px-2 py-0.5 rounded-full bg-primary/20 text-primary text-[10px] font-label-md font-bold tracking-wider border border-primary/30">0%</span>
-        <span class="tooltip-text">Scroll Position</span>
-    </div>
+<aside id="floatingScrollController" aria-label="Page Scroll Navigation"
+    class="fixed right-4 top-1/2 -translate-y-1/2 z-50 flex flex-col items-center gap-2 py-3 px-2 rounded-2xl custom-scroll-dock select-none">
 
-    <!-- Scroll to Top Button -->
-    <button onclick="scrollToTop()" class="custom-scroll-btn tooltip" title="Scroll to Top" aria-label="Scroll to Top">
-        <span class="material-symbols-outlined text-base">vertical_align_top</span>
-        <span class="tooltip-text">Scroll to Top</span>
+    <!-- Scroll Position % -->
+    <span id="scrollPercentBadge" class="sdock-pct">0%</span>
+
+    <div class="sdock-divider"></div>
+
+    <!-- Jump to Top -->
+    <button onclick="scrollToTop()" class="sdock-btn" aria-label="Scroll to Top">
+        &#8679;
+        <span class="sdock-tip">Jump to Top</span>
     </button>
 
-    <!-- Scroll Step Up Button -->
-    <button onclick="scrollStepUp()" class="custom-scroll-btn tooltip" title="Scroll Up" aria-label="Scroll Up">
-        <span class="material-symbols-outlined text-base">keyboard_arrow_up</span>
-        <span class="tooltip-text">Scroll Up (Step)</span>
+    <!-- Step Up -->
+    <button onclick="scrollStepUp()" class="sdock-btn" aria-label="Scroll Up">
+        &#8593;
+        <span class="sdock-tip">Scroll Up</span>
     </button>
 
-    <!-- Interactive Custom Scroll Rail & Draggable Thumb -->
-    <div class="py-1 px-0.5 tooltip relative">
-        <div id="customScrollRail" class="custom-scroll-rail" title="Click or Drag to Scroll">
-            <div id="customScrollFill" class="custom-scroll-fill"></div>
-            <!-- Section Tick Marks -->
-            <div class="absolute inset-y-0 w-full flex flex-col justify-between py-2 items-center pointer-events-none opacity-30">
-                <div class="w-1.5 h-0.5 bg-on-surface rounded-full"></div>
-                <div class="w-1.5 h-0.5 bg-on-surface rounded-full"></div>
-                <div class="w-1.5 h-0.5 bg-on-surface rounded-full"></div>
-                <div class="w-1.5 h-0.5 bg-on-surface rounded-full"></div>
-            </div>
-            <!-- Draggable Thumb Handle -->
-            <div id="customScrollThumb" class="custom-scroll-thumb-btn flex items-center justify-center">
-                <div class="w-1 h-3 rounded-full bg-surface-container-lowest/80"></div>
-            </div>
+    <!-- Scroll Rail -->
+    <div id="customScrollRail" class="custom-scroll-rail" title="Click or drag to scroll" style="margin: 2px 0;">
+        <div id="customScrollFill" class="custom-scroll-fill"></div>
+        <!-- Tick marks -->
+        <div class="absolute inset-y-0 w-full flex flex-col justify-between py-3 items-center pointer-events-none" style="opacity:0.2;">
+            <div style="width:6px;height:2px;background:currentColor;border-radius:1px;"></div>
+            <div style="width:6px;height:2px;background:currentColor;border-radius:1px;"></div>
+            <div style="width:6px;height:2px;background:currentColor;border-radius:1px;"></div>
         </div>
-        <span class="tooltip-text">Click or Drag Scrollbar</span>
+        <!-- Draggable thumb -->
+        <div id="customScrollThumb" class="custom-scroll-thumb-btn"></div>
     </div>
 
-    <!-- Scroll Step Down Button -->
-    <button onclick="scrollStepDown()" class="custom-scroll-btn tooltip" title="Scroll Down" aria-label="Scroll Down">
-        <span class="material-symbols-outlined text-base">keyboard_arrow_down</span>
-        <span class="tooltip-text">Scroll Down (Step)</span>
+    <!-- Step Down -->
+    <button onclick="scrollStepDown()" class="sdock-btn" aria-label="Scroll Down">
+        &#8595;
+        <span class="sdock-tip">Scroll Down</span>
     </button>
 
-    <!-- Scroll to Bottom Button -->
-    <button onclick="scrollToBottom()" class="custom-scroll-btn tooltip" title="Scroll to Bottom" aria-label="Scroll to Bottom">
-        <span class="material-symbols-outlined text-base">vertical_align_bottom</span>
-        <span class="tooltip-text">Scroll to Bottom</span>
+    <!-- Jump to Bottom -->
+    <button onclick="scrollToBottom()" class="sdock-btn" aria-label="Scroll to Bottom">
+        &#8681;
+        <span class="sdock-tip">Jump to Bottom</span>
     </button>
+
 </aside>
 
 <!-- SideNavBar -->
