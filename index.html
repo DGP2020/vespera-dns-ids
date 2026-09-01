@@ -156,167 +156,16 @@
         html:not(.dark) .glass-panel { background: #0f1320; border-color: #1e2538; }
 
         /* Layout */
-        .main-content-wrapper { margin-left: 14rem; padding-top: 3rem; transition: margin-left 0.25s ease; }
+        .main-content-wrapper { margin-left: 14rem; padding-top: 3.5rem; transition: margin-left 0.25s ease; }
         .sidebar-collapsed + .main-content-wrapper { margin-left: 0; }
         .sidebar { transition: transform 0.25s ease; }
         .sidebar-collapsed { transform: translateX(-100%); }
 
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        /* Clean Modern Native Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: #0a0d14; }
-        ::-webkit-scrollbar-thumb { background: #1e2538; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb { background: #1e2538; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #2a3350; }
-        
-        /* Visible High-Contrast Native Scrollbar */
-        ::-webkit-scrollbar { width: 10px; height: 10px; }
-        ::-webkit-scrollbar-track { background: rgba(15, 19, 29, 0.6); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb { background: rgba(173, 198, 255, 0.25); border-radius: 10px; border: 2px solid rgba(15, 19, 29, 0.6); }
-        ::-webkit-scrollbar-thumb:hover { background: rgba(173, 198, 255, 0.5); }
-        html:not(.dark) ::-webkit-scrollbar-track { background: rgba(220, 226, 240, 0.6); }
-        html:not(.dark) ::-webkit-scrollbar-thumb { background: rgba(0, 90, 194, 0.3); border: 2px solid rgba(220, 226, 240, 0.6); }
-        html:not(.dark) ::-webkit-scrollbar-thumb:hover { background: rgba(0, 90, 194, 0.6); }
-
-        /* Custom Interactive Scroll Dock */
-        .custom-scroll-dock {
-            background: rgba(20, 23, 35, 0.82);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 16px 48px 0 rgba(0, 0, 0, 0.5), 0 0 24px rgba(77, 142, 255, 0.12);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        html:not(.dark) .custom-scroll-dock {
-            background: rgba(255, 255, 255, 0.95);
-            border: 1px solid rgba(0, 0, 0, 0.1);
-            box-shadow: 0 16px 48px 0 rgba(0, 0, 0, 0.14), 0 0 18px rgba(0, 90, 194, 0.08);
-        }
-
-        /* Tooltip system for scroll dock */
-        .sdock-btn {
-            position: relative;
-            width: 36px;
-            height: 36px;
-            border-radius: 9999px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: rgba(173, 198, 255, 0.7);
-            background: transparent;
-            border: 1px solid transparent;
-            transition: all 0.2s ease;
-            cursor: pointer;
-            font-size: 18px;
-            line-height: 1;
-        }
-        .sdock-btn:hover {
-            color: #ffffff;
-            background: rgba(77, 142, 255, 0.22);
-            border-color: rgba(77, 142, 255, 0.45);
-            transform: scale(1.12);
-            box-shadow: 0 0 14px rgba(77, 142, 255, 0.45);
-        }
-        html:not(.dark) .sdock-btn {
-            color: rgba(0, 90, 194, 0.55);
-        }
-        html:not(.dark) .sdock-btn:hover {
-            color: #005ac2;
-            background: rgba(0, 90, 194, 0.12);
-            border-color: rgba(0, 90, 194, 0.35);
-        }
-        .sdock-btn .sdock-tip {
-            position: absolute;
-            right: calc(100% + 10px);
-            top: 50%;
-            transform: translateY(-50%);
-            white-space: nowrap;
-            background: rgba(15, 19, 29, 0.92);
-            color: #e2e6f3;
-            font-size: 11px;
-            font-family: 'Google Sans', sans-serif;
-            padding: 4px 10px;
-            border-radius: 6px;
-            border: 1px solid rgba(255,255,255,0.1);
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.18s ease;
-        }
-        html:not(.dark) .sdock-btn .sdock-tip {
-            background: rgba(20, 25, 40, 0.88);
-            color: #f0f2fb;
-        }
-        .sdock-btn:hover .sdock-tip { opacity: 1; }
-
-        .custom-scroll-rail {
-            position: relative;
-            width: 16px;
-            height: 200px;
-            background: rgba(10, 14, 24, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 9999px;
-            cursor: pointer;
-            overflow: hidden;
-            transition: border-color 0.2s ease, box-shadow 0.2s ease;
-        }
-        .custom-scroll-rail:hover {
-            border-color: rgba(77, 142, 255, 0.5);
-            box-shadow: 0 0 12px rgba(77, 142, 255, 0.25);
-        }
-        html:not(.dark) .custom-scroll-rail {
-            background: rgba(210, 220, 240, 0.8);
-            border: 1px solid rgba(0, 0, 0, 0.12);
-        }
-        html:not(.dark) .custom-scroll-rail:hover {
-            border-color: rgba(0, 90, 194, 0.5);
-        }
-        .custom-scroll-fill {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 0%;
-            background: linear-gradient(to bottom, #4d8eff, #4edea3);
-            opacity: 0.3;
-            transition: height 0.05s ease-out;
-            pointer-events: none;
-        }
-        .custom-scroll-thumb-btn {
-            position: absolute;
-            left: 2px;
-            width: 10px;
-            height: 36px;
-            border-radius: 9999px;
-            background: linear-gradient(180deg, #adc6ff, #4d8eff);
-            box-shadow: 0 0 10px rgba(77, 142, 255, 0.7);
-            cursor: grab;
-            transition: background 0.2s ease, box-shadow 0.2s ease;
-            user-select: none;
-            touch-action: none;
-        }
-        .custom-scroll-thumb-btn:active {
-            cursor: grabbing;
-            background: linear-gradient(180deg, #d8e2ff, #4edea3);
-            box-shadow: 0 0 16px rgba(78, 222, 163, 0.9);
-        }
-
-        /* percent badge */
-        .sdock-pct {
-            font-size: 10px;
-            font-family: 'Google Sans', monospace;
-            font-weight: 700;
-            letter-spacing: 0.05em;
-            color: #7ca8ff;
-            padding: 2px 6px;
-            border-radius: 9999px;
-            border: 1px solid rgba(77,142,255,0.25);
-            background: rgba(77,142,255,0.1);
-            min-width: 32px;
-            text-align: center;
-        }
-        html:not(.dark) .sdock-pct { color: #005ac2; border-color: rgba(0,90,194,0.25); background: rgba(0,90,194,0.08); }
-
-        /* divider */
-        .sdock-divider { width: 20px; height: 1px; background: rgba(255,255,255,0.08); border-radius: 1px; }
-        html:not(.dark) .sdock-divider { background: rgba(0,0,0,0.08); }
     </style>
     <script>
         // HTML / JS Sanitizers for XSS protection
@@ -351,7 +200,6 @@
                 if(s) s.classList.toggle('sidebar-nav-active', t===tab);
             });
             window.scrollTo(0,0);
-            setTimeout(updateScrollProgress, 60);
         }
 
         function toggleSidebar() {
@@ -360,150 +208,6 @@
             sidebar.classList.toggle('sidebar-collapsed');
             const isCollapsed = sidebar.classList.contains('sidebar-collapsed');
             mainContent.style.marginLeft = isCollapsed ? '0' : '14rem';
-        }
-
-        // ===== CUSTOM SCROLL CONTROLLER LOGIC =====
-        let isDraggingScrollThumb = false;
-        let scrollDragStartY = 0;
-        let scrollDragStartScrollTop = 0;
-
-        function updateScrollProgress() {
-            const docElem = document.documentElement;
-            const docBody = document.body;
-            const scrollTop = window.pageYOffset || docElem.scrollTop || docBody.scrollTop || 0;
-            const scrollHeight = Math.max(docElem.scrollHeight, docBody.scrollHeight, docElem.offsetHeight, docBody.offsetHeight);
-            const clientHeight = window.innerHeight || docElem.clientHeight || 1;
-            
-            const maxScroll = Math.max(scrollHeight - clientHeight, 1);
-            const scrollPercent = Math.min(Math.max(scrollTop / maxScroll, 0), 1);
-            const percentInt = Math.round(scrollPercent * 100);
-            
-            // Top reading progress bar
-            const topBar = document.getElementById('topScrollProgressBar');
-            if (topBar) {
-                topBar.style.width = (scrollPercent * 100) + '%';
-            }
-            
-            // Percentage badge
-            const badge = document.getElementById('scrollPercentBadge');
-            if (badge) {
-                badge.innerText = percentInt + '%';
-            }
-            
-            // Vertical rail fill and draggable thumb
-            const rail = document.getElementById('customScrollRail');
-            const fill = document.getElementById('customScrollFill');
-            const thumb = document.getElementById('customScrollThumb');
-            
-            if (rail && thumb) {
-                const railHeight = rail.clientHeight || 180;
-                const thumbHeight = thumb.clientHeight || 32;
-                const maxThumbTop = Math.max(railHeight - thumbHeight - 2, 0);
-                const thumbTop = Math.round(scrollPercent * maxThumbTop);
-                
-                thumb.style.transform = `translateY(${thumbTop}px)`;
-                if (fill) {
-                    fill.style.height = `${scrollPercent * 100}%`;
-                }
-            }
-        }
-
-        function scrollToTop() {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function scrollToBottom() {
-            const docElem = document.documentElement;
-            const docBody = document.body;
-            const scrollHeight = Math.max(docElem.scrollHeight, docBody.scrollHeight);
-            window.scrollTo({ top: scrollHeight, behavior: 'smooth' });
-        }
-
-        function scrollStepUp() {
-            window.scrollBy({ top: -380, behavior: 'smooth' });
-        }
-
-        function scrollStepDown() {
-            window.scrollBy({ top: 380, behavior: 'smooth' });
-        }
-
-        function handleRailClick(event) {
-            if (event.target.closest('#customScrollThumb')) return;
-            const rail = document.getElementById('customScrollRail');
-            if (!rail) return;
-            
-            const rect = rail.getBoundingClientRect();
-            const clickY = event.clientY - rect.top;
-            const ratio = Math.min(Math.max(clickY / rect.height, 0), 1);
-            
-            const docElem = document.documentElement;
-            const docBody = document.body;
-            const scrollHeight = Math.max(docElem.scrollHeight, docBody.scrollHeight);
-            const clientHeight = window.innerHeight || docElem.clientHeight || 1;
-            const maxScroll = Math.max(scrollHeight - clientHeight, 0);
-            
-            window.scrollTo({
-                top: ratio * maxScroll,
-                behavior: 'smooth'
-            });
-        }
-
-        function initCustomScrollController() {
-            const rail = document.getElementById('customScrollRail');
-            const thumb = document.getElementById('customScrollThumb');
-            
-            if (rail) {
-                rail.addEventListener('click', handleRailClick);
-            }
-            
-            if (thumb) {
-                const onPointerDown = (e) => {
-                    isDraggingScrollThumb = true;
-                    scrollDragStartY = e.clientY;
-                    scrollDragStartScrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                    thumb.style.cursor = 'grabbing';
-                    document.body.style.userSelect = 'none';
-                    document.addEventListener('pointermove', onPointerMove);
-                    document.addEventListener('pointerup', onPointerUp);
-                };
-                
-                const onPointerMove = (e) => {
-                    if (!isDraggingScrollThumb || !rail) return;
-                    const deltaY = e.clientY - scrollDragStartY;
-                    const railHeight = rail.clientHeight || 180;
-                    const thumbHeight = thumb.clientHeight || 32;
-                    const maxThumbTravel = Math.max(railHeight - thumbHeight, 1);
-                    
-                    const docElem = document.documentElement;
-                    const docBody = document.body;
-                    const scrollHeight = Math.max(docElem.scrollHeight, docBody.scrollHeight);
-                    const clientHeight = window.innerHeight || docElem.clientHeight || 1;
-                    const maxScroll = Math.max(scrollHeight - clientHeight, 0);
-                    
-                    const scrollDelta = (deltaY / maxThumbTravel) * maxScroll;
-                    window.scrollTo({
-                        top: Math.min(Math.max(scrollDragStartScrollTop + scrollDelta, 0), maxScroll),
-                        behavior: 'auto'
-                    });
-                };
-                
-                const onPointerUp = () => {
-                    if (isDraggingScrollThumb) {
-                        isDraggingScrollThumb = false;
-                        thumb.style.cursor = 'grab';
-                        document.body.style.userSelect = '';
-                        document.removeEventListener('pointermove', onPointerMove);
-                        document.removeEventListener('pointerup', onPointerUp);
-                    }
-                };
-                
-                thumb.addEventListener('pointerdown', onPointerDown);
-            }
-            
-            window.addEventListener('scroll', updateScrollProgress, { passive: true });
-            window.addEventListener('resize', updateScrollProgress, { passive: true });
-            
-            updateScrollProgress();
         }
 
         function toggleTheme() {
@@ -1118,56 +822,30 @@
 </head>
 <body class="font-body-md text-body-md antialiased min-h-screen flex flex-col">
 <!-- TopNavBar -->
-<header class="bg-surface/80 backdrop-blur-md dark:bg-surface/80 text-primary dark:text-primary flex justify-between items-center w-full px-gutter h-12 max-w-container-max mx-auto border-b border-outline-variant/30 dark:border-outline-variant/30 fixed top-0 z-50">
-<div class="flex items-center gap-4">
-<button class="text-on-surface-variant hover:text-primary transition-colors flex items-center justify-center p-2 rounded-full hover:bg-surface-variant/50" onclick="toggleSidebar()">
-<span class="material-symbols-outlined">menu</span>
+<header class="fixed top-0 left-0 right-0 h-14 z-50 flex justify-between items-center px-6 border-b"
+    style="background:#0f1320; border-color:#1e2538;">
+<div class="flex items-center gap-3">
+<button class="text-[#5d6b8a] hover:text-[#4d8eff] transition-colors flex items-center justify-center p-1.5 rounded hover:bg-[#131826]" onclick="toggleSidebar()" aria-label="Toggle Sidebar">
+<span class="material-symbols-outlined text-lg">menu</span>
 </button>
-<span class="text-headline-md font-headline-md font-bold text-on-surface dark:text-on-surface">Vespera DNS IDS</span>
+<span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;letter-spacing:0.08em;color:#e4e8f7;">VESPERA DNS IDS</span>
 </div>
-<nav class="hidden md:flex items-center gap-6">
-<a id="nav-dashboard" class="nav-tab text-on-surface-variant font-medium hover:text-primary transition-colors cursor-pointer" onclick="switchTab('dashboard')">Dashboard</a>
-<a id="nav-threat-intel" class="nav-tab text-on-surface-variant font-medium hover:text-primary transition-colors cursor-pointer" onclick="switchTab('threat-intel')">Threat Intelligence</a>
-<a id="nav-logs" class="nav-tab text-on-surface-variant font-medium hover:text-primary transition-colors cursor-pointer" onclick="switchTab('logs')">Logs</a>
-<a id="nav-tier1" class="nav-tab text-on-surface-variant font-medium hover:text-primary transition-colors cursor-pointer" onclick="switchTab('tier1')">Tier-1 Analysis</a>
-<a id="nav-tier2" class="nav-tab text-on-surface-variant font-medium hover:text-primary transition-colors cursor-pointer" onclick="switchTab('tier2')">Tier-2 Deep Dive</a>
+<nav class="hidden md:flex items-center gap-5">
+<a id="nav-dashboard" class="nav-tab cursor-pointer text-xs" style="color:#5d6b8a;text-decoration:none;font-weight:500;" onclick="switchTab('dashboard')">Dashboard</a>
+<a id="nav-threat-intel" class="nav-tab cursor-pointer text-xs" style="color:#5d6b8a;text-decoration:none;font-weight:500;" onclick="switchTab('threat-intel')">Threat Intelligence</a>
+<a id="nav-logs" class="nav-tab cursor-pointer text-xs" style="color:#5d6b8a;text-decoration:none;font-weight:500;" onclick="switchTab('logs')">Logs</a>
+<a id="nav-tier1" class="nav-tab cursor-pointer text-xs" style="color:#5d6b8a;text-decoration:none;font-weight:500;" onclick="switchTab('tier1')">Tier-1 Analysis</a>
+<a id="nav-tier2" class="nav-tab cursor-pointer text-xs" style="color:#5d6b8a;text-decoration:none;font-weight:500;" onclick="switchTab('tier2')">Tier-2 Deep Dive</a>
 </nav>
-<div class="flex items-center gap-4">
-<!-- Light / Dark Mode Toggle Button -->
-<button onclick="toggleTheme()" class="flex items-center gap-2 font-label-md text-label-md bg-surface-variant/40 hover:bg-surface-variant/70 text-on-surface px-3.5 py-1.5 rounded-full border border-outline-variant/30 transition-all cursor-pointer" title="Toggle Light / Dark Theme">
-<span id="themeToggleIcon" class="material-symbols-outlined text-sm">light_mode</span>
-<span class="text-xs">Theme</span>
+<div class="flex items-center gap-3">
+<button onclick="toggleTheme()" class="flex items-center gap-1.5 px-3 py-1 rounded text-xs transition-all cursor-pointer" style="background:#131826;border:1px solid #1e2538;color:#e4e8f7;" title="Toggle Light / Dark Theme">
+<span id="themeToggleIcon" class="material-symbols-outlined" style="font-size:14px;">light_mode</span>
+<span style="font-size:11px;">Theme</span>
 </button>
-<div class="flex items-center gap-2">
-<button class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-surface-variant/50 transition-colors text-on-surface-variant hover:text-primary" title="Star Project">
-<span class="material-symbols-outlined text-sm">star</span>
-</button>
-<button class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-surface-variant/50 transition-colors text-on-surface-variant hover:text-primary" title="Settings">
-<span class="material-symbols-outlined text-sm">settings</span>
-</button>
-</div>
 </div>
 </header>
 
-<!-- Top Scroll Progress Bar -->
-<div id="topScrollProgressBar" class="fixed top-12 left-0 h-[2px] z-50 transition-all duration-75" style="width: 0%; background: linear-gradient(90deg, #4d8eff, #00d68f);"></div>
-
-<!-- Floating Scroll Controller -->
-<aside id="floatingScrollController" aria-label="Page Scroll Navigation"
-    class="fixed right-4 top-1/2 -translate-y-1/2 z-50 flex flex-col items-center gap-2 py-3 px-2 rounded-2xl custom-scroll-dock select-none">
-    <span id="scrollPercentBadge" class="sdock-pct">0%</span>
-    <div class="sdock-divider"></div>
-    <button onclick="scrollToTop()" class="sdock-btn" aria-label="Scroll to Top">&#8679;<span class="sdock-tip">Jump to Top</span></button>
-    <button onclick="scrollStepUp()" class="sdock-btn" aria-label="Scroll Up">&#8593;<span class="sdock-tip">Scroll Up</span></button>
-    <div id="customScrollRail" class="custom-scroll-rail" title="Click or drag" style="margin: 2px 0;">
-        <div id="customScrollFill" class="custom-scroll-fill"></div>
-        <div id="customScrollThumb" class="custom-scroll-thumb-btn"></div>
-    </div>
-    <button onclick="scrollStepDown()" class="sdock-btn" aria-label="Scroll Down">&#8595;<span class="sdock-tip">Scroll Down</span></button>
-    <button onclick="scrollToBottom()" class="sdock-btn" aria-label="Scroll to Bottom">&#8681;<span class="sdock-tip">Jump to Bottom</span></button>
-</aside>
-
-<aside class="sidebar fixed left-0 top-12 h-[calc(100vh-48px)] flex flex-col z-40 w-56" id="sidebar"
+<aside class="sidebar fixed left-0 top-14 h-[calc(100vh-56px)] flex flex-col z-40 w-56" id="sidebar"
     style="background:#0f1320; border-right:1px solid #1e2538;">
 <div style="padding:12px 12px 8px; border-bottom:1px solid #1e2538;">
     <div style="display:flex;align-items:center;gap:8px;">
@@ -1430,20 +1108,20 @@
 <script>
     // ===== BUILD TAB HTML =====
     function buildThreatIntelTab() {
-        return `<div class="mb-8"><div class="flex items-center justify-between mb-2">
-<h1 class="font-display-lg text-on-surface flex items-center gap-3">Threat Intelligence <span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings:'FILL' 1;">travel_explore</span></h1>
+        return `<div class="mb-4"><div class="flex items-center justify-between mb-1">
+<h1 class="text-xl font-bold text-[#e4e8f7] flex items-center gap-2.5 font-['JetBrains_Mono']">Threat Intelligence <span class="material-symbols-outlined text-[#4d8eff] text-2xl" style="font-variation-settings:'FILL' 1;">travel_explore</span></h1>
 <div class="flex items-center gap-3">
-<button id="refreshThreatBtn" onclick="refreshThreatFeed()" class="flex items-center gap-2 px-4 py-2 rounded-full bg-primary/20 border border-primary/30 text-primary text-xs font-label-md hover:bg-primary/30 transition-all"><span class="material-symbols-outlined text-sm">refresh</span> Refresh Feed</button>
-<div class="text-on-surface-variant font-label-sm text-xs bg-surface-container-high/50 px-3 py-1 rounded-full border border-outline-variant/30 flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-secondary inline-block relative live-pulse"></span> Feed Active</div>
+<button id="refreshThreatBtn" onclick="refreshThreatFeed()" class="flex items-center gap-2 px-3 py-1.5 rounded bg-[#4d8eff]/10 border border-[#4d8eff]/30 text-[#4d8eff] text-xs font-label-md hover:bg-[#4d8eff]/20 transition-all"><span class="material-symbols-outlined text-sm">refresh</span> Refresh Feed</button>
+<div class="text-[#5d6b8a] text-xs px-3 py-1 rounded border border-[#1e2538] flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-[#00d68f] inline-block relative live-pulse"></span> Feed Active</div>
 </div></div>
-<p class="text-on-surface-variant font-body-lg">Live threat indicators, known malicious domains, and global DNS attack patterns.</p></div>
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+<p class="text-[#5d6b8a] text-xs">Live threat indicators, known malicious domains, and global DNS attack patterns.</p></div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
 <div class="glass-panel rounded-xl p-5 threat-card border-l-4 border-tertiary-container"><div class="flex items-center justify-between mb-3"><span class="text-on-surface-variant text-xs font-label-sm uppercase tracking-wider">Active IOCs</span><span class="material-symbols-outlined text-tertiary-container" style="font-variation-settings:'FILL' 1;">bug_report</span></div><div class="text-3xl font-bold text-tertiary-container font-label-md" id="ioc-count">247</div><div class="text-xs text-on-surface-variant mt-1 font-label-sm">↑ 12 new today</div></div>
 <div class="glass-panel rounded-xl p-5 threat-card border-l-4 border-primary"><div class="flex items-center justify-between mb-3"><span class="text-on-surface-variant text-xs font-label-sm uppercase tracking-wider">Blocked Domains</span><span class="material-symbols-outlined text-primary" style="font-variation-settings:'FILL' 1;">block</span></div><div class="text-3xl font-bold text-primary font-label-md">1,842</div><div class="text-xs text-on-surface-variant mt-1 font-label-sm">↑ 58 new today</div></div>
 <div class="glass-panel rounded-xl p-5 threat-card border-l-4 border-secondary"><div class="flex items-center justify-between mb-3"><span class="text-on-surface-variant text-xs font-label-sm uppercase tracking-wider">Detection Rate</span><span class="material-symbols-outlined text-secondary" style="font-variation-settings:'FILL' 1;">verified</span></div><div class="text-3xl font-bold text-secondary font-label-md">99.1%</div><div class="text-xs text-on-surface-variant mt-1 font-label-sm">Last 30 days</div></div>
 <div class="glass-panel rounded-xl p-5 threat-card border-l-4 border-outline"><div class="flex items-center justify-between mb-3"><span class="text-on-surface-variant text-xs font-label-sm uppercase tracking-wider">False Positive Rate</span><span class="material-symbols-outlined text-on-surface-variant" style="font-variation-settings:'FILL' 1;">target</span></div><div class="text-3xl font-bold text-on-surface font-label-md">0.3%</div><div class="text-xs text-on-surface-variant mt-1 font-label-sm">Industry leading</div></div>
 </div>
-<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-4">
 <div class="lg:col-span-8 glass-panel rounded-xl overflow-hidden">
 <div class="px-6 py-4 border-b border-outline-variant/20 flex items-center justify-between"><h2 class="font-headline-md font-semibold text-on-surface">🔴 Live IOC Feed</h2><div class="flex items-center gap-3">
 <select id="iocTypeFilter" onchange="filterIOCTable()" class="bg-surface-container text-on-surface text-xs border border-outline-variant/40 rounded-lg px-3 py-1.5 font-label-sm focus:outline-none"><option value="all">All Types</option><option value="tunnel">DNS Tunnel</option><option value="exfil">Data Exfil</option><option value="c2">C2 Comm</option><option value="malware">Malware Drop</option></select>
@@ -1463,14 +1141,14 @@
     }
 
     function buildLogsTab() {
-        return `<div class="mb-8"><div class="flex items-center justify-between mb-2">
-<h1 class="font-display-lg text-on-surface flex items-center gap-3">DNS Query Logs <span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings:'FILL' 1;">list_alt</span></h1>
-<div class="flex items-center gap-3">
-<button onclick="toggleLiveLogs()" class="flex items-center gap-2 px-4 py-2 rounded-full bg-secondary/20 border border-secondary/30 text-secondary text-xs font-label-md hover:bg-secondary/30 transition-all"><span class="material-symbols-outlined text-sm" id="liveLogIcon">pause</span><span id="liveLogLabel">Pause Stream</span></button>
-<button onclick="clearLogs()" class="flex items-center gap-2 px-4 py-2 rounded-full bg-surface-container-high border border-outline-variant/30 text-on-surface-variant text-xs font-label-md hover:bg-surface-variant/50 transition-all"><span class="material-symbols-outlined text-sm">delete_sweep</span> Clear</button>
-<button onclick="exportLogs()" class="flex items-center gap-2 px-4 py-2 rounded-full bg-primary/20 border border-primary/30 text-primary text-xs font-label-md hover:bg-primary/30 transition-all"><span class="material-symbols-outlined text-sm">download</span> Export</button>
-</div></div><p class="text-on-surface-variant font-body-lg">Live stream of all DNS queries processed by the detection engine.</p></div>
-<div class="glass-panel rounded-xl p-4 mb-6 flex flex-wrap gap-3 items-center">
+        return `<div class="mb-4"><div class="flex items-center justify-between mb-1">
+<h1 class="text-xl font-bold text-[#e4e8f7] flex items-center gap-2.5 font-['JetBrains_Mono']">DNS Query Logs <span class="material-symbols-outlined text-[#4d8eff] text-2xl" style="font-variation-settings:'FILL' 1;">list_alt</span></h1>
+<div class="flex items-center gap-2">
+<button onclick="toggleLiveLogs()" class="flex items-center gap-1.5 px-3 py-1.5 rounded bg-[#00d68f]/10 border border-[#00d68f]/30 text-[#00d68f] text-xs font-label-md hover:bg-[#00d68f]/20 transition-all"><span class="material-symbols-outlined text-sm" id="liveLogIcon">pause</span><span id="liveLogLabel">Pause Stream</span></button>
+<button onclick="clearLogs()" class="flex items-center gap-1.5 px-3 py-1.5 rounded bg-[#131826] border border-[#1e2538] text-[#5d6b8a] text-xs font-label-md hover:bg-[#1e2538] transition-all"><span class="material-symbols-outlined text-sm">delete_sweep</span> Clear</button>
+<button onclick="exportLogs()" class="flex items-center gap-1.5 px-3 py-1.5 rounded bg-[#4d8eff]/10 border border-[#4d8eff]/30 text-[#4d8eff] text-xs font-label-md hover:bg-[#4d8eff]/20 transition-all"><span class="material-symbols-outlined text-sm">download</span> Export</button>
+</div></div><p class="text-[#5d6b8a] text-xs">Live stream of all DNS queries processed by the detection engine.</p></div>
+<div class="glass-panel rounded-xl p-4 mb-4 flex flex-wrap gap-3 items-center">
 <span class="text-xs text-on-surface-variant font-label-sm uppercase tracking-wider">Filters:</span>
 <input id="logSearch" type="text" placeholder="Search domain..." oninput="filterLogs()" class="bg-[#0a0e18]/80 border border-outline-variant text-on-surface rounded-lg px-3 py-2 text-xs font-label-md focus:outline-none input-glow w-48">
 <select id="logVerdictFilter" onchange="filterLogs()" class="bg-surface-container text-on-surface text-xs border border-outline-variant/40 rounded-lg px-3 py-2 font-label-sm focus:outline-none"><option value="all">All Verdicts</option><option value="threat">Threat</option><option value="benign">Benign</option></select>
@@ -1491,8 +1169,8 @@
     }
 
     function buildTier1Tab() {
-        return `<div class="mb-8"><h1 class="font-display-lg text-on-surface flex items-center gap-3 mb-2">Tier-1 (Stateless) Analysis <span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings:'FILL' 1;">shield</span></h1><p class="text-on-surface-variant font-body-lg">Fast triage using stateless packet-level features. XGBoost model, sub-millisecond latency.</p></div>
-<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
+        return `<div class="mb-4"><h1 class="text-xl font-bold text-[#e4e8f7] flex items-center gap-2.5 mb-1 font-['JetBrains_Mono']">Tier-1 (Stateless) Analysis <span class="material-symbols-outlined text-[#4d8eff] text-2xl" style="font-variation-settings:'FILL' 1;">shield</span></h1><p class="text-[#5d6b8a] text-xs">Fast triage using stateless packet-level features. XGBoost model, sub-millisecond latency.</p></div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-4">
 <div class="lg:col-span-7 flex flex-col gap-6">
 <div class="glass-panel p-8 rounded-xl flex flex-col gap-6 relative overflow-hidden">
 <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-primary/30"></div>
@@ -1522,10 +1200,10 @@
     }
 
     function buildTier2Tab() {
-        return `<div class="mb-8"><h1 class="font-display-lg text-on-surface flex items-center gap-3 mb-2">Tier-2 Deep Dive <span class="material-symbols-outlined text-tertiary-container text-3xl" style="font-variation-settings:'FILL' 1;">security</span></h1><p class="text-on-surface-variant font-body-lg">Stateful deep analysis with TreeSHAP feature attributions. 30-second traffic windows.</p></div>
-<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
-<div class="lg:col-span-7 flex flex-col gap-6">
-<div class="glass-panel p-8 rounded-xl flex flex-col gap-6 relative overflow-hidden">
+        return `<div class="mb-4"><h1 class="text-xl font-bold text-[#e4e8f7] flex items-center gap-2.5 mb-1 font-['JetBrains_Mono']">Tier-2 Deep Dive <span class="material-symbols-outlined text-[#ff4f4f] text-2xl" style="font-variation-settings:'FILL' 1;">security</span></h1><p class="text-[#5d6b8a] text-xs">Stateful deep analysis with TreeSHAP feature attributions. 30-second traffic windows.</p></div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-4">
+<div class="lg:col-span-7 flex flex-col gap-5">
+<div class="glass-panel p-6 rounded-xl flex flex-col gap-5 relative overflow-hidden">
 <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-tertiary-container to-tertiary-container/30"></div>
 <h2 class="font-headline-md font-semibold text-on-surface flex items-center gap-2"><span class="material-symbols-outlined text-tertiary-container">manage_search</span> Run Tier-2 Deep Analysis</h2>
 <div><label class="block font-label-md text-on-surface-variant mb-2">Domain Name</label><input id="t2DomainInput" class="w-full bg-[#0a0e18]/80 border border-outline-variant text-on-surface rounded-xl px-4 py-3 font-label-md focus:outline-none input-glow transition-all" type="text" placeholder="e.g. vpn.evil.com"></div>
@@ -1569,8 +1247,6 @@
         renderIOCTable();
         renderAttackBreakdown();
         renderRegionList();
-        // Initialize custom scrollbar controller
-        initCustomScrollController();
         // Start live log streaming
         startLiveLogs();
     });
