@@ -16,6 +16,10 @@ Built as a portfolio project demonstrating applied machine learning in network s
 
 Test the ML models directly in your browser without local setup:
 👉 **[https://vespera.streamlit.app](https://vespera.streamlit.app)**
+<img width="1920" height="912" alt="image" src="https://github.com/user-attachments/assets/390b1f5c-d725-41ad-8995-439b32cf8951" />
+<img width="1905" height="865" alt="image" src="https://github.com/user-attachments/assets/8ec80e81-452c-4741-b592-7afbeec9e1c8" />
+<img width="1920" height="912" alt="image" src="https://github.com/user-attachments/assets/29ee5519-1294-4928-9831-e7ad76cf6aec" />
+<img width="1868" height="867" alt="image" src="https://github.com/user-attachments/assets/8d964de9-5b70-4c54-9b1b-d614f02e4e96" />
 
 ### Features of the Web Dashboard:
 - **Interactive Domain Tester:** Enter any FQDN (e.g., `google.com` or `a1b2c3d4.evil.com`) and DNS record type (`A`, `TXT`, `CNAME`).
