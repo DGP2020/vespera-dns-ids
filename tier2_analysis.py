@@ -247,6 +247,7 @@ def compute_shap_attributions(
     model: Any,
     features: dict,
     top_n: int = 5,
+    explainer: Optional[Any] = None,
 ) -> list[dict]:
     """
     Compute TreeSHAP feature attributions for one event using the
@@ -256,9 +257,11 @@ def compute_shap_attributions(
     Tier-1 inline path (dnstds §11.5).
 
     Args:
-        model:    Fitted xgb.XGBClassifier instance.
-        features: 8-feature dict from extract_stateful_features().
-        top_n:    Number of top attributions to return (default 5).
+        model:     Fitted xgb.XGBClassifier instance.
+        features:  8-feature dict from extract_stateful_features().
+        top_n:     Number of top attributions to return (default 5).
+        explainer: Optional pre-compiled shap.TreeExplainer instance.
+                   If None, an explainer is instantiated on-the-fly.
 
     Returns:
         Ranked list of dicts:
@@ -271,9 +274,9 @@ def compute_shap_attributions(
 
     try:
         x = features_to_array(features)
-        explainer = shap.TreeExplainer(model)
+        tree_explainer = explainer or shap.TreeExplainer(model)
         # shap_values shape: (n_samples, n_features) for binary classification
-        shap_values = explainer.shap_values(x)
+        shap_values = tree_explainer.shap_values(x)
 
         # For XGBClassifier shap returns shape (1, n_features) for class 1
         if isinstance(shap_values, list):
@@ -319,6 +322,7 @@ class Tier2Classifier:
     def __init__(self, cfg: Optional[Tier2Config] = None) -> None:
         self._cfg = cfg or get_config().tier2
         self._model: Optional[Any] = None
+        self._explainer: Optional[Any] = None
         self._load_or_init_model()
 
     # ------------------------------------------------------------------
@@ -361,6 +365,19 @@ class Tier2Classifier:
             )
 
         self._model = model
+        self._init_explainer()
+
+    def _init_explainer(self) -> None:
+        """Pre-initialize and cache the TreeSHAP explainer for the active model."""
+        if self.is_fitted and _SHAP_AVAILABLE:
+            try:
+                self._explainer = shap.TreeExplainer(self._model)
+                logger.info("Tier-2 TreeSHAP explainer pre-initialized and cached.")
+            except Exception:  # noqa: BLE001
+                logger.exception("Failed to pre-initialize TreeSHAP explainer.")
+                self._explainer = None
+        else:
+            self._explainer = None
 
     @property
     def is_fitted(self) -> bool:
@@ -422,7 +439,10 @@ class Tier2Classifier:
             shap_attributions: list[dict] = []
             if verdict == VERDICT_CRITICAL or tier2_mode == "AUDIT_ENRICHMENT":
                 shap_attributions = compute_shap_attributions(
-                    self._model, stateful_features, top_n=5
+                    self._model,
+                    stateful_features,
+                    top_n=5,
+                    explainer=self._explainer,
                 )
 
             latency_ms = (time.perf_counter() - t0) * 1000
@@ -505,6 +525,7 @@ class Tier2Classifier:
 
         self._model.fit(X, y, **fit_kwargs)
         logger.info("Tier-2 model trained on %d samples.", len(y))
+        self._init_explainer()
 
     def save_model(self, path: Path) -> None:
         """Persist the trained Tier-2 model in XGBoost JSON format."""

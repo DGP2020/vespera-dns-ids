@@ -51,6 +51,7 @@ logger = logging.getLogger("dns_detector.main")
 
 from config import get_config
 from memory_queue import MemoryQueueProvider
+from queue_broker import BaseQueueBroker
 from packet_capture import CaptureLoop
 from tier1_triage import Tier1Classifier
 from alert_dispatcher import AlertDispatcher
@@ -82,7 +83,7 @@ def _pin_process_to_cores(cores: list[int], label: str) -> None:
 # Tier-2 worker process entry point
 # ---------------------------------------------------------------------------
 
-def _tier2_worker(queue_provider: MemoryQueueProvider, worker_id: int) -> None:
+def _tier2_worker(queue_provider: BaseQueueBroker, worker_id: int) -> None:
     """
     Entry point for each Tier-2 consumer worker process.
     Imports are deferred so the forked process only loads Tier-2 modules.
@@ -177,9 +178,16 @@ class DetectorSupervisor:
         _main_dispatcher = self._dispatcher
         logger.info("AlertDispatcher started.")
 
-        # 2. Shared queue
-        self._queue = MemoryQueueProvider(self._cfg.queue)
-        logger.info("MemoryQueueProvider ready (maxsize=%d).", self._cfg.queue.max_size)
+        # 2. Shared queue with consistent-hash partitioning per worker
+        self._queue = MemoryQueueProvider(
+            self._cfg.queue,
+            num_partitions=self._cfg.tier2_worker_count,
+        )
+        logger.info(
+            "MemoryQueueProvider ready (partitions=%d, maxsize_per_partition=%d).",
+            self._cfg.tier2_worker_count,
+            self._cfg.queue.max_size,
+        )
 
         # 3. Spawn Tier-2 worker processes BEFORE entering the Tier-1 loop
         self._spawn_tier2_workers()
@@ -229,17 +237,22 @@ class DetectorSupervisor:
 
     def _spawn_tier2_workers(self) -> None:
         count = self._cfg.tier2_worker_count
-        logger.info("Spawning %d Tier-2 worker process(es).", count)
+        logger.info("Spawning %d Tier-2 worker process(es) with partitioned queues.", count)
         for i in range(count):
+            partition_queue = (
+                self._queue.get_partition(i)
+                if self._queue is not None
+                else None
+            )
             p = multiprocessing.Process(
                 target=_tier2_worker,
-                args=(self._queue, i),
+                args=(partition_queue, i),
                 name=f"dns-tier2-worker-{i}",
                 daemon=True,
             )
             p.start()
             self._tier2_processes.append(p)
-            logger.info("Tier-2 worker %d started (pid=%d).", i, p.pid)
+            logger.info("Tier-2 worker %d started (pid=%d, partition=%d).", i, p.pid, i)
 
     def _shutdown_tier2_workers(self) -> None:
         logger.info("Shutting down %d Tier-2 worker(s).", len(self._tier2_processes))
